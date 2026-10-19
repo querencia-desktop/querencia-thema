@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Querencia-Klassisch
+Comment=Klassisches Thema von Querencia Desktop (GTK 4, GTK 3, labwc)
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Querencia-Klassisch

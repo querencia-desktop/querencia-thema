@@ -1,0 +1,822 @@
+/* Querencia-Klassisch für GTK 4 – GNOME-2-Schicht über dem eingebauten Thema.
+ *
+ * Vorbild: Ubuntu 10.04 (Ambiance-Fensterinhalt, Human/Clearlooks-Formen)
+ * mit dem Querencia-Akzent #F07746. Werte wie Panel, Rechner, Editor,
+ * Systemmonitor und Dateisuche (deren eigene CSS bleibt vorrangig):
+ *
+ *   Grund #f2f1f0   Schrift #3c3c3c   Ansicht #ffffff   Menü #f5f4f2
+ *   Rahmen hell #c7c2be, Knopfrand #a8a29d, Kästchenrand #8f8a85
+ *   Auswahl Verlauf #f6a179 -> #f07746, Rand #c6602f, Schrift #1a1a1a
+ *   (dunkel statt weiß: 6,2:1 statt 2,8:1, WCAG AA; siehe docs/farben.md)
+ *
+ * Fenster ohne Fokus sehen aus wie mit Fokus (erzeugen.py entfernt
+ * :backdrop). Keine Kopfleisten-Optik: die Programme nutzen den Rahmen
+ * von labwc (Querencia-Klassisch/labwc).
+ */
+
+/* ---------------------------------------------------------------- Knöpfe */
+
+button {
+  min-height: 22px;
+  padding: 3px 10px;
+  border: 1px solid #a8a29d;
+  border-radius: 3px;
+  color: #3c3c3c;
+  background-image: linear-gradient(to bottom, #fefefe, #e9e6e2);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 1px rgba(0, 0, 0, 0.04);
+}
+
+button:hover {
+  color: #3c3c3c;
+  border-color: #9a948d;
+  background-image: linear-gradient(to bottom, #ffffff, #f2f0ed);
+  box-shadow: inset 0 1px #ffffff, 0 1px rgba(0, 0, 0, 0.04);
+}
+
+button:active, button:checked, button.keyboard-activating {
+  color: #3c3c3c;
+  border-color: #918b84;
+  background-image: linear-gradient(to bottom, #d6d2cd, #e5e2de);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+button:checked:hover {
+  background-image: linear-gradient(to bottom, #dcd8d3, #ebe8e4);
+}
+
+button:disabled {
+  color: #a5a09a;
+  border-color: #cfcac5;
+  background-image: linear-gradient(to bottom, #f8f7f6, #efedeb);
+  box-shadow: none;
+}
+
+button:disabled:active, button:disabled:checked {
+  border-color: #c3beb8;
+  background-image: image(#e4e1dd);
+  box-shadow: none;
+}
+
+button.text-button { padding-left: 12px; padding-right: 12px; }
+button.image-button { min-width: 22px; padding-left: 4px; padding-right: 4px; }
+button.text-button.image-button { padding-left: 8px; padding-right: 8px; }
+button.text-button.image-button label { padding-left: 4px; padding-right: 4px; }
+
+/* Verbundene Knöpfe: nur die Enden rund */
+.linked:not(.vertical) > button:first-child,
+.linked:not(.vertical) > :first-child > button {
+  border-top-left-radius: 3px; border-bottom-left-radius: 3px;
+}
+.linked:not(.vertical) > button:last-child,
+.linked:not(.vertical) > :last-child > button {
+  border-top-right-radius: 3px; border-bottom-right-radius: 3px;
+}
+
+/* Flache Knöpfe und Werkzeugleisten-Knöpfe: flach, beim Überfahren erhaben
+   (GNOME 2) */
+button.flat:hover,
+.toolbar > button:hover,
+.toolbar > :not(.linked) > button:hover,
+.toolbar :not(.linked) > menubutton > button:hover,
+.toolbar :not(.linked) > scalebutton > button:hover,
+.toolbar :not(.linked) > dropdown > button:hover {
+  border-color: #a8a29d;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, #ffffff, #ebe8e4);
+  box-shadow: inset 0 1px #ffffff;
+}
+
+button.flat:active, button.flat:checked,
+.toolbar > button:active, .toolbar > button:checked,
+.toolbar > :not(.linked) > button:active,
+.toolbar > :not(.linked) > button:checked,
+.toolbar :not(.linked) > menubutton > button:checked {
+  border-color: #918b84;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, #d6d2cd, #e5e2de);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+/* Empfohlene Aktion: Akzent, dunkle Schrift */
+button.suggested-action {
+  color: #1a1a1a;
+  border-color: #c6602f;
+  background-image: linear-gradient(to bottom, #f8ad88, #f07746);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.35);
+}
+button.suggested-action:hover {
+  color: #1a1a1a;
+  border-color: #c6602f;
+  background-image: linear-gradient(to bottom, #fbbb9a, #f3875a);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.4);
+}
+button.suggested-action:active, button.suggested-action:checked {
+  color: #1a1a1a;
+  border-color: #b4552a;
+  background-image: linear-gradient(to bottom, #e2683a, #f07746);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+button.suggested-action:focus:focus-visible { outline-color: rgba(60, 60, 60, 0.6); }
+button.suggested-action:disabled {
+  color: #a5a09a;
+  border-color: #cfcac5;
+  background-image: linear-gradient(to bottom, #f8f7f6, #efedeb);
+  box-shadow: none;
+}
+
+/* Gefährliche Aktion: Rot, weiße Schrift (5,0:1 und besser) */
+button.destructive-action {
+  color: #ffffff;
+  border-color: #8f1f1a;
+  background-image: linear-gradient(to bottom, #cc3b35, #b02a24);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.2);
+}
+button.destructive-action:hover {
+  color: #ffffff;
+  border-color: #8f1f1a;
+  background-image: linear-gradient(to bottom, #c9362f, #b9302a);
+}
+button.destructive-action:active, button.destructive-action:checked {
+  color: #ffffff;
+  border-color: #7a1a16;
+  background-image: linear-gradient(to bottom, #9e2621, #b02a24);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+button.destructive-action:focus:focus-visible { outline-color: rgba(255, 255, 255, 0.8); }
+button.destructive-action:disabled {
+  color: #a5a09a;
+  border-color: #cfcac5;
+  background-image: linear-gradient(to bottom, #f8f7f6, #efedeb);
+  box-shadow: none;
+}
+
+/* Fokusrahmen: Akzent, halbdurchsichtig, innen */
+button:focus:focus-visible,
+checkbutton:focus:focus-visible,
+row:focus:focus-visible,
+switch:focus:focus-visible {
+  outline-color: rgba(240, 119, 70, 0.7);
+  outline-width: 1px;
+  outline-offset: -3px;
+}
+
+/* ------------------------------------------------------- Eingabefelder */
+
+spinbutton.vertical > text, spinbutton:not(.vertical), entry {
+  min-height: 24px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px solid #a8a29d;
+  border-radius: 3px;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  box-shadow: inset 0 1px rgba(0, 0, 0, 0.07);
+}
+
+spinbutton.vertical > text:focus-within, spinbutton:focus-within:not(.vertical), entry:focus-within {
+  border-color: #f07746;
+  outline-color: rgba(240, 119, 70, 0.35);
+  outline-width: 1px;
+  outline-offset: -2px;
+}
+
+spinbutton.vertical > text:disabled, spinbutton:disabled:not(.vertical), entry:disabled {
+  color: #a5a09a;
+  border-color: #cfcac5;
+  background-color: #f5f4f2;
+  box-shadow: none;
+}
+
+entry.flat, entry.flat:focus-within {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+spinbutton:not(.vertical) > button.image-button.up:not(.flat),
+spinbutton:not(.vertical) > button.image-button.down:not(.flat) {
+  min-height: 16px;
+  min-width: 20px;
+  padding: 0 2px;
+}
+
+/* Auswahlliste (DropDown/ComboBox) */
+dropdown > popover.menu.background > contents { padding: 2px 0; }
+dropdown popover listview, combobox popover listview { margin: 0; }
+dropdown popover listview > row.activatable,
+combobox popover listview > row.activatable { padding: 3px 8px; border-radius: 0; }
+dropdown popover, combobox popover { margin-top: 2px; }
+
+/* ------------------------------------------------- Menüleiste und Menüs */
+
+menubar {
+  padding: 1px 2px;
+  background-color: #f2f1f0;
+  border-bottom: 1px solid #c7c2be;
+  box-shadow: none;
+}
+
+menubar > item {
+  min-height: 18px;
+  padding: 3px 8px;
+  border-radius: 0;
+  color: #3c3c3c;
+}
+
+menubar > item:selected, menubar > item:hover {
+  color: #1a1a1a;
+  background-image: linear-gradient(to bottom, #f6a179, #f07746);
+  box-shadow: inset 0 0 0 1px #c6602f;
+}
+
+menubar > item:disabled { color: #a5a09a; box-shadow: none; }
+
+popover.background > arrow, popover.background > contents {
+  background-color: #f5f4f2;
+  border: 1px solid #a8a29d;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
+popover.background > contents { padding: 6px; border-radius: 3px; }
+
+popover.menu > arrow, popover.menu.background > contents {
+  background-color: #f5f4f2;
+  padding: 2px 0;
+}
+
+popover.menu.background > contents {
+  border-radius: 0;
+  border-color: #c7c2be;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+menubar > item popover.menu.background > contents { padding: 2px 0; }
+menubar > item popover.menu.background popover.menu.background > contents { border-radius: 0; }
+
+popover.menu modelbutton {
+  min-height: 20px;
+  min-width: 40px;
+  padding: 1px 14px;
+  border-radius: 0;
+  color: #3c3c3c;
+}
+
+popover.menu modelbutton:selected,
+popover.menu modelbutton:hover {
+  color: #1a1a1a;
+  background-color: #f07746;
+  background-image: linear-gradient(to bottom, #f6a179, #f07746);
+  box-shadow: inset 0 0 0 1px #c6602f;
+}
+
+popover.menu modelbutton:selected:active { background-image: linear-gradient(to bottom, #e2683a, #f07746); }
+popover.menu modelbutton:disabled { color: #a5a09a; }
+popover.menu modelbutton:disabled:selected { color: #6d6964; }
+
+popover.menu.background separator { margin: 3px 0; background-color: #dcd8d4; }
+popover.menu label.title { padding: 3px 24px; }
+popover.menu box.inline-buttons button.image-button.model { min-height: 24px; min-width: 24px; }
+
+popover.menu check, popover.menu radio { color: #3c3c3c; }
+popover.menu modelbutton:selected check, popover.menu modelbutton:selected radio { color: #1a1a1a; }
+
+/* -------------------------------------------------------- Werkzeugleiste */
+
+.toolbar {
+  padding: 3px 4px;
+  border-spacing: 2px;
+  background-color: #f2f1f0;
+  background-image: linear-gradient(to bottom, #f7f6f5, #e9e7e4);
+  border-bottom: 1px solid #c7c2be;
+}
+
+.toolbar.osd { background-image: none; border-bottom: none; }
+.toolbar > separator, .toolbar.horizontal > separator { margin: 3px 2px; background-color: #c7c2be; }
+
+searchbar > revealer > box {
+  padding: 3px 6px;
+  border-bottom: 1px solid #c7c2be;
+  background-color: #f2f1f0;
+  box-shadow: none;
+}
+
+actionbar > revealer > box {
+  padding: 3px 6px;
+  border-top: 1px solid #c7c2be;
+  background-color: #f2f1f0;
+}
+
+/* Statusleiste (GtkStatusbar und Kästen mit Klasse .statusbar) */
+statusbar, .statusbar {
+  padding: 2px 8px;
+  border-top: 1px solid #c7c2be;
+  background-color: #f2f1f0;
+  color: #3c3c3c;
+  font-size: smaller;
+}
+
+/* Kopfleiste nur für Dialoge, die GTK selbst mit Kopfleiste baut */
+headerbar {
+  min-height: 34px;
+  padding: 0 4px;
+  color: #3c3c3c;
+  background-color: #eeece9;
+  background-image: linear-gradient(to bottom, #eeece9, #d8d4d0);
+  border-bottom: 1px solid #a8a29d;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
+}
+
+headerbar entry, headerbar spinbutton, headerbar button, headerbar menubutton,
+headerbar separator:not(.sidebar) { margin-top: 4px; margin-bottom: 4px; }
+
+/* ----------------------------------------------- Listen und Baumansichten */
+
+.view:selected, iconview:selected, .view:selected:focus, iconview:selected:focus,
+listview > row:selected, list > row:selected, columnview > listview > row:selected,
+treeview.view:selected, treeview.view:selected:focus,
+gridview > child:selected, flowbox > flowboxchild:selected, row:selected {
+  color: #1a1a1a;
+  background-color: #f07746;
+  background-image: linear-gradient(to bottom, #f6a179, #f07746);
+  border-radius: 0;
+}
+
+/* Auswahl in einer Liste ohne Tastaturfokus: Ambiance-Beige (Lucid) */
+listview:not(:focus-within) > row:selected,
+columnview:not(:focus-within) > listview > row:selected,
+list:not(:focus-within) > row:selected {
+  color: #1a1a1a;
+  background-color: #c6b9a6;
+  background-image: none;
+}
+
+row.activatable:selected:hover, row.activatable:selected.has-open-popup {
+  background-color: #f07746;
+  background-image: linear-gradient(to bottom, #f8ad88, #f3875a);
+}
+
+row.activatable:hover, row.activatable.has-open-popup { background-color: rgba(240, 119, 70, 0.10); }
+row:selected { outline-color: rgba(60, 60, 60, 0.6); }
+row:selected label, row:selected image { color: inherit; }
+
+/* Zebrastreifen in Spaltenansichten (GtkColumnView). Die alte GtkTreeView
+   kennt in GTK 4 keine Zeilenknoten; dort gibt es keine Streifen. */
+columnview > listview > row:nth-child(even):not(:selected) {
+  background-color: #f5f4f2;
+}
+
+columnview > listview > row > cell { padding: 2px 6px; }
+columnview.data-table > listview > row > cell { padding-top: 1px; padding-bottom: 1px; }
+columnview.complex > listview > row > cell > * { padding: 2px 6px; }
+listview > row, list > row { padding: 2px 4px; }
+
+/* Spaltenköpfe wie GNOME 2: erhabene Knöpfe mit Trennstrich */
+columnview.view > header > button, treeview.view > header > button,
+columnview.view > header > button:hover, treeview.view > header > button:hover,
+columnview.view > header > button:active, treeview.view > header > button:active {
+  min-height: 20px;
+  padding: 1px 6px;
+  color: #3c3c3c;
+  font-weight: normal;
+  border-style: none solid solid none;
+  border-width: 1px;
+  border-color: #c7c2be;
+  border-bottom-color: #a8a29d;
+  border-radius: 0;
+  background-image: linear-gradient(to bottom, #fbfaf9, #ecebe9);
+  box-shadow: none;
+}
+
+columnview.view > header > button:hover, treeview.view > header > button:hover {
+  background-image: linear-gradient(to bottom, #ffffff, #f2f1ef);
+}
+
+columnview.view > header > button:active, treeview.view > header > button:active {
+  background-image: linear-gradient(to bottom, #e2dfdb, #ecebe9);
+}
+
+.rich-list > row { padding: 4px 8px; min-height: 24px; }
+.rich-list > header { background-color: #f2f1f0; color: #3c3c3c; }
+.boxed-list { border-radius: 3px; border-color: #c7c2be; }
+.boxed-list > row:first-child { border-top-left-radius: 3px; border-top-right-radius: 3px; }
+.boxed-list > row:last-child { border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; }
+
+/* Seitenleisten (StackSidebar, Dateiauswahl): Zeilen wie eine GNOME-2-Liste */
+.navigation-sidebar > row { min-height: 24px; padding: 2px 8px; margin: 0; border-radius: 0; }
+.navigation-sidebar > row:hover { background-color: rgba(240, 119, 70, 0.10); }
+.navigation-sidebar > row:selected { border-radius: 0; }
+
+/* Bildschirmhilfe Gummiband */
+rubberband, .content-view > rubberband, columnview.view > rubberband,
+treeview.view > rubberband, gridview > rubberband, flowbox > rubberband {
+  border: 1px solid #c6602f;
+  background-color: rgba(240, 119, 70, 0.2);
+}
+
+/* ------------------------------------------------------------- Reiter */
+
+notebook > header {
+  padding: 2px 2px 0 2px;
+  border-color: #a8a29d;
+  background-color: #e6e3df;
+}
+
+notebook > header > tabs > tab {
+  min-height: 20px;
+  min-width: 20px;
+  padding: 3px 10px;
+  color: #5a5652;
+  border: 1px solid #bdb7b1;
+  background-image: linear-gradient(to bottom, #ecebe8, #dedad6);
+  box-shadow: none;
+}
+
+notebook > header > tabs > tab:hover {
+  color: #3c3c3c;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, #f7f6f5, #e8e5e2);
+}
+
+notebook > header > tabs > tab:checked {
+  color: #3c3c3c;
+  border-color: #a8a29d;
+  background-image: none;
+  background-color: #f2f1f0;
+}
+
+notebook > header.top > tabs > tab, notebook > header.bottom > tabs > tab { margin-left: 0; margin-right: 1px; }
+notebook > header.left > tabs > tab, notebook > header.right > tabs > tab { margin-top: 0; margin-bottom: 1px; }
+
+notebook > header.top > tabs > tab { border-bottom-style: none; border-radius: 3px 3px 0 0; padding-bottom: 3px; }
+notebook > header.top > tabs > tab:hover { box-shadow: none; }
+notebook > header.top > tabs > tab:checked { box-shadow: inset 0 2px #f07746; }
+notebook > header.top > tabs { margin-bottom: -1px; }
+
+notebook > header.bottom > tabs > tab { border-top-style: none; border-radius: 0 0 3px 3px; padding-top: 3px; }
+notebook > header.bottom > tabs > tab:hover { box-shadow: none; }
+notebook > header.bottom > tabs > tab:checked { box-shadow: inset 0 -2px #f07746; }
+notebook > header.bottom > tabs { margin-top: -1px; }
+
+notebook > header.left > tabs > tab { border-right-style: none; border-radius: 3px 0 0 3px; }
+notebook > header.left > tabs > tab:hover { box-shadow: none; }
+notebook > header.left > tabs > tab:checked { box-shadow: inset 2px 0 #f07746; }
+notebook > header.left > tabs { margin-right: -1px; }
+
+notebook > header.right > tabs > tab { border-left-style: none; border-radius: 0 3px 3px 0; }
+notebook > header.right > tabs > tab:hover { box-shadow: none; }
+notebook > header.right > tabs > tab:checked { box-shadow: inset -2px 0 #f07746; }
+notebook > header.right > tabs { margin-left: -1px; }
+
+notebook > stack:not(:only-child) { background-color: #f2f1f0; }
+notebook { border: 1px solid #a8a29d; }
+notebook.frame { border-radius: 0; }
+
+/* -------------------------------------------------------- Scrollbalken */
+
+scrollbar {
+  background-color: #e3e0dc;
+  border-color: #c7c2be;
+}
+
+scrollbar > range > trough > slider {
+  min-width: 13px;
+  min-height: 13px;
+  margin: 0;
+  border: 1px solid #a8a29d;
+  border-radius: 3px;
+  background-clip: border-box;
+  background-color: #f2f0ed;
+  background-image: linear-gradient(to right, #fbfaf9, #e6e3df);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+scrollbar.horizontal > range > trough > slider {
+  background-image: linear-gradient(to bottom, #fbfaf9, #e6e3df);
+}
+
+scrollbar > range > trough > slider:hover {
+  border-color: #9a948d;
+  background-image: linear-gradient(to right, #ffffff, #efedea);
+}
+scrollbar.horizontal > range > trough > slider:hover {
+  background-image: linear-gradient(to bottom, #ffffff, #efedea);
+}
+
+scrollbar > range > trough > slider:hover:active {
+  border-color: #c6602f;
+  background-image: linear-gradient(to right, #f8ad88, #f07746);
+}
+scrollbar.horizontal > range > trough > slider:hover:active {
+  background-image: linear-gradient(to bottom, #f8ad88, #f07746);
+}
+
+scrollbar > range > trough > slider:disabled { background-image: none; border-color: transparent; background-color: transparent; }
+scrollbar > range.fine-tune > trough > slider { min-width: 13px; min-height: 13px; }
+scrollbar > range.fine-tune.horizontal > trough > slider,
+scrollbar > range.fine-tune.vertical > trough > slider { border-width: 1px; }
+scrollbar > range > trough { margin: 1px; }
+
+/* Falls ein Programm Überlagerungsbalken erzwingt: trotzdem klassisch und
+   breit zeichnen (das Ausblenden selbst steuert GTK, siehe
+   docs/aufbau.md, gtk-overlay-scrolling). */
+scrollbar.overlay-indicator:not(.dragging):not(.hovering) {
+  background-color: rgba(227, 224, 220, 0.85);
+  border-color: transparent;
+}
+scrollbar.overlay-indicator:not(.dragging):not(.hovering) > range > trough > slider {
+  margin: 0;
+  min-width: 9px;
+  min-height: 9px;
+  border: 1px solid #a8a29d;
+  background-color: #f2f0ed;
+}
+scrollbar.overlay-indicator.dragging, scrollbar.overlay-indicator.hovering {
+  background-color: #e3e0dc;
+  border: none;
+}
+
+scrolledwindow > junction { background: #e3e0dc; }
+
+/* ------------------------------------------------------ Schieberegler */
+
+scale > trough {
+  min-height: 4px;
+  min-width: 4px;
+  border: 1px solid #a8a29d;
+  border-radius: 2px;
+  background-color: #e3e0dc;
+  box-shadow: inset 0 1px rgba(0, 0, 0, 0.08);
+}
+
+scale > trough > highlight {
+  border: 1px solid #c6602f;
+  border-radius: 2px;
+  background-image: linear-gradient(to bottom, #f6a179, #f07746);
+  margin: -1px;
+}
+
+scale.vertical > trough > highlight { background-image: linear-gradient(to right, #f6a179, #f07746); }
+
+scale > trough > slider,
+scale.marks-before:not(.marks-after) > trough > slider,
+scale.marks-after:not(.marks-before) > trough > slider {
+  min-width: 14px;
+  min-height: 14px;
+  margin: -7px;
+  border: 1px solid #918b84;
+  border-radius: 3px;
+  background-color: #f2f0ed;
+  background-image: linear-gradient(to bottom, #ffffff, #e3e0dc);
+  box-shadow: inset 0 1px #ffffff, 0 1px rgba(0, 0, 0, 0.1);
+}
+
+scale > trough > slider:hover,
+scale.marks-before:not(.marks-after) > trough > slider:hover,
+scale.marks-after:not(.marks-before) > trough > slider:hover {
+  border-color: #c6602f;
+  background-image: linear-gradient(to bottom, #ffffff, #ece9e5);
+}
+
+scale > trough > slider:active,
+scale.marks-before:not(.marks-after) > trough > slider:active,
+scale.marks-after:not(.marks-before) > trough > slider:active {
+  border-color: #c6602f;
+  background-image: linear-gradient(to bottom, #e3e0dc, #f2f0ed);
+}
+
+scale > trough > slider:disabled,
+scale.marks-before:not(.marks-after) > trough > slider:disabled,
+scale.marks-after:not(.marks-before) > trough > slider:disabled {
+  border-color: #cfcac5;
+  background-image: image(#f5f4f2);
+  box-shadow: none;
+}
+
+scale > trough:disabled > highlight { background-image: none; background-color: #d8d4d0; border-color: #c3beb8; }
+scale > marks { color: #8f8a85; }
+
+/* ------------------------------------------------------ Fortschritt */
+
+progressbar { color: #3c3c3c; }
+progressbar.horizontal > trough { min-width: 150px; }
+progressbar.horizontal > trough, progressbar.horizontal > trough > progress { min-height: 14px; }
+progressbar.vertical > trough, progressbar.vertical > trough > progress { min-width: 14px; }
+
+progressbar > trough {
+  border: 1px solid #a8a29d;
+  border-radius: 3px;
+  background-color: #e3e0dc;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+progressbar > trough > progress {
+  border: 1px solid #c6602f;
+  border-radius: 2px;
+  background-color: #f07746;
+  background-image: linear-gradient(to bottom, #f8ad88, #f07746 60%, #e66a38);
+  margin: -1px;
+}
+
+progressbar.vertical > trough > progress { background-image: linear-gradient(to right, #f8ad88, #f07746 60%, #e66a38); }
+progressbar > trough > progress.left, progressbar > trough > progress.right,
+progressbar > trough > progress.top, progressbar > trough > progress.bottom { border-radius: 2px; }
+progressbar > trough > progress:disabled { background-image: none; background-color: #c3beb8; border-color: #a8a29d; }
+progressbar.osd > trough > progress { border: none; margin: 0; }
+progressbar.osd > trough { border: none; }
+progressbar > text { color: #3c3c3c; }
+
+levelbar > trough { border: 1px solid #a8a29d; border-radius: 3px; background-color: #e3e0dc; padding: 1px; }
+levelbar > trough > block { border-radius: 1px; }
+levelbar > trough > block.filled, levelbar > trough > block.high { background-color: #f07746; border-color: #c6602f; }
+levelbar > trough > block.low { background-color: #e5a50a; }
+levelbar > trough > block.empty { background-color: #ffffff; border-color: #d8d4d0; }
+
+/* -------------------------------------------- Kästchen und Optionsfelder */
+
+check, radio {
+  min-width: 14px;
+  min-height: 14px;
+  border: 1px solid #8f8a85;
+  color: #3c3c3c;
+  background-image: linear-gradient(to bottom, #ffffff 10%, #ece9e5);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
+}
+
+check:hover, radio:hover {
+  border-color: #c6602f;
+  background-image: linear-gradient(to bottom, #ffffff, #f4f2ef);
+}
+
+check:active, radio:active {
+  background-image: linear-gradient(to bottom, #dcd8d3, #ece9e5);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+check:checked, radio:checked, check:indeterminate, radio:indeterminate {
+  color: #3c3c3c;
+  border-color: #8f8a85;
+  background-clip: padding-box;
+  background-image: linear-gradient(to bottom, #ffffff 10%, #ece9e5);
+}
+
+check:checked:hover, radio:checked:hover,
+check:indeterminate:hover, radio:indeterminate:hover {
+  border-color: #c6602f;
+  background-image: linear-gradient(to bottom, #ffffff, #f4f2ef);
+}
+
+check:checked:active, radio:checked:active,
+check:indeterminate:active, radio:indeterminate:active {
+  background-image: linear-gradient(to bottom, #dcd8d3, #ece9e5);
+}
+
+check:disabled, radio:disabled,
+check:checked:disabled, radio:checked:disabled,
+check:indeterminate:disabled, radio:indeterminate:disabled {
+  color: #b0aba5;
+  border-color: #cfcac5;
+  background-image: image(#f5f4f2);
+  box-shadow: none;
+}
+
+check { border-radius: 2px; }
+
+row:selected check, row:selected radio,
+treeview.view check:selected, treeview.view radio:selected,
+treeview.view check:selected:focus, treeview.view radio:selected:focus {
+  color: #1a1a1a;
+  border-color: #c6602f;
+}
+
+checkbutton { border-radius: 3px; }
+
+/* ----------------------------------------------------------- Schalter */
+
+switch {
+  border: 1px solid #a8a29d;
+  border-radius: 3px;
+  color: #5a5652;
+  background-color: #e3e0dc;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+switch:checked {
+  color: #1a1a1a;
+  border-color: #c6602f;
+  background-color: #f07746;
+  background-image: linear-gradient(to bottom, #f07746, #f6a179);
+}
+
+switch:disabled { color: #a5a09a; border-color: #cfcac5; background-color: #f5f4f2; background-image: none; }
+
+switch > slider {
+  min-width: 22px;
+  min-height: 20px;
+  margin: -1px;
+  border: 1px solid #918b84;
+  border-radius: 3px;
+  background-image: linear-gradient(to bottom, #ffffff, #e3e0dc);
+  box-shadow: inset 0 1px #ffffff;
+}
+
+switch:hover > slider { border-color: #c6602f; background-image: linear-gradient(to bottom, #ffffff, #ece9e5); }
+switch:checked > slider { border-color: #b4552a; }
+switch:disabled > slider { border-color: #cfcac5; background-image: image(#f5f4f2); box-shadow: none; }
+
+row:selected switch { border-color: #c6602f; }
+
+/* ------------------------------------------------------------- Tooltips */
+
+tooltip.background, tooltip {
+  padding: 4px 6px;
+  border-radius: 3px;
+  border: 1px solid #000000;
+  background-color: rgba(30, 30, 30, 0.95);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+tooltip > box { border-spacing: 6px; }
+tooltip * { color: #ffffff; }
+
+/* --------------------------------------------- Rahmen, Trenner, Dialoge */
+
+frame, .frame { border-color: #c7c2be; }
+frame { border-radius: 0; }
+separator { background-color: #d8d4d0; }
+paned > separator { background-color: #c7c2be; }
+paned.wide > separator { background-color: #f2f1f0; border-color: #c7c2be; }
+
+window.dialog .dialog-action-area > button { min-height: 22px; padding: 3px 12px; }
+
+/* GTK-4-Meldungsdialog (AlertDialog, CSD ohne Titelleiste): eckig, Rahmen
+   wie die labwc-Fensterrahmen, Knöpfe als einzelne Knöpfe statt einer
+   durchgehenden Fläche wie bei Adwaita */
+window.csd.dialog.message {
+  border-radius: 0;
+  box-shadow: 0 0 0 1px #7a7570, 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+window.dialog.message.csd.background { border-radius: 0; }
+window.dialog.message .titlebar { border-radius: 0; }
+window.dialog.message label.title { font-weight: bold; font-size: 120%; }
+
+window.dialog.message.csd .dialog-action-area {
+  margin: 0;
+  padding: 4px 10px 10px 10px;
+  border-spacing: 6px;
+}
+
+window.dialog.message.csd .dialog-action-area button,
+window.dialog.message.csd .dialog-action-area button:first-child,
+window.dialog.message.csd .dialog-action-area button:last-child {
+  min-height: 22px;
+  padding: 3px 12px;
+  border: 1px solid #a8a29d;
+  border-radius: 3px;
+}
+
+window.dialog.message.csd .dialog-action-area button.suggested-action { border-color: #c6602f; }
+window.dialog.message.csd .dialog-action-area button.destructive-action { border-color: #8f1f1a; }
+
+/* Infoleiste */
+infobar.info > revealer > box, infobar.question > revealer > box { background-color: #fcf3c8; color: #3c3c3c; border-bottom: 1px solid #e0d38f; }
+infobar.warning > revealer > box { background-color: #fbdcb5; color: #3c3c3c; border-bottom: 1px solid #e0a35c; }
+infobar.error > revealer > box { background-color: #c7342a; color: #ffffff; border-bottom: 1px solid #9a261e; }
+
+/* Links: dunkles Orange, damit Text AA erreicht (5,0:1 auf #f2f1f0) */
+link, button.link, .link { color: #b33c0b; }
+link:visited, button.link:visited, .link:visited { color: #8a3a1c; }
+link:hover, button.link:hover { color: #d2501a; }
+
+/* Kalender */
+calendar { border: 1px solid #a8a29d; }
+calendar > header { border-bottom: 1px solid #c7c2be; background-color: #f2f1f0; }
+calendar > grid > label.day-number:selected { color: #1a1a1a; background-color: #f07746; border-radius: 0; }
+calendar > grid > label.today { box-shadow: inset 0px -2px #f07746; }
+
+/* Erweiterer */
+expander-widget > box > title { padding: 2px 0; }
+
+/* Dateiauswahl: Pfadleiste und Seitenleiste */
+.path-bar button { padding: 3px 6px; }
+placessidebar > viewport > list, stacksidebar > scrolledwindow > viewport > list,
+.sidebar { background-color: #f7f6f5; border-color: #c7c2be; }
+
+/* Gedimmter Text (dim-label, Platzhalter, Untertitel): 75 % statt 55 %
+   Deckkraft, damit er AA erreicht (4,8:1 auf dem Fenstergrund) */
+.dim-label, spinbutton:not(.vertical) > text > placeholder, entry > text > placeholder,
+label.separator, .titlebar:not(headerbar) .subtitle, headerbar .subtitle {
+  opacity: 0.75;
+}
+
+/* Textansicht */
+textview > text { color: #1a1a1a; }
+textview > border { background-color: #f2f1f0; }
+
+/* Textauswahl */
+label > selection:focus-within,
+entry > text > selection:focus-within,
+textview > text > selection:focus-within,
+spinbutton:not(.vertical) > text > selection:focus-within {
+  background-color: #f07746;
+  color: #1a1a1a;
+}

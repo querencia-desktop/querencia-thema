@@ -1,0 +1,12 @@
+/* Vergleichsvariante (nicht ausgeliefert): weiße Schrift auf der orangen
+   Auswahl wie Ambiance und die Panelmenüs (2,8:1, unter WCAG AA). */
+.view:selected, iconview:selected, .view:selected:focus, iconview:selected:focus,
+listview > row:selected, list > row:selected, columnview > listview > row:selected,
+treeview.view:selected, treeview.view:selected:focus,
+gridview > child:selected, flowbox > flowboxchild:selected, row:selected,
+menubar > item:selected, menubar > item:hover,
+popover.menu modelbutton:selected, popover.menu modelbutton:hover,
+button.suggested-action, button.suggested-action:hover, button.suggested-action:active,
+switch:checked {
+  color: #ffffff;
+}
