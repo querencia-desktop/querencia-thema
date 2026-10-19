@@ -2682,8 +2682,10 @@ infobar.warning > revealer > box { background-color: #fbdcb5; color: #3c3c3c; bo
 infobar.error > revealer > box { background-color: #c7342a; color: #ffffff; border-bottom: 1px solid #9a261e; }
 
 /* Links: dunkles Orange, damit Text AA erreicht (5,0:1 auf #f2f1f0) */
-link, button.link, .link { color: #b33c0b; }
-link:visited, button.link:visited, .link:visited { color: #8a3a1c; }
+/* Nur der Verweis selbst: GTK gibt einer Beschriftung mit Verweisen die
+   Klasse .link, die darf nicht eingefärbt werden. */
+link, button.link { color: #b33c0b; }
+link:visited, button.link:visited { color: #8a3a1c; }
 link:hover, button.link:hover { color: #d2501a; }
 
 /* Kalender */
