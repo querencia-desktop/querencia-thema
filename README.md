@@ -17,6 +17,20 @@ Querencia-Klassisch/
 └─ gtk-3.0/    gtk.css + assets/ (Fremdprogramme mit GTK 3)
 ```
 
+> **Alpha.** Keine dunkle Variante; Teil 1 jeder `gtk.css` hängt von der
+> installierten GTK-Version ab.
+
+## Stand
+
+| | |
+|---|---|
+| Version | 0.1 (Tag `thema/gtk-0.1`, Vorlage `a53ff41c34adeb72`) |
+| Auf der Entwicklungs-VM | live seit 20.10.2026 (`gtk-theme` = `Querencia-Klassisch`, immer sichtbare Scrollbalken) |
+| Letzte Prüfung | isolierte Läufe mit Belegbildern und Portal-Probe, Kontraste nach WCAG AA, siehe [docs/pruefung.md](docs/pruefung.md) und [docs/farben.md](docs/farben.md) |
+| Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22 und GTK 3 |
+
+Änderungen je Version: [CHANGELOG.md](CHANGELOG.md).
+
 ## Benutzen
 
 Das Thema gilt, wenn `org.gnome.desktop.interface gtk-theme` auf
@@ -33,23 +47,17 @@ ein. Es tut das nur nach Freigabe durch die Status-Session, siehe
 [docs/integration.md](docs/integration.md). Später kommt es nach
 `/usr/share/themes/Querencia-Klassisch/` (Paket).
 
-## Bauen
+## Bauen und Prüfen
 
-`gtk.css` wird erzeugt, nicht von Hand geschrieben:
-
-```bash
-python3 -I werkzeug/erzeugen.py
-```
-
-Der Generator nimmt das eingebaute Thema der installierten GTK-Bibliothek,
-dreht dessen Blau auf den Querencia-Akzent, macht die Ecken klassisch und
-hängt die eigene Schicht `quelle/gtk4-klassisch.css` bzw.
-`quelle/gtk3-klassisch.css` an. Einzelheiten stehen in
-[docs/aufbau.md](docs/aufbau.md).
+`python3 -I werkzeug/erzeugen.py` erzeugt beide `gtk.css` (nie von Hand schreiben); geprüft wird nur isoliert (`werkzeug/isoliert.py`: eigener labwc, eigener D-Bus, Portale im Wegwerf-Bus).
+Generator, Schichten und Grenzen: [docs/aufbau.md](docs/aufbau.md); Prüfung und Belegbilder: [docs/pruefung.md](docs/pruefung.md); Integration: [docs/integration.md](docs/integration.md).
 
 ## Lizenz und Herkunft
 
-GPL-3.0-or-later (siehe `LICENSE`), wie die Querencia-Programme.
+GPL-3.0-or-later, siehe [LICENSE](LICENSE) (reiner Lizenztext), wie die
+Querencia-Programme. Copyright 2026 Querencia Desktop contributors;
+Urheberhinweis sowie die Herkunft von Teil 1 in
+[COPYRIGHT](COPYRIGHT).
 
 - Teil 1 jeder `gtk.css` ist aus dem eingebauten Thema von GTK abgeleitet
   (GTK 4 „Default“, GTK 3 „Adwaita“; GNOME-Projekt, LGPL-2.1-or-later). Die
@@ -60,3 +68,6 @@ GPL-3.0-or-later (siehe `LICENSE`), wie die Querencia-Programme.
   keine Grafiken und kein Code. Marken und „look and feel“ von Ubuntu sind
   davon nicht erfasst; das Thema heißt deshalb nicht Ambiance oder Human.
 - Haken, Punkt und Strich unter `quelle/assets/` sind eigene SVG-Dateien.
+
+Name und Logo „Querencia“ sind keine freien Inhalte (Markenregel).
+

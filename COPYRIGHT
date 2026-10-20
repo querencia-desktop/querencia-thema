@@ -1,0 +1,22 @@
+Querencia Thema (GTK-Thema Querencia-Klassisch) – Teil von Querencia Desktop
+Copyright (C) 2026 Querencia Desktop contributors
+
+This theme is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+This theme is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License in
+the file LICENSE for more details.
+
+Dateien mit eigenem Lizenzvermerk behalten diesen (README.md, Abschnitt
+„Lizenz“).
+
+Herkunft: Teil 1 jeder gtk.css unter Querencia-Klassisch/ ist aus dem
+eingebauten Thema von GTK abgeleitet (GTK 4 „Default“, GTK 3 „Adwaita“;
+GNOME-Projekt, LGPL-2.1-or-later) und wird unter der GPL-3.0-or-later
+weitergegeben, wie es die LGPL erlaubt. Farbwerte nach Ubuntu 10.04 Ambiance
+und Human (© Canonical Ltd, CC BY-SA 3.0); übernommen sind nur einzelne
+Farbwerte und Proportionen, keine Grafiken und kein Code.
