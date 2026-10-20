@@ -3,7 +3,7 @@
 # labwc, eigener D-Bus, GSETTINGS_BACKEND=memory, Wegwerfprofil). Die
 # laufende Sitzung und dconf bleiben unberührt.
 #
-#   bash werkzeug/belege.sh <fall> <BREITExHÖHE> <vorher|nachher|weiss> [ziel]
+#   bash werkzeug/belege.sh <fall> <BREITExHÖHE> <vorher|nachher|weiss|dunkel|farbschema|gtkdark> [ziel]
 #
 # fall: muster-knoepfe muster-listen muster-regler muster-text muster-dialog
 #       muster-popover muster-tooltip muster-klein muster3 muster3-liste rechner
@@ -17,6 +17,14 @@
 # weiss   = wie nachher, Auswahlschrift weiß (Vergleich, nicht ausgeliefert)
 # dunkel  = wie nachher, Menü- und Werkzeugleiste dunkel (Ambiance-Kopf,
 #           Vergleich der Richtungen, nicht ausgeliefert)
+# farbschema = Thema 0.2: Querencia-Klassisch über das Settings-Portal,
+#           Programm hell starten, dann color-scheme prefer-dark und zurück
+#           (lauf-farbschema.sh); eigenes HOME im Profil.
+# gtkdark   = wie nachher, aber GTK_THEME=Querencia-Klassisch:dark und
+#           gtk-application-prefer-dark-theme: GTK lädt gtk-dark.css (auch GTK 3)
+# QTH_THEMA_QUELLE=<Ordner Querencia-Klassisch> nimmt gtk-4.0/gtk-3.0 von dort
+#           statt aus dem Repo (Regression gegen die Live-Ablage, nur gelesen).
+# Alle Läufe mit GSK_DEBUG=full-redraw (ganze Fläche je Bild neu zeichnen).
 # Ergebnis: <ziel>/<fall>-<R>-<thema>-*.png (Standard: nachweis/bilder)
 set -euo pipefail
 E=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
@@ -25,6 +33,7 @@ ZIEL=${4:-$E/nachweis/bilder}
 case $R in *x*) ;; *) echo "Auflösung als BREITExHÖHE" >&2; exit 2 ;; esac
 WB=${QTH_WERKZEUG_BIN:-$HOME/projects/querencia-rechner/werkzeug/bin}
 [ -x "$WB/qeingabe" ] && [ -x "$WB/qausgabe" ] || { echo "qeingabe/qausgabe fehlen in $WB" >&2; exit 2; }
+TQ=${QTH_THEMA_QUELLE:-$E/Querencia-Klassisch}
 LIVE_LABWC=$(readlink -f "$HOME/.local/share/themes/Querencia-Klassisch/labwc")
 OPT=$HOME/opt/querencia
 
@@ -68,23 +77,24 @@ SCHRIFT=$(gsettings get org.gnome.desktop.interface font-name 2>/dev/null | tr -
     echo "[Settings]"
     [ -n "$SCHRIFT" ] && echo "gtk-font-name=$SCHRIFT"
     # portal: Thema nur über gsettings (Portal), nicht über settings.ini
-    if [ "$THEMA" != vorher ] && [ "${FALL#portal}" = "$FALL" ]; then
+    if [ "$THEMA" != vorher ] && [ "$THEMA" != farbschema ] && [ "${FALL#portal}" = "$FALL" ]; then
         echo "gtk-theme-name=Querencia-Klassisch"
         echo "gtk-overlay-scrolling=false"
+        if [ "$THEMA" = gtkdark ]; then echo "gtk-application-prefer-dark-theme=true"; fi
     fi
 } | tee "$PROFIL/config/gtk-4.0/settings.ini" >"$PROFIL/config/gtk-3.0/settings.ini"
 case $THEMA in
 vorher) ;;
-nachher)
-    ln -s "$E/Querencia-Klassisch/gtk-4.0" "$PROFIL/data/themes/Querencia-Klassisch/gtk-4.0"
-    ln -s "$E/Querencia-Klassisch/gtk-3.0" "$PROFIL/data/themes/Querencia-Klassisch/gtk-3.0" ;;
+nachher | farbschema | gtkdark)
+    ln -s "$TQ/gtk-4.0" "$PROFIL/data/themes/Querencia-Klassisch/gtk-4.0"
+    ln -s "$TQ/gtk-3.0" "$PROFIL/data/themes/Querencia-Klassisch/gtk-3.0" ;;
 weiss | dunkel)
     for v in gtk-4.0 gtk-3.0; do
         mkdir -p "$PROFIL/data/themes/Querencia-Klassisch/$v"
         cp -r "$E/Querencia-Klassisch/$v/." "$PROFIL/data/themes/Querencia-Klassisch/$v/"
     done
     cat "$E/werkzeug/varianten/$THEMA.css" >>"$PROFIL/data/themes/Querencia-Klassisch/gtk-4.0/gtk.css" ;;
-*) echo "Thema vorher|nachher|weiss|dunkel" >&2; exit 2 ;;
+*) echo "Thema vorher|nachher|weiss|dunkel|farbschema|gtkdark" >&2; exit 2 ;;
 esac
 cat >"$PROFIL/config/labwc/rc.xml" <<X
 <?xml version="1.0"?>
@@ -98,15 +108,17 @@ cat >"$PROFIL/config/labwc/rc.xml" <<X
 X
 {
     printf 'BIN=('; printf '%q ' "${BIN[@]}"; printf ')\n'
-    printf 'Q=%q\nQA=%q\nOUT=%q\nR=%q\nNAME=%q\nMENUE=%q\nZEIGER=%q\nKLICK=%q\n' \
-        "$WB/qeingabe" "$WB/qausgabe" "$ZIEL" "$R" "$FALL-$R-$THEMA" "$MENUE" "$ZEIGER" "$KLICK"
+    printf 'Q=%q\nQA=%q\nOUT=%q\nR=%q\nNAME=%q\nMENUE=%q\nZEIGER=%q\nKLICK=%q\nSCHRIFT=%q\n' \
+        "$WB/qeingabe" "$WB/qausgabe" "$ZIEL" "$R" "$FALL-$R-$THEMA" "$MENUE" "$ZEIGER" "$KLICK" "$SCHRIFT"
 } >"$PROFIL/env.sh"
 # GTK 3 nimmt unter Wayland Thema und Balkenart aus gsettings (im Test nur
 # Speicher-Backend), nicht aus settings.ini: dort GTK_THEME und
 # GTK_OVERLAY_SCROLLING. GTK 4 liest settings.ini (ohne Portal).
 UMG=()
 [ "$THEMA" != vorher ] && UMG=(GTK_THEME=Querencia-Klassisch GTK_OVERLAY_SCROLLING=0)
+[ "$THEMA" = gtkdark ] && UMG=(GTK_THEME=Querencia-Klassisch:dark GTK_OVERLAY_SCROLLING=0)
 # Sprache wie live (session/querencia/labwc/environment)
 case $FALL in portal*) UMG=(QTH_PORTALE=1) ;; esac
-env "${UMG[@]}" LANG=en_US.UTF-8 LANGUAGE=de python3 -I "$E/werkzeug/isoliert.py" "$PROFIL" "$E/werkzeug/$INNEN" 90 || true
+[ "$THEMA" = farbschema ] && { INNEN=lauf-farbschema.sh; UMG=(QTH_PORTALE=1 QTH_EIGENES_HOME=1); }
+env "${UMG[@]}" GSK_DEBUG=full-redraw LANG=en_US.UTF-8 LANGUAGE=de python3 -I "$E/werkzeug/isoliert.py" "$PROFIL" "$E/werkzeug/$INNEN" 90 || true
 ls "$ZIEL"/"$FALL-$R-$THEMA"-*.png 2>/dev/null || echo "keine Bilder: $FALL $R $THEMA" >&2

@@ -8,12 +8,17 @@ Theme-Link bleiben unberührt.
 | Werkzeug | Zweck |
 |---|---|
 | `werkzeug/isoliert.py` | Eigener headless labwc 0.9.8, eigener D-Bus, eigenes `XDG_RUNTIME_DIR` und XDG-Profil, `GSETTINGS_BACKEND=memory`. Übernommen aus querencia-rechner (G2-H). Ergänzt um das Aushängen des eigenen gvfs-Mounts und den Portal-Modus `QTH_PORTALE=1`. |
-| `werkzeug/belege.sh <fall> <BxH> <thema>` | Ein Fall, ein Bild bzw. zwei (zweites mit per F10 geöffnetem Menü). `thema`: `vorher` (GTK-Standard wie heute live), `nachher`, `weiss`, `dunkel` (Vergleichsvarianten). |
+| `werkzeug/belege.sh <fall> <BxH> <thema>` | Ein Fall, ein Bild bzw. zwei (zweites mit per F10 geöffnetem Menü). `thema`: `vorher` (GTK-Standard wie heute live), `nachher`, `weiss`, `dunkel` (Vergleichsvarianten), `farbschema` (0.2: hell starten, über das Portal auf dunkel und zurück, eigenes HOME), `gtkdark` (0.2: `GTK_THEME=…:dark`, lädt `gtk-dark.css`). `QTH_THEMA_QUELLE` nimmt das Thema aus einer Ablage. Alle Läufe mit `GSK_DEBUG=full-redraw`. |
+| `werkzeug/belege-02.sh [ziel]` | 0.2: Bilder hell/dunkel (Einstellungen, Files, Editor, Panel-Menü in 1024×768 und 1920×1080, weitere Programme in 1024×768) und Regression hell gegen die Live-Ablage, nach  (ca. 15 min) |
+| `werkzeug/lauf-farbschema.sh` | läuft in der Isolation: Programm hell, `color-scheme prefer-dark`, Menü, zurück auf `default`; je Schritt ein Bild |
+| `werkzeug/farbschema-start.sh`, `farbschema-probe.py` | 0.2: Startfehler von GTK 4.22 (Neustart unter `prefer-dark` bleibt hell, mit `Settings.notify` dunkel) |
+| `werkzeug/bildvergleich.py` | Pixelvergleich zweier PNG mit Bereich der Abweichung, Pixel lesen |
+| `werkzeug/css-sichten.py`, `css-sichten-liste.txt` | 0.2: feste Hellfarben in der eigenen CSS der Programme (Live-Stände, nur `git show`) |
 | `werkzeug/alle-belege.sh` | Alle Fälle in 1024×768 und 1920×1080 (ca. 15 min), nach `nachweis/bilder/` |
 | `werkzeug/muster4.py`, `muster3.py` | Musterseiten mit allen Elementarten (GTK 4 über PyGObject, GTK 3 über ctypes, weil die VM kein GI für GTK 3 hat) |
 | `werkzeug/lauf-portal.sh`, `doc-stellvertreter.py` | Portal-Probe: xdg-desktop-portal(-gtk) im Wegwerf-Bus, gsettings als Schlüsseldatei im Profil, Dokumentenportal nur als Stellvertreter (kein FUSE-Mount, PT-1) |
 | `werkzeug/kontrast.py` | WCAG-Kontrast aller Schrift/Grund-Paare |
-| `integration/probe.sh` | Probe des Integrationsskripts |
+| `integration/probe.sh`, `integration/probe-02.sh` | Probe der Integrationsskripte 0.1 und 0.2 |
 
 Eingaben (`qeingabe`) und Auflösung (`qausgabe`) kommen aus
 `querencia-rechner/werkzeug/bin` (`QTH_WERKZEUG_BIN`). Sie verweigern den
@@ -34,7 +39,34 @@ Bilder, Panel (mit offenem Menü) und Desktop.
   `settings.ini`.
 - Portal-Probe: wie live über gsettings → Portal → Programm.
 
-## Ergebnisse (20.10.2026)
+## Ergebnisse 0.2 (20.10.2026, dunkle Fassung)
+
+- **Umschalten über das Portal:** Einstellungen, Panel (Leisten), die
+  Musterseiten und die Ansichten von Editor, Systemmonitor und Rechner
+  wechseln beim Setzen von `color-scheme prefer-dark` sofort ins Dunkle und
+  beim Zurücksetzen wieder ins Helle (Pixelprobe: Fenstergrund `#f2f1f0` →
+  `#3c3b37` → `#f2f1f0`). Bilder: 
+  (`*-1-hell`, `*-2-dunkel`, `*-3-dunkel-menue`, `*-4-wieder-hell`).
+- **Startfehler GTK 4.22:** ein Programm, das unter `prefer-dark` neu
+  startet, bleibt hell (`#3c3c3c`); mit einmal `Settings.notify` nach dem
+  Start dunkel (`#dfdbd2`). Beleg `werkzeug/farbschema-start.sh`.
+- **`gtk-dark.css`** lädt mit `GTK_THEME=Querencia-Klassisch:dark` in GTK 4
+  und GTK 3 (Bilder `gtk-dark/`). GTK 3 folgt `color-scheme` nicht.
+- **Regression hell:** Repo 0.2 gegen Live-Ablage 0.1, isoliert, 17 Bilder:
+  13 pixelgleich; Abweichungen nur am Textcursor (Editor, 1 px breit), am
+  laufenden Spinner (Regler-Musterseite) und an Messwerten (Systemmonitor).
+  Ein Gegenlauf Live gegen Live zeigt dieselben Stellen.
+- **Programm-CSS:** Wo Programme feste helle Flächen setzen (Menüleisten,
+  Menüs, Statusleisten, Reiter, Rechneranzeige, Software-Listen,
+  Benachrichtigungen), bleiben diese hell; in Menüs mit eigenem hellem Grund
+  wird die Schrift des Themas hell und unleserlich (Editor, Bilder, Rechner,
+  Systemmonitor, Dateisuche, Software). Liste mit Datei:Zeile in der
+  Übergabe Thema 0.2. Files folgt seinem eigenen Strata-Thema und bleibt
+  hell; der labwc-Rahmen bleibt hell.
+- **Kontrast:** 35 Pflichtpaare der dunklen Fassung bestehen WCAG AA
+  (`docs/farben.md`), die 26 der hellen weiterhin.
+
+## Ergebnisse 0.1 (20.10.2026)
 
 - **Alle Programme** sehen mit dem Thema stimmig aus. Wo sie eigene CSS haben
   (Menüs, Listen, Panel), bleibt diese vorrangig und passt farblich.

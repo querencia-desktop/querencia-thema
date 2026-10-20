@@ -1,0 +1,135 @@
+# Querencia-Klassisch dunkel: Zuordnung der Farben der hellen Schicht
+# (quelle/gtk4-klassisch.css, quelle/gtk3-klassisch.css) zur dunklen Fassung.
+# Gelesen von werkzeug/erzeugen.py; jede Farbe der hellen Schicht braucht
+# hier eine Zeile, sonst bricht erzeugen.py ab.
+#
+# Vorbild Ubuntu 10.04 „Ambiance“: Fenster, Menü- und Werkzeugleiste #3c3b37,
+# Schrift #dfdbd2, Ränder #2b2a27; Ansichten (Listen, Editoren, Textfelder)
+# dunkler als das Fenster, Schrift #f2f1f0. Orange-Akzent und Auswahl
+# (#f6a179 -> #f07746, Schrift #1a1a1a) bleiben gleich.
+#
+# Format: <rolle> <hell> <dunkel> [Zweck]
+#   akzent   Farbe bleibt; steht sie im Hintergrund einer Regel, bleibt die
+#            ganze Regel unverändert (Schrift auf Orange oder Rot).
+#   *        gilt in jeder Rolle
+#   schrift  color
+#   flaeche  background-color, background-image ohne Verlauf (image(...))
+#   verlauf  background-image mit Verlauf (erhabene Elemente)
+#   rand     border-*, outline-*
+#   schatten box-shadow
+# rgba() ohne Leerzeichen schreiben.
+
+# ------------------------------------------------------------ Akzent (bleibt)
+akzent   #f07746   Akzent, Auswahl unten
+akzent   #f6a179   Auswahl oben
+akzent   #f8ad88   empfohlene Aktion oben
+akzent   #fbbb9a   empfohlene Aktion, Überfahren oben
+akzent   #f3875a   empfohlene Aktion, Überfahren unten
+akzent   #e2683a   gedrückt oben
+akzent   #e66a38   Fortschritt unten
+akzent   #cc3b35   gefährliche Aktion
+akzent   #b02a24   gefährliche Aktion
+akzent   #c9362f   gefährliche Aktion
+akzent   #b9302a   gefährliche Aktion
+akzent   #9e2621   gefährliche Aktion
+akzent   #c7342a   Fehlerleiste
+*        #c6602f   #c6602f   Akzentrand
+*        #b4552a   #b4552a   Akzentrand gedrückt
+*        #8f1f1a   #8f1f1a   Rand gefährlich
+*        #e5a50a   #e5a50a   Pegel niedrig
+*        #000000   #000000   Tooltip-Rand
+*        rgba(240,119,70,0.10)  rgba(240,119,70,0.16)  Überfahren (auf Dunkel etwas kräftiger)
+*        rgba(240,119,70,0.2)   rgba(240,119,70,0.25)  Gummiband
+*        rgba(240,119,70,0.35)  rgba(240,119,70,0.5)   Fokus im Eingabefeld
+*        rgba(240,119,70,0.7)   rgba(240,119,70,0.8)   Fokusrahmen
+*        rgba(30,30,30,0.95)    rgba(30,30,30,0.95)    Tooltip
+*        rgba(60,60,60,0.6)     rgba(60,60,60,0.6)     Fokus auf Orange
+*        rgba(0,0,0,0.04)       rgba(0,0,0,0.15)       Schatten
+*        rgba(0,0,0,0.07)       rgba(0,0,0,0.2)        Schatten Eingabefeld
+*        rgba(0,0,0,0.08)       rgba(0,0,0,0.2)        Schatten Rinne
+*        rgba(0,0,0,0.1)        rgba(0,0,0,0.25)       Schatten
+*        rgba(0,0,0,0.12)       rgba(0,0,0,0.35)       Schatten Menü
+*        rgba(0,0,0,0.15)       rgba(0,0,0,0.3)        Schatten gedrückt
+*        rgba(0,0,0,0.18)       rgba(0,0,0,0.35)       Schatten gedrückt, Popover
+*        rgba(0,0,0,0.25)       rgba(0,0,0,0.4)        Schatten Dialog
+
+# ------------------------------------------------------------------ Schrift
+schrift  #3c3c3c   #dfdbd2   Fensterschrift (Ambiance)
+schrift  #1a1a1a   #f2f1f0   Schrift in Ansichten und Feldern
+schrift  #5a5652   #bdb7b1   Reiter inaktiv, Schalter
+schrift  #a5a09a   #858079   deaktiviert (WCAG-Ausnahme)
+schrift  #b0aba5   #77726c   deaktiviertes Kästchen
+schrift  #6d6964   #6d6964   deaktiviert auf Orange (bleibt)
+schrift  #8f8a85   #b3aea7   Skalenmarken
+schrift  #ffffff   #ffffff   Tooltip, Schrift auf Rot
+schrift  #b33c0b   #f6a179   Verweis (hellorange)
+schrift  #8a3a1c   #e5a383   besuchter Verweis
+schrift  #d2501a   #fbbb9a   Verweis, Überfahren
+
+# ------------------------------------------------------------------ Flächen
+flaeche  #f2f1f0   #3c3b37   Fenster, Menüleiste, Statusleiste
+flaeche  #ffffff   #2b2a27   Ansicht, Eingabefeld
+flaeche  #f5f4f2   #353430   Menü, Zebrazeile, deaktiviertes Feld
+flaeche  #f7f6f5   #34332f   Seitenleiste
+flaeche  #eeece9   #45443f   Kopfleiste
+flaeche  #e6e3df   #302f2b   Reiterleiste
+flaeche  #e3e0dc   #2f2e2a   Rinnen (Scrollbalken, Regler, Fortschritt)
+flaeche  #f2f0ed   #57554f   Grund unter Schieber
+flaeche  #c6b9a6   #6b6153   Auswahl ohne Fokus (dunkles Beige)
+flaeche  #d8d4d0   #2b2a27   Trenner, deaktivierte Füllung
+flaeche  #dcd8d4   #2b2a27   Trenner im Menü
+flaeche  #c7c2be   #2b2a27   Trenner in Werkzeugleiste und Teilern
+flaeche  #c3beb8   #55534e   deaktivierter Fortschritt
+flaeche  #e4e1dd   #383733   deaktiviert gedrückt
+flaeche  #fcf3c8   #4d4528   Info-/Frageleiste
+flaeche  #fbdcb5   #5a4228   Warnleiste
+flaeche  rgba(227,224,220,0.85)  rgba(47,46,42,0.85)  Überlagerungsbalken
+
+# -------------------------------------------------- Verläufe (erhaben)
+verlauf  #fefefe   #57554f   Knopf oben
+verlauf  #e9e6e2   #4a4843   Knopf unten
+verlauf  #ffffff   #5f5d57   Überfahren oben, Schieber, Kästchen
+verlauf  #f2f0ed   #524f4a   Überfahren unten
+verlauf  #d6d2cd   #33322e   gedrückt oben
+verlauf  #e5e2de   #3c3b37   gedrückt unten
+verlauf  #dcd8d3   #383733   gedrückt/geschaltet überfahren oben
+verlauf  #ebe8e4   #46443f   geschaltet überfahren unten
+verlauf  #f8f7f6   #42413c   deaktiviert oben
+verlauf  #efedeb   #3e3d39   deaktiviert unten
+verlauf  #f7f6f5   #45443f   Werkzeugleiste oben, Reiter überfahren oben
+verlauf  #e9e7e4   #3c3b37   Werkzeugleiste unten (#3c3b37, Ambiance)
+verlauf  #eeece9   #45443f   Kopfleiste oben
+verlauf  #d8d4d0   #3c3b37   Kopfleiste unten
+verlauf  #fbfaf9   #55534d   Spaltenkopf, Scrollbalken oben
+verlauf  #ecebe9   #46443f   Spaltenkopf unten
+verlauf  #f2f1ef   #4f4d48   Spaltenkopf überfahren unten
+verlauf  #e2dfdb   #3a3935   Spaltenkopf gedrückt oben
+verlauf  #ecebe8   #36352f   Reiter inaktiv oben
+verlauf  #dedad6   #2f2e2a   Reiter inaktiv unten
+verlauf  #e8e5e2   #393834   Reiter überfahren unten
+verlauf  #e6e3df   #4a4843   Scrollbalken unten
+verlauf  #efedea   #4f4d48   Scrollbalken überfahren unten
+verlauf  #e3e0dc   #46443f   Schieber unten, Regler gedrückt oben
+verlauf  #ece9e5   #4a4843   Kästchen unten, Regler überfahren unten
+verlauf  #f4f2ef   #524f4a   Kästchen überfahren unten
+
+# -------------------------------------------------------------------- Ränder
+rand     #c7c2be   #2b2a27   Rahmen (Ambiance)
+rand     #a8a29d   #23221f   Knopf-, Feld- und Reiterrand
+rand     #9a948d   #1e1d1a   Rand überfahren
+rand     #918b84   #1c1b19   Rand gedrückt, Schieber
+rand     #8f8a85   #1c1b19   Kästchenrand
+rand     #cfcac5   #33322e   Rand deaktiviert
+rand     #c3beb8   #33322e   Rand deaktiviert
+rand     #bdb7b1   #2b2a27   Reiterrand
+rand     #d8d4d0   #2b2a27   Pegel leer, Kopfleistenrand
+rand     #f07746   #f07746   Fokus im Eingabefeld
+rand     #e0d38f   #6b5f2e   Info-/Frageleiste
+rand     #e0a35c   #7a5a2e   Warnleiste
+rand     rgba(255,255,255,0.8)  rgba(255,255,255,0.8)  Fokus auf Rot
+
+# ----------------------------------------------------------------- Schatten
+schatten #ffffff                 rgba(255,255,255,0.10)  Lichtkante oben
+schatten rgba(255,255,255,0.8)   rgba(255,255,255,0.08)  Lichtkante oben
+schatten rgba(255,255,255,0.6)   rgba(255,255,255,0.05)  Lichtkante Schieber
+schatten #7a7570                 #1a1918                 Dialograhmen

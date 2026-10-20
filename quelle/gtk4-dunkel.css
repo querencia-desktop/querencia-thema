@@ -1,0 +1,19 @@
+/* Querencia-Klassisch dunkel für GTK 4 – Ergänzungen nach der umgefärbten
+ * hellen Schicht (werkzeug/erzeugen.py, quelle/dunkel-zuordnung.txt).
+ *
+ * Vorbild Ubuntu 10.04 „Ambiance“: Fenster, Menü- und Werkzeugleiste
+ * #3c3b37, Schrift #dfdbd2, Ränder #2b2a27; Ansichten #2b2a27 mit Schrift
+ * #f2f1f0. Auswahl wie hell: Orange-Verlauf mit Schrift #1a1a1a.
+ */
+
+/* Ansichten (Listen, Baumansichten, Editoren): Schrift wie Textfelder */
+.view, iconview, textview > text { color: #f2f1f0; }
+
+/* Marken in ausgewählten Zeilen und markierten Menüeinträgen stehen auf
+   Orange: dunkel wie in der hellen Fassung */
+row:selected check, row:selected radio,
+treeview.view check:selected, treeview.view radio:selected,
+treeview.view check:selected:focus, treeview.view radio:selected:focus,
+popover.menu modelbutton:selected check, popover.menu modelbutton:selected radio {
+  color: #1a1a1a;
+}

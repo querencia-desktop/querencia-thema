@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Erzeugt Querencia-Klassisch/gtk-4.0/gtk.css und gtk-3.0/gtk.css.
+"""Erzeugt Querencia-Klassisch/gtk-4.0/gtk.css, gtk-4.0/gtk-dark.css,
+gtk-3.0/gtk.css und gtk-3.0/gtk-dark.css.
 
 Grundlage ist das eingebaute Thema der installierten GTK-Bibliothek
 (GTK 4: resource:///org/gtk/libgtk/theme/Default/Default-light.css,
@@ -16,6 +17,17 @@ Danach hängt es die eigene Schicht quelle/gtk4-klassisch.css bzw.
 quelle/gtk3-klassisch.css an. Bilder aus dem Grundthema werden nicht
 übernommen; die drei Markierungen (Haken, Punkt, Strich) liegen als eigene
 SVG unter quelle/assets/.
+
+Dunkle Fassung (Thema 0.2): Grundlage ist das dunkle eingebaute Thema
+(Default-dark.css bzw. gtk-contained-dark.css) mit denselben Schritten und
+den Farben aus FARBEN_DUNKEL; übrige Grautöne bekommen den warmen
+Ambiance-Ton. Die helle Schicht wird über quelle/dunkel-zuordnung.txt
+umgefärbt (jede Farbe braucht dort eine Zeile), danach folgt
+quelle/gtk4-dunkel.css bzw. quelle/gtk3-dunkel.css. Das Ergebnis steht in
+gtk-dark.css und, nur für GTK 4, zusätzlich in gtk.css als Block
+`@media (prefers-color-scheme: dark)`: GTK 4.22 lädt gtk-dark.css nur bei
+GTK_THEME=…:dark oder gtk-application-prefer-dark-theme, das Farbschema aus
+dem Settings-Portal wirkt nur über die Medienabfrage (docs/aufbau.md).
 
 Aufruf:  python3 -I werkzeug/erzeugen.py [--pruefen]
 --pruefen erzeugt in den Arbeitsspeicher und vergleicht mit den Dateien im
@@ -34,11 +46,24 @@ REPO = Path(__file__).resolve().parent.parent
 THEMA = REPO / "Querencia-Klassisch"
 
 QUELLEN = {
-    "gtk-4.0": ("libgtk-4.so.1", "/org/gtk/libgtk/theme/Default/Default-light.css",
-                REPO / "quelle" / "gtk4-klassisch.css"),
-    "gtk-3.0": ("libgtk-3.so.0", "/org/gtk/libgtk/theme/Adwaita/gtk-contained.css",
-                REPO / "quelle" / "gtk3-klassisch.css"),
+    "gtk-4.0": {
+        "lib": "libgtk-4.so.1",
+        "hell": "/org/gtk/libgtk/theme/Default/Default-light.css",
+        "dunkel": "/org/gtk/libgtk/theme/Default/Default-dark.css",
+        "schicht": REPO / "quelle" / "gtk4-klassisch.css",
+        "schicht_dunkel": REPO / "quelle" / "gtk4-dunkel.css",
+        "medien": True,   # GTK 4 kennt @media (prefers-color-scheme)
+    },
+    "gtk-3.0": {
+        "lib": "libgtk-3.so.0",
+        "hell": "/org/gtk/libgtk/theme/Adwaita/gtk-contained.css",
+        "dunkel": "/org/gtk/libgtk/theme/Adwaita/gtk-contained-dark.css",
+        "schicht": REPO / "quelle" / "gtk3-klassisch.css",
+        "schicht_dunkel": REPO / "quelle" / "gtk3-dunkel.css",
+        "medien": False,
+    },
 }
+ZUORDNUNG = REPO / "quelle" / "dunkel-zuordnung.txt"
 
 # Feste Zuordnungen (Grundthema -> Querencia-Klassisch). Alles Übrige, was
 # nicht zur blauen Familie gehört, bleibt wie im Grundthema.
@@ -49,6 +74,17 @@ FARBEN = {
     "#929595": "#8f8a85",   # deaktivierte Schrift
     "#2ec27e": "#f07746",   # GTK 4: Ablageziel beim Ziehen (drop) im Akzent
     "#3584e4": "#f07746",   # Akzent genau (die Drehung träfe #f17948)
+}
+
+# Dunkles Grundthema -> Querencia-Klassisch dunkel (Ambiance-Palette).
+FARBEN_DUNKEL = {
+    "#353535": "#3c3b37",   # Fenstergrund (Ambiance)
+    "#2d2d2d": "#2b2a27",   # Ansicht
+    "#eeeeec": "#dfdbd2",   # Schrift (Ambiance)
+    "#1b1b1b": "#23221f",   # Rahmen
+    "#919190": "#858079",   # deaktivierte Schrift
+    "#2ec27e": "#f07746",   # GTK 4: Ablageziel beim Ziehen im Akzent
+    "#3584e4": "#f07746",   # Akzent genau
 }
 
 AKZENT_H = 17.4 / 360  # Farbton von #F07746
@@ -80,26 +116,39 @@ def blau_zu_orange(r: int, g: int, b: int):
     return round(r2 * 255), round(g2 * 255), round(b2 * 255)
 
 
-def farbe_hex(m: re.Match) -> str:
-    alt = m.group(0).lower()
-    if alt in FARBEN:
-        return FARBEN[alt]
-    r, g, b = (int(alt[i:i + 2], 16) for i in (1, 3, 5))
+def warm(r: int, g: int, b: int):
+    """Neutrales Grau des dunklen Grundthemas in den warmen Ambiance-Ton
+    (#353535-Stufe -> #3c3b37-Art); Weiß, Schwarz und Farben bleiben."""
+    if max(r, g, b) - min(r, g, b) > 3:
+        return None
+    v = round((r + g + b) / 3)
+    if not 8 < v < 248:
+        return None
+    return v, v - round(v * 0.02), v - round(v * 0.07)
+
+
+def zuordnen(r: int, g: int, b: int, farben: dict, waerme: bool):
+    alt = "#%02x%02x%02x" % (r, g, b)
+    if alt in farben:
+        neu = farben[alt]
+        return tuple(int(neu[i:i + 2], 16) for i in (1, 3, 5))
     neu = blau_zu_orange(r, g, b)
+    if neu is None and waerme:
+        neu = warm(r, g, b)
+    return neu
+
+
+def farbe_hex(m: re.Match, farben: dict, waerme: bool) -> str:
+    alt = m.group(0).lower()
+    neu = zuordnen(*(int(alt[i:i + 2], 16) for i in (1, 3, 5)), farben, waerme)
     return "#%02x%02x%02x" % neu if neu else m.group(0)
 
 
-def farbe_rgba(m: re.Match) -> str:
-    r, g, b = int(m.group(2)), int(m.group(3)), int(m.group(4))
-    alt = "#%02x%02x%02x" % (r, g, b)
-    if alt in FARBEN:
-        neu = FARBEN[alt]
-        r2, g2, b2 = (int(neu[i:i + 2], 16) for i in (1, 3, 5))
-    else:
-        o = blau_zu_orange(r, g, b)
-        if not o:
-            return m.group(0)
-        r2, g2, b2 = o
+def farbe_rgba(m: re.Match, farben: dict, waerme: bool) -> str:
+    neu = zuordnen(int(m.group(2)), int(m.group(3)), int(m.group(4)), farben, waerme)
+    if not neu:
+        return m.group(0)
+    r2, g2, b2 = neu
     if m.group(1) == "rgba":
         return f"rgba({r2}, {g2}, {b2}, {m.group(5)})"
     return f"rgb({r2}, {g2}, {b2})"
@@ -173,53 +222,174 @@ def assets(css: str) -> str:
     return css
 
 
-def erzeuge(ordner: str) -> tuple[str, str]:
-    lib, pfad, schicht = QUELLEN[ordner]
-    basis = grundthema(lib, pfad)
+def grund_umsetzen(basis: str, farben: dict, waerme: bool) -> str:
     teile = []
     for b in bloecke(basis):
         b = ohne_backdrop(b)
         if not b:
             continue
-        b = HEX.sub(farbe_hex, b)
-        b = RGBA.sub(farbe_rgba, b)
+        b = HEX.sub(lambda m: farbe_hex(m, farben, waerme), b)
+        b = RGBA.sub(lambda m: farbe_rgba(m, farben, waerme), b)
         b = RADIUS.sub(ecken, b)
         teile.append(b)
     umgesetzt = assets("".join(teile))
-    umgesetzt = re.sub(r"\n{3,}", "\n\n", umgesetzt)
+    return re.sub(r"\n{3,}", "\n\n", umgesetzt).strip() + "\n"
+
+
+# ------------------------------------------------- helle Schicht -> dunkel
+
+FARBTOKEN = re.compile(r"#[0-9a-fA-F]{6}\b|rgba?\([^)]*\)")
+DEKLARATION = re.compile(r"([a-z-]+)(\s*:\s*)([^;{}]+)")
+
+
+def norm(farbe: str) -> str:
+    return re.sub(r"\s+", "", farbe.lower())
+
+
+def css_farbe(farbe: str) -> str:
+    return farbe.replace(",", ", ") if farbe.startswith("rgb") else farbe
+
+
+def zuordnung_lesen() -> tuple[dict, set]:
+    tabelle, akzent = {}, set()
+    for nr, zeile in enumerate(ZUORDNUNG.read_text().splitlines(), 1):
+        teile = zeile.split()
+        if not teile or teile[0].startswith("#"):
+            continue
+        if teile[0] == "akzent":
+            akzent.add(norm(teile[1]))
+            continue
+        if len(teile) < 3 or teile[0] not in ("*", "schrift", "flaeche", "verlauf", "rand", "schatten"):
+            raise SystemExit(f"erzeugen: {ZUORDNUNG.name}:{nr}: unlesbar: {zeile}")
+        schluessel = (teile[0], norm(teile[1]))
+        if schluessel in tabelle:
+            raise SystemExit(f"erzeugen: {ZUORDNUNG.name}:{nr}: doppelt: {zeile}")
+        tabelle[schluessel] = css_farbe(norm(teile[2]))
+    return tabelle, akzent
+
+
+def rolle(eigenschaft: str, wert: str):
+    if eigenschaft == "color":
+        return "schrift"
+    if eigenschaft.startswith(("border", "outline")):
+        return "rand"
+    if eigenschaft == "box-shadow":
+        return "schatten"
+    if eigenschaft.startswith("background"):
+        return "verlauf" if "gradient" in wert else "flaeche"
+    return None
+
+
+def schicht_dunkel(css: str, name: str, tabelle: dict, akzent: set, benutzt: set) -> str:
+    """Färbt die helle Schicht nach der Zuordnung um. Regeln mit einem
+    Akzent im Hintergrund (Auswahl, empfohlene/gefährliche Aktion) bleiben
+    unverändert: ihre Schrift steht auf Orange oder Rot."""
+    fehlt = []
+
+    def regel(block: str) -> str:
+        if block.startswith(("/*", "@")) or "{" not in block:
+            return block
+        kopf, rumpf = block.split("{", 1)
+        for e, _, w in DEKLARATION.findall(rumpf):
+            if e.startswith("background") and any(norm(t) in akzent for t in FARBTOKEN.findall(w)):
+                return block
+
+        def deklaration(m: re.Match) -> str:
+            eig, wert = m.group(1), m.group(3)
+            r = rolle(eig, wert)
+
+            def farbe(t: re.Match) -> str:
+                k = norm(t.group(0))
+                for schluessel in ((r, k), ("*", k)):
+                    if schluessel in tabelle:
+                        benutzt.add(schluessel)
+                        return tabelle[schluessel]
+                if k in akzent:
+                    return t.group(0)
+                fehlt.append(f"{r or eig} {k} ({kopf.strip()[:50]})")
+                return t.group(0)
+            return m.group(1) + m.group(2) + FARBTOKEN.sub(farbe, wert)
+        return kopf + "{" + DEKLARATION.sub(deklaration, rumpf)
+
+    aus = "".join(regel(b) for b in bloecke(css))
+    if fehlt:
+        raise SystemExit(f"erzeugen: {name}: Farben ohne Dunkel-Zuordnung in {ZUORDNUNG.name}:\n  "
+                         + "\n  ".join(dict.fromkeys(fehlt)))
+    return aus
+
+
+def erzeuge(ordner: str, tabelle: dict, akzent: set, benutzt: set) -> dict:
+    q = QUELLEN[ordner]
+    schicht, schicht_d = q["schicht"], q["schicht_dunkel"]
+    basis = grundthema(q["lib"], q["hell"])
+    basis_d = grundthema(q["lib"], q["dunkel"])
     summe = hashlib.sha256(basis.encode()).hexdigest()
+    summe_d = hashlib.sha256(basis_d.encode()).hexdigest()
+    rel = lambda p: p.relative_to(REPO).as_posix()   # noqa: E731
     kopf = (
         "/* Querencia-Klassisch – GTK-Thema für Querencia Desktop (" + ordner + ").\n"
         " * ERZEUGT von werkzeug/erzeugen.py – nicht von Hand ändern.\n"
         " *\n"
-        " * Teil 1: eingebautes GTK-Thema (" + pfad + ",\n"
+        " * Teil 1: eingebautes GTK-Thema (" + q["hell"] + ",\n"
         " *         GTK, LGPL-2.1-or-later) mit Querencia-Farben, 3-px-Ecken und\n"
         " *         ohne :backdrop; SHA256 der Grundlage " + summe + ".\n"
-        " * Teil 2: " + schicht.relative_to(REPO).as_posix() + " (GPL-3.0-or-later).\n"
-        " */\n\n"
+        " * Teil 2: " + rel(schicht) + " (GPL-3.0-or-later).\n"
+        + (" * Teil 3: dunkle Fassung wie gtk-dark.css als Block\n"
+           " *         @media (prefers-color-scheme: dark).\n" if q["medien"] else "")
+        + " */\n\n"
     )
     trenner = "\n/* ==== Teil 2: " + schicht.name + " ==== */\n\n"
-    return kopf + umgesetzt.strip() + "\n" + trenner + schicht.read_text(), summe
+    hell = grund_umsetzen(basis, FARBEN, False).strip() + "\n" + trenner + schicht.read_text()
+    dunkel = (
+        grund_umsetzen(basis_d, FARBEN_DUNKEL, True).strip() + "\n"
+        + "\n/* ==== Teil 2: " + schicht.name + ", umgefärbt nach " + ZUORDNUNG.name + " ==== */\n\n"
+        + schicht_dunkel(schicht.read_text(), schicht.name, tabelle, akzent, benutzt)
+        + "\n/* ==== Teil 3: " + schicht_d.name + " ==== */\n\n"
+        + schicht_d.read_text()
+    )
+    kopf_d = (
+        "/* Querencia-Klassisch dunkel – GTK-Thema für Querencia Desktop (" + ordner + ").\n"
+        " * ERZEUGT von werkzeug/erzeugen.py – nicht von Hand ändern.\n"
+        " *\n"
+        " * Teil 1: eingebautes GTK-Thema (" + q["dunkel"] + ",\n"
+        " *         GTK, LGPL-2.1-or-later) mit Querencia-Farben (Ambiance dunkel),\n"
+        " *         3-px-Ecken und ohne :backdrop; SHA256 der Grundlage " + summe_d + ".\n"
+        " * Teil 2: " + rel(schicht) + ", umgefärbt nach " + rel(ZUORDNUNG) + ".\n"
+        " * Teil 3: " + rel(schicht_d) + " (alle GPL-3.0-or-later).\n"
+        " */\n\n"
+    )
+    dateien = {"gtk-dark.css": kopf_d + dunkel}
+    if q["medien"]:
+        hell += ("\n/* ==== Teil 3: dunkle Fassung (gleich gtk-dark.css) ==== */\n\n"
+                 "@media (prefers-color-scheme: dark) {\n\n" + dunkel + "\n}\n")
+    dateien["gtk.css"] = kopf + hell
+    return {"dateien": dateien, "summe": summe, "summe_d": summe_d}
 
 
 def main() -> int:
     pruefen = "--pruefen" in sys.argv[1:]
     abweichung = 0
+    tabelle, akzent = zuordnung_lesen()
+    benutzt = set()
     for ordner in QUELLEN:
-        css, summe = erzeuge(ordner)
-        ziel = THEMA / ordner / "gtk.css"
-        if pruefen:
-            if not ziel.exists() or ziel.read_text() != css:
-                print(f"erzeugen: {ziel.relative_to(REPO)} weicht ab (Grundlage {summe[:16]})")
-                abweichung = 1
-            continue
-        ziel.parent.mkdir(parents=True, exist_ok=True)
-        ziel.write_text(css)
-        adir = ziel.parent / "assets"
-        if adir.exists():
-            shutil.rmtree(adir)
-        shutil.copytree(REPO / "quelle" / "assets", adir)
-        print(f"erzeugen: {ziel.relative_to(REPO)} ({len(css)} Bytes, Grundlage {summe[:16]})")
+        e = erzeuge(ordner, tabelle, akzent, benutzt)
+        for datei, css in e["dateien"].items():
+            ziel = THEMA / ordner / datei
+            if pruefen:
+                if not ziel.exists() or ziel.read_text() != css:
+                    print(f"erzeugen: {ziel.relative_to(REPO)} weicht ab (Grundlage {e['summe'][:16]}/{e['summe_d'][:16]})")
+                    abweichung = 1
+                continue
+            ziel.parent.mkdir(parents=True, exist_ok=True)
+            ziel.write_text(css)
+            print(f"erzeugen: {ziel.relative_to(REPO)} ({len(css)} Bytes, Grundlage {e['summe'][:16]}/{e['summe_d'][:16]})")
+        if not pruefen:
+            adir = THEMA / ordner / "assets"
+            if adir.exists():
+                shutil.rmtree(adir)
+            shutil.copytree(REPO / "quelle" / "assets", adir)
+    for r, k in sorted(set(tabelle) - benutzt):
+        print(f"erzeugen: Hinweis: Zuordnung {r} {k} wird nicht gebraucht")
     return abweichung
 
 

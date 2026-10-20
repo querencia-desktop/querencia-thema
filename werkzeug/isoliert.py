@@ -146,6 +146,19 @@ def main() -> int:
     own_dirs = os.path.join(profile, "config/user-dirs.dirs")
     if os.path.exists(real_dirs) and not os.path.exists(own_dirs):
         shutil.copy2(real_dirs, own_dirs)
+    # Thema 0.2: QTH_EIGENES_HOME=1 gibt dem Lauf ein eigenes HOME im Profil
+    # (leere Benutzerordner nach user-dirs.dirs); nichts liest oder schreibt
+    # dann im echten HOME.
+    if os.environ.get("QTH_EIGENES_HOME") == "1":
+        home = os.path.join(profile, "home")
+        env["HOME"] = home
+        os.makedirs(home, exist_ok=True)
+        if os.path.exists(own_dirs):
+            with open(own_dirs) as f:
+                for zeile in f:
+                    if zeile.startswith("XDG_") and '="$HOME/' in zeile:
+                        os.makedirs(os.path.join(home, zeile.split('="$HOME/', 1)[1].rstrip().rstrip('"')),
+                                    exist_ok=True)
 
     log = open(os.path.join(profile, "logs", f"lauf-{time.strftime('%Y%m%d-%H%M%S')}.log"), "w")
     cmd = ["dbus-run-session", "--", LABWC, "-C", os.path.join(profile, "config/labwc"),

@@ -1,7 +1,64 @@
 # Integration auf der Entwicklungs-VM
 
-Skript: `integration/thema-integrieren.sh`. Das Muster folgt
-`theme-osd-integrieren.sh` (G2-R) aus querencia-runtime.
+Zwei Skripte, beide nach dem Muster von `theme-osd-integrieren.sh` (G2-R)
+aus querencia-runtime:
+
+| Skript | Schritt | Vorlage | Probe |
+|---|---|---|---|
+| `integration/thema-02-integrieren.sh` | 0.1 (`a53ff41c…`) → 0.2 (dunkle Fassung) | `integration/vorschlag-02/` | `integration/probe-02.sh` |
+| `integration/thema-integrieren.sh` | G2-R (`e72ae8ed…`) → 0.1, mit gsettings | `integration/vorschlag/` | `integration/probe.sh` |
+
+Das Skript 0.1 und seine Vorlage bleiben unverändert: Journal und Übergabe
+Thema-1 zeigen darauf (Rückfall von 0.1 auf G2-R).
+
+## Thema 0.2 (`thema-02-integrieren.sh`)
+
+```bash
+bash integration/thema-02-integrieren.sh pruefen
+QTH_FREIGABE=ja bash integration/thema-02-integrieren.sh aktivieren   # nur nach Freigabe
+QTH_FREIGABE=ja bash integration/thema-02-integrieren.sh zurueck
+```
+
+- **aktivieren** legt die Ablage `~/opt/querencia-theme/<B16>/Querencia-Klassisch`
+  an (0555/0444, Kopie von `vorschlag-02/`, Herkunftsdatei daneben) und
+  stellt den Link `~/.local/share/themes/Querencia-Klassisch` atomar von
+  `a53ff41c…` auf `<B16>` um. Journalzeile mit Rückfallbefehl.
+- **gsettings bleiben unberührt** (`gtk-theme`, `color-scheme`,
+  `overlay-scrolling`); `pruefen` liest sie nur.
+- **zurueck** stellt den Link auf `a53ff41c…` zurück; die Ablage 0.2 bleibt.
+- Invarianten: Liste 0.1 (`vorschlag/theme-manifest.txt`, `a53ff41c…`),
+  Liste 0.2 (`BAUM_NEU`), Vorlage und beide Ablagen gegen ihre Listen,
+  außerhalb von `gtk-4.0/` und `gtk-3.0/` alles byte-gleich mit 0.1 (labwc,
+  `index.theme`), `gtk-4.0/gtk-dark.css` vorhanden. Link fremd oder fehlend,
+  Sperre belegt, Live ohne `QTH_FREIGABE=ja`: Exit 2, nichts geändert.
+  Fehler oder Signal mitten im Lauf: Link zurück, Exit 1.
+- **Wirkung:** neu gestartete GTK-Programme sehen 0.2 sofort. Laufende
+  (Panel, Desktop, offene Fenster) behalten die schon geladene 0.1, bis sie
+  neu starten (spätestens bei der nächsten Anmeldung); GTK liest die
+  Dateien nur beim Start und beim Wechsel von `gtk-theme`. Hell sieht 0.2
+  aus wie 0.1 (pixelgleich, docs/pruefung.md).
+- **Vor dem Umschalten auf dunkel** beachten: Programme mit eigener heller
+  CSS (Editor, Bilder, Rechner, Systemmonitor, Dateisuche, Software) haben
+  im Dunkel-Modus helle Menüs mit heller Schrift, bis der Folgeauftrag
+  „CSS-Welle dunkel“ sie nachzieht (Liste in der Übergabe Thema 0.2).
+
+Probe: `bash integration/probe-02.sh` (Wegwerf-Ordner unter
+`~/.cache/querencia-thema/`, Ablage 0.1 als Kopie, gsettings als
+Schlüsseldatei; Fehler an jeder Stelle und Signale in beide Richtungen,
+doppeltes aktivieren/zurueck, veränderte Ablagen, fremder und fehlender
+Link, belegte Sperre, Live ohne Freigabe; am Ende echte gsettings, echter
+Link und keine Live-Ablage). Ergebnis zuletzt: 46/46.
+
+Nach einer Änderung am Thema:
+
+```bash
+python3 -I werkzeug/erzeugen.py
+bash werkzeug/vorlage-02-bauen.sh   # vorschlag-02 + Liste, trägt BAUM_NEU ein
+bash integration/probe-02.sh
+bash werkzeug/summen.sh             # SHA256SUMS erneuern
+```
+
+## Thema 0.1 (`thema-integrieren.sh`)
 
 ```bash
 bash integration/thema-integrieren.sh pruefen
@@ -9,7 +66,7 @@ QTH_FREIGABE=ja bash integration/thema-integrieren.sh aktivieren   # nur nach Fr
 QTH_FREIGABE=ja bash integration/thema-integrieren.sh zurueck
 ```
 
-## Was „aktivieren“ tut
+### Was „aktivieren“ tut
 
 1. **Ablage** `~/opt/querencia-theme/<B16>/Querencia-Klassisch`
    (Ordner 0555, Dateien 0444). Kopie von `integration/vorschlag/`:
@@ -32,13 +89,13 @@ GTK-3-Programme lesen gsettings direkt. Der Fensterrahmen ändert sich nicht,
 ein `labwc --reconfigure` ist nicht nötig. Programme mit eigenem
 `GTK_THEME` oder ohne Portal zeigen das Thema erst nach einem Neustart.
 
-## „zurueck“
+### „zurueck“
 
 Stellt Link, `gtk-theme` und `overlay-scrolling` auf die gesicherten Werte.
 Die neue Ablage bleibt liegen. Hat jemand `gtk-theme` inzwischen von Hand auf
 ein drittes Thema gestellt, verweigert `zurueck` (Exit 2) und ändert nichts.
 
-## Sicherungen und Verweigerungen
+### Sicherungen und Verweigerungen
 
 - `QTH_FREIGABE=ja` ist live Pflicht; ohne sie Exit 2.
 - Prüfsummen: Liste der alten Ablage (`querencia-runtime/integration/theme/
@@ -52,7 +109,7 @@ ein drittes Thema gestellt, verweigert `zurueck` (Exit 2) und ändert nichts.
 - Fehler oder Signal mitten im Lauf: Link und beide gsettings-Werte zurück
   (Exit 1). Exit 3, falls das nicht vollständig gelingt.
 
-## Probe
+### Probe
 
 ```bash
 bash integration/probe.sh
@@ -66,7 +123,7 @@ Ablage, einen fremden Link und Live ohne Freigabe. Am Ende vergleicht sie die
 echten gsettings und den echten Link mit dem Stand davor. Ergebnis zuletzt:
 43/43.
 
-## Nach einer Änderung am Thema
+### Nach einer Änderung am Thema
 
 ```bash
 python3 -I werkzeug/erzeugen.py

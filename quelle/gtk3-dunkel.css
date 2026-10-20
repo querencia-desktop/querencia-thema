@@ -1,0 +1,15 @@
+/* Querencia-Klassisch dunkel für GTK 3 – Ergänzungen nach der umgefärbten
+ * hellen Schicht (werkzeug/erzeugen.py, quelle/dunkel-zuordnung.txt).
+ * Werte wie quelle/gtk4-dunkel.css.
+ */
+
+/* Ansichten (Listen, Baumansichten, Editoren): Schrift wie Textfelder */
+.view, iconview, textview text { color: #f2f1f0; }
+
+/* Marken in ausgewählten Zeilen und markierten Menüeinträgen stehen auf
+   Orange: dunkel wie in der hellen Fassung */
+.view check:selected, .view radio:selected,
+list row:selected check, list row:selected radio,
+menu menuitem:hover check, menu menuitem:hover radio {
+  color: #1a1a1a;
+}
