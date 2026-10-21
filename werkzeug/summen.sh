@@ -1,6 +1,6 @@
 #!/bin/bash
 # SHA256SUMS im Repo-Wurzelordner: Thema, Vorlage, Integrationsskript, Probe,
-# Quellen und Werkzeuge (Grundlage der Freigabe durch die Status-Session).
+# Quellen und Werkzeuge (Grundlage der Freigabe).
 set -euo pipefail
 E=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
 cd "$E"

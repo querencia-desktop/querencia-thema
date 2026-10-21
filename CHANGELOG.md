@@ -6,7 +6,7 @@ nach [Semantic Versioning](https://semver.org/lang/de/). Solange die Hauptversio
 
 ## [0.2.1] – 2026-10-21 (Tags `thema/gtk-0.2.1`, `thema/gtk-0.2.1-1`)
 
-Lesbarkeit (QD-088) und benannte Farben für Programme.
+Lesbarkeit und benannte Farben für Programme.
 
 ### Geändert
 - Dunkel: Fehlerschrift (`label.error`, Eingabefelder mit `.error`)

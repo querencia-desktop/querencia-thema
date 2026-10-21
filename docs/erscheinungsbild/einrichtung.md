@@ -33,15 +33,14 @@ Settings-Portal). Der Zeiger über Fenstern und auf dem Desktop kommt von
 labwc (`cursor-shape-v1`), also erst mit `XCURSOR_THEME` in der
 labwc-Konfiguration.
 
-## labwc: Fenstertitel und Zeiger kommen aus der Runtime-Vorgabe (G2-AG)
+## labwc: Fenstertitel und Zeiger kommen aus der Vorgabe der Sitzung
 
 Das Skript setzt nur gsettings. Fenstertitel-Schrift (DejaVu Sans Bold 10,
 Menü und Fensterwechsler DejaVu Sans 10) und `XCURSOR_THEME=DMZ-White`,
-`XCURSOR_SIZE=24` liest labwc aus seiner Konfiguration. Entscheidung der
-Status-Session (20.10.2026, nach Antwort von G2-AG): Diese Werte kommen als
-Querencia-Standard in die **Vorgabe im Runtime-Repo**
-(`session/querencia/labwc/rc.xml` und `environment`), gebaut und
-freigegeben von G2-AG. Der Sitzungsstarter übernimmt sie in die
+`XCURSOR_SIZE=24` liest labwc aus seiner Konfiguration. Entscheidung vom
+20.10.2026: Diese Werte kommen als Querencia-Standard in die **Vorgabe der
+Sitzung** (`session/querencia/labwc/rc.xml` und `environment` im Repo
+`querencia-shell`). Der Sitzungsstarter übernimmt sie in die
 Benutzerkopie `~/.config/querencia/labwc/`, solange der Benutzer die Datei
 nicht geändert hat.
 

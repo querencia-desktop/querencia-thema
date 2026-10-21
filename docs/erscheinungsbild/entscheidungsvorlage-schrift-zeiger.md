@@ -1,6 +1,6 @@
 # Entscheidungsvorlage Schrift und Mauszeiger (Thema-3)
 
-Stand 20.10.2026 00:40. Für den Besitzer, über die Status-Session.
+Stand 20.10.2026 00:40. Vorlage zur Entscheidung.
 Belegbilder: nicht veröffentlicht (Entwicklungsumgebung).
 
 ## 0. Ist-Stand (gemessen, nur gelesen)
@@ -104,7 +104,7 @@ als Links und einen Warte-Zeiger in der Akzentfarbe `#F07746`; erzeugt aus
 SVG mit `xcursorgen`, Stufen 24/32/48. Lohnt sich erst, wenn Zeiger Teil
 der Marke werden sollen.
 
-## 4. Lizenz und Veröffentlichung (analog LIZENZEN.md Q9)
+## 4. Lizenz und Veröffentlichung
 
 Schriften und Zeiger werden **nicht mitgeliefert**, sondern nur empfohlen:
 das Repo `querencia-erscheinungsbild` (GPL-3.0-or-later) enthält nur die

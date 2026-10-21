@@ -1,9 +1,11 @@
 # Querencia Thema
 
 GTK-Thema „Querencia-Klassisch“ für alle, die Querencia Desktop benutzen.
-Teil von [Querencia Desktop](https://github.com/querencia-desktop/querencia)
+Teil von [Querencia Desktop](https://querencialinux.org)
 – einer klassischen Desktopumgebung im GNOME-2-Stil für Wayland (labwc,
 Rust, GTK 4).
+Installiert wird es zusammen mit Querencia Desktop aus der APT-Quelle;
+Anleitung auf <https://querencialinux.org>.
 
 *English summary:* The “Querencia-Klassisch” GTK 4 and GTK 3 theme: the light
 Ubuntu 10.04 look (Ambiance content area, Human/Clearlooks shapes) with the
