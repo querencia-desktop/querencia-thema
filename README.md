@@ -20,7 +20,10 @@ Querencia-Klassisch/
 Seit 0.2 gibt es eine dunkle Fassung nach Ambiance (Fenster, Menü- und
 Werkzeugleisten `#3c3b37`, Ansichten dunkel, Auswahl weiter Orange mit
 dunkler Schrift). Sie gilt bei `color-scheme` `prefer-dark` (Einstellungen →
-Erscheinungsbild).
+Erscheinungsbild). Seit 0.2.1 ist die Fehlerschrift dunkel lesbar, die
+Tastenkürzel in Menüs erreichen hell und dunkel WCAG AA, und Programme
+finden benannte Farben für Seitenleiste und Menü (`@sidebar_bg_color`,
+`@menu_bg_color` u. a., siehe [docs/farben.md](docs/farben.md)).
 
 > **Alpha.** Teil 1 jeder `gtk.css` hängt von der installierten GTK-Version
 > ab. GTK 4.22 schaltet nur laufende Programme dunkel; neu gestartete
@@ -32,9 +35,9 @@ Erscheinungsbild).
 
 | | |
 |---|---|
-| Version | 0.2 (Tag `thema/gtk-0.2`, Vorlage `vorschlag-02`), noch nicht live |
-| Auf der Entwicklungs-VM | 0.1 live seit 20.10.2026 (Tag `thema/gtk-0.1`, Vorlage `a53ff41c34adeb72`; `gtk-theme` = `Querencia-Klassisch`, immer sichtbare Scrollbalken) |
-| Letzte Prüfung | isolierte Läufe hell/dunkel über das Settings-Portal, helle Fassung pixelgleich mit 0.1, Kontraste hell und dunkel nach WCAG AA, siehe [docs/pruefung.md](docs/pruefung.md) und [docs/farben.md](docs/farben.md) |
+| Version | 0.2.1 (Tag `thema/gtk-0.2.1-int`, Vorlage `integration/021/vorlage`), noch nicht live |
+| Auf der Entwicklungs-VM | 0.2 live seit 21.10.2026 10:26 (Tag `thema/gtk-0.2`, Ablage `b531c62050830d10`; `gtk-theme` = `Querencia-Klassisch`, `color-scheme` `default`) |
+| Letzte Prüfung | isolierte Läufe hell/dunkel über das Settings-Portal gegen die Live-Ablage 0.2 (de 1024×768, en 1920×1080), hell pixelgleich außer den Tastenkürzeln, Kontraste hell und dunkel nach WCAG AA, siehe [docs/pruefung.md](docs/pruefung.md) und [docs/farben.md](docs/farben.md) |
 | Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22 und GTK 3 |
 
 Änderungen je Version: [CHANGELOG.md](CHANGELOG.md).
@@ -54,8 +57,9 @@ Dunkel: `org.gnome.desktop.interface color-scheme` auf `prefer-dark`
 (Einstellungen → Erscheinungsbild); ein einzelnes Programm dunkel testen mit
 `GTK_THEME=Querencia-Klassisch:dark`.
 
-Auf der Entwicklungs-VM richten `integration/thema-integrieren.sh` (0.1) und
-`integration/thema-02-integrieren.sh` (0.2) das Thema ein. Es tut das nur nach Freigabe durch die Status-Session, siehe
+Auf der Entwicklungs-VM richten `integration/thema-integrieren.sh` (0.1),
+`integration/thema-02-integrieren.sh` (0.2) und
+`integration/021/thema-021-integrieren.sh` (0.2.1) das Thema ein. Es tut das nur nach Freigabe durch die Status-Session, siehe
 [docs/integration.md](docs/integration.md). Später kommt es nach
 `/usr/share/themes/Querencia-Klassisch/` (Paket).
 

@@ -69,6 +69,48 @@ Die Auswahl bleibt Orange mit dunkler Schrift: das Paar hängt nicht vom
 Fenstergrund ab (6,2:1 unten, 8,5:1 oben). Ein helleres Orange war nicht
 nötig.
 
+## Fehlerschrift und Tastenkürzel (0.2.1)
+
+- **Fehlerschrift** (`label.error`, Eingabefelder mit `.error`): Das
+  Grundthema setzt hell und dunkel `#cc0000`. Hell ergibt das 5,2:1 auf dem
+  Fenstergrund, dunkel nur 1,9:1 auf `#3c3b37`. Die dunkle Fassung setzt
+  deshalb `#ed8b85`: 4,6:1 auf Fenster und Dialog, 5,1:1 auf dem Menü und
+  5,9:1 in der Ansicht. Hell bleibt `#cc0000`.
+- **Tastenkürzel im Menü** (`popover.menu accelerator`, GTK 3
+  `menuitem accelerator`): GTK dimmt sie auf 55 % der Schrift. Das ergibt
+  hell 2,9:1 und dunkel 3,9:1. Das Thema setzt 75 %: hell 4,9:1, dunkel
+  5,8:1. Auf der orangen Auswahl steht das Kürzel in voller Schrift
+  `#1a1a1a` (6,2:1 unten, 8,5:1 oben). Das ist die einzige Änderung von 0.2.1
+  an der hellen Darstellung: Die Kürzel sind etwas dunkler.
+
+## Benannte Farben (0.2.1)
+
+Programme können diese Namen in ihrer eigenen CSS verwenden, statt die
+Werte fest einzutragen. Die Farben wechseln dann mit dem Farbschema, ohne
+einen eigenen `@media`-Block und ohne Bindung des Programm-Providers an
+`gtk-interface-color-scheme`. Die Namen stehen in `gtk.css` (hell, und
+dunkel im `@media`-Block) und in `gtk-dark.css`, für GTK 4 und GTK 3. Das
+Thema selbst zeichnet nichts damit. Die Programme stellen in späteren
+Fassungen darauf um.
+
+| Name | hell | dunkel | Zweck |
+|---|---|---|---|
+| `@sidebar_bg_color` | `#f5f4f2` | `#353430` | Grund von Seitenleisten (z. B. Software, Kategorien) |
+| `@sidebar_fg_color` | `#3c3c3c` | `#e8e6e3` | Schrift auf der Seitenleiste (hell 10,0:1, dunkel 10,0:1) |
+| `@menu_bg_color` | `#f5f4f2` | `#353430` | Grund eigener Menüs und Popover, wie `popover.menu` |
+| `@menu_fg_color` | `#3c3c3c` | `#dfdbd2` | Schrift eigener Menüs, wie `popover.menu` (dunkel 9,0:1) |
+
+Die Menünamen tragen genau die Werte, mit denen das Thema `popover.menu`
+zeichnet. Ein Programm-Menü sieht damit aus wie die Menüs des Themas. Für
+Rahmen gibt es schon `@borders` aus dem Grundthema (hell `#c7c2be`, dunkel
+`#23221f`), für Ansichten `@theme_base_color`.
+
+Beispiel (Programm-CSS):
+
+```css
+list.qs-seite { background-color: @sidebar_bg_color; color: @sidebar_fg_color; }
+```
+
 ## Kontrast-Tabelle
 
 Erzeugt mit `python3 -I werkzeug/kontrast.py --markdown`. Jedes Paar muss in
@@ -105,7 +147,17 @@ dunkel: `gtk-4.0/gtk-dark.css`), sonst schlägt die Prüfung fehl.
 | Schalter an (Textteil) | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
 | Gedimmter Text (dim-label, 75 %) auf Fenstergrund | `#3c3c3c@0.75` | `#f2f1f0` | 4,9:1 | bestanden |
 | Platzhalter (75 %) im Eingabefeld | `#1a1a1a@0.75` | `#ffffff` | 7,7:1 | bestanden |
+| Fehlerschrift (label.error) auf Fenstergrund | `#cc0000` | `#f2f1f0` | 5,2:1 | bestanden |
+| Fehlerschrift auf Menügrund | `#cc0000` | `#f5f4f2` | 5,4:1 | bestanden |
+| Fehlerschrift in Ansicht und Eingabefeld | `#cc0000` | `#ffffff` | 5,9:1 | bestanden |
+| Tastenkürzel im Menü (75 %) | `#3c3c3c@0.75` | `#f5f4f2` | 4,9:1 | bestanden |
+| Tastenkürzel auf Auswahl, oben | `#1a1a1a` | `#f6a179` | 8,5:1 | bestanden |
+| Tastenkürzel auf Auswahl, unten | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| @sidebar_fg_color auf @sidebar_bg_color | `#3c3c3c` | `#f5f4f2` | 10,0:1 | bestanden |
+| @menu_fg_color auf @menu_bg_color | `#3c3c3c` | `#f5f4f2` | 10,0:1 | bestanden |
 | Deaktivierte Schrift (WCAG-Ausnahme) | `#a5a09a` | `#f2f1f0` | 2,3:1 | (Info) unter AA |
+| Vergleich: Tastenkürzel bis 0.2 (55 %) | `#3c3c3c@0.55` | `#f5f4f2` | 2,9:1 | (Info) unter AA |
+| Tastenkürzel auf Auswahl, gedrückt (Augenblick) | `#1a1a1a` | `#e2683a` | 5,2:1 | (Info) erfüllt |
 | Vergleich: weiße Auswahlschrift (Ambiance, Panelmenü) | `#ffffff` | `#f07746` | 2,8:1 | (Info) unter AA |
 | Vergleich: weiße Schrift, Verlauf oben | `#ffffff` | `#f6a179` | 2,0:1 | (Info) unter AA |
 
@@ -148,6 +200,16 @@ dunkel: `gtk-4.0/gtk-dark.css`), sonst schlägt die Prüfung fehl.
 | Gedimmter Text (dim-label, 75 %) auf Fenstergrund | `#dfdbd2@0.75` | `#3c3b37` | 5,4:1 | bestanden |
 | Platzhalter (75 %) im Eingabefeld | `#f2f1f0@0.75` | `#2b2a27` | 7,8:1 | bestanden |
 | Skalenmarken | `#b3aea7` | `#3c3b37` | 5,1:1 | bestanden |
+| Fehlerschrift (label.error) auf Fenstergrund und Dialog | `#ed8b85` | `#3c3b37` | 4,6:1 | bestanden |
+| Fehlerschrift auf Menügrund | `#ed8b85` | `#353430` | 5,1:1 | bestanden |
+| Fehlerschrift in Ansicht und Eingabefeld | `#ed8b85` | `#2b2a27` | 5,9:1 | bestanden |
+| Tastenkürzel im Menü (75 %) | `#dfdbd2@0.75` | `#353430` | 5,8:1 | bestanden |
+| Tastenkürzel auf Auswahl, oben | `#1a1a1a` | `#f6a179` | 8,5:1 | bestanden |
+| Tastenkürzel auf Auswahl, unten | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| @sidebar_fg_color auf @sidebar_bg_color | `#e8e6e3` | `#353430` | 10,0:1 | bestanden |
+| @menu_fg_color auf @menu_bg_color | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
 | Deaktivierte Schrift (WCAG-Ausnahme) | `#858079` | `#3c3b37` | 2,9:1 | (Info) unter AA |
 | Deaktivierte Schrift im Feld (WCAG-Ausnahme) | `#858079` | `#353430` | 3,2:1 | (Info) unter AA |
+| Vergleich: Fehlerschrift bis 0.2 (#cc0000) | `#cc0000` | `#3c3b37` | 1,9:1 | (Info) unter AA |
+| Vergleich: Tastenkürzel bis 0.2 (55 %) | `#dfdbd2@0.55` | `#353430` | 3,9:1 | (Info) unter AA |
 | Vergleich: weiße Auswahlschrift (Ambiance) | `#ffffff` | `#f07746` | 2,8:1 | (Info) unter AA |

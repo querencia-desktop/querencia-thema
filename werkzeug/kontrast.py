@@ -48,8 +48,19 @@ PAARE = [
     ("Schalter an (Textteil)", "#1a1a1a", "#f07746", True),
     ("Gedimmter Text (dim-label, 75 %) auf Fenstergrund", "#3c3c3c@0.75", "#f2f1f0", True),
     ("Platzhalter (75 %) im Eingabefeld", "#1a1a1a@0.75", "#ffffff", True),
+    # 0.2.1
+    ("Fehlerschrift (label.error) auf Fenstergrund", "#cc0000", "#f2f1f0", True),
+    ("Fehlerschrift auf Menügrund", "#cc0000", "#f5f4f2", True),
+    ("Fehlerschrift in Ansicht und Eingabefeld", "#cc0000", "#ffffff", True),
+    ("Tastenkürzel im Menü (75 %)", "#3c3c3c@0.75", "#f5f4f2", True),
+    ("Tastenkürzel auf Auswahl, oben", "#1a1a1a", "#f6a179", True),
+    ("Tastenkürzel auf Auswahl, unten", "#1a1a1a", "#f07746", True),
+    ("@sidebar_fg_color auf @sidebar_bg_color", "#3c3c3c", "#f5f4f2", True),
+    ("@menu_fg_color auf @menu_bg_color", "#3c3c3c", "#f5f4f2", True),
     # Nur zur Information
     ("Deaktivierte Schrift (WCAG-Ausnahme)", "#a5a09a", "#f2f1f0", False),
+    ("Vergleich: Tastenkürzel bis 0.2 (55 %)", "#3c3c3c@0.55", "#f5f4f2", False),
+    ("Tastenkürzel auf Auswahl, gedrückt (Augenblick)", "#1a1a1a", "#e2683a", False),
     ("Vergleich: weiße Auswahlschrift (Ambiance, Panelmenü)", "#ffffff", "#f07746", False),
     ("Vergleich: weiße Schrift, Verlauf oben", "#ffffff", "#f6a179", False),
 ]
@@ -91,9 +102,20 @@ PAARE_DUNKEL = [
     ("Gedimmter Text (dim-label, 75 %) auf Fenstergrund", "#dfdbd2@0.75", "#3c3b37", True),
     ("Platzhalter (75 %) im Eingabefeld", "#f2f1f0@0.75", "#2b2a27", True),
     ("Skalenmarken", "#b3aea7", "#3c3b37", True),
+    # 0.2.1
+    ("Fehlerschrift (label.error) auf Fenstergrund und Dialog", "#ed8b85", "#3c3b37", True),
+    ("Fehlerschrift auf Menügrund", "#ed8b85", "#353430", True),
+    ("Fehlerschrift in Ansicht und Eingabefeld", "#ed8b85", "#2b2a27", True),
+    ("Tastenkürzel im Menü (75 %)", "#dfdbd2@0.75", "#353430", True),
+    ("Tastenkürzel auf Auswahl, oben", "#1a1a1a", "#f6a179", True),
+    ("Tastenkürzel auf Auswahl, unten", "#1a1a1a", "#f07746", True),
+    ("@sidebar_fg_color auf @sidebar_bg_color", "#e8e6e3", "#353430", True),
+    ("@menu_fg_color auf @menu_bg_color", "#dfdbd2", "#353430", True),
     # Nur zur Information
     ("Deaktivierte Schrift (WCAG-Ausnahme)", "#858079", "#3c3b37", False),
     ("Deaktivierte Schrift im Feld (WCAG-Ausnahme)", "#858079", "#353430", False),
+    ("Vergleich: Fehlerschrift bis 0.2 (#cc0000)", "#cc0000", "#3c3b37", False),
+    ("Vergleich: Tastenkürzel bis 0.2 (55 %)", "#dfdbd2@0.55", "#353430", False),
     ("Vergleich: weiße Auswahlschrift (Ambiance)", "#ffffff", "#f07746", False),
 ]
 
@@ -130,7 +152,8 @@ def mischen(fg: str, bg: str) -> str:
 def im_thema(farbe: str, css: str) -> bool:
     if "@" in farbe:
         farbe, a = farbe.split("@")
-        return farbe in css and f"opacity: {a}" in css
+        # opacity (dim-label) oder relative Farbe (Tastenkürzel, 0.2.1)
+        return farbe in css and (f"opacity: {a}" in css or f"alpha * {a})" in css)
     return ERSATZ.get(farbe, farbe) in css
 
 

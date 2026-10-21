@@ -1693,6 +1693,13 @@ read if you used those and something break with a version upgrade you're on your
  * Palette siehe gtk4-klassisch.css und docs/farben.md.
  */
 
+/* ------------------------------------------------------- Benannte Farben */
+/* Seit 0.2.1, wie gtk4-klassisch.css; dunkel in gtk3-dunkel.css. */
+@define-color sidebar_bg_color #f5f4f2;
+@define-color sidebar_fg_color #3c3c3c;
+@define-color menu_bg_color #f5f4f2;
+@define-color menu_fg_color #3c3c3c;
+
 /* ---------------------------------------------------------------- Knöpfe */
 
 button {
@@ -1851,6 +1858,10 @@ menu menuitem:hover, .menu menuitem:hover, .context-menu menuitem:hover {
 
 menu menuitem:disabled, .menu menuitem:disabled { color: #858079; }
 menu separator, .menu separator { margin: 3px 0; background-color: #2b2a27; }
+/* Tastenkürzel: 75 % statt 55 % (AA, wie GTK 4), auf der Auswahl voll (0.2.1) */
+menuitem accelerator { color: alpha(currentColor, 0.75); }
+menu menuitem:hover accelerator, .menu menuitem:hover accelerator,
+.context-menu menuitem:hover accelerator { color: inherit; }
 
 popover.background {
   padding: 4px;
@@ -2153,3 +2164,16 @@ list row:selected check, list row:selected radio,
 menu menuitem:hover check, menu menuitem:hover radio {
   color: #1a1a1a;
 }
+
+/* Fehlerschrift: #cc0000 des Grundthemas hat auf dem Fenstergrund #3c3b37
+   nur 1,9:1. #ed8b85 erreicht 4,6:1, auf Menü und
+   Ansicht mehr (docs/farben.md). Hell bleibt #cc0000 (0.2.1). */
+label.error { color: #ed8b85; }
+label.error:disabled { color: rgba(237, 139, 133, 0.5); }
+spinbutton.error:not(.vertical), entry.error { color: #ed8b85; }
+
+/* Benannte Farben, dunkle Werte (hell in gtk3-klassisch.css) */
+@define-color sidebar_bg_color #353430;
+@define-color sidebar_fg_color #e8e6e3;
+@define-color menu_bg_color #353430;
+@define-color menu_fg_color #dfdbd2;

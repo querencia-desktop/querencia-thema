@@ -18,7 +18,11 @@ Theme-Link bleiben unberührt.
 | `werkzeug/muster4.py`, `muster3.py` | Musterseiten mit allen Elementarten (GTK 4 über PyGObject, GTK 3 über ctypes, weil die VM kein GI für GTK 3 hat) |
 | `werkzeug/lauf-portal.sh`, `doc-stellvertreter.py` | Portal-Probe: xdg-desktop-portal(-gtk) im Wegwerf-Bus, gsettings als Schlüsseldatei im Profil, Dokumentenportal nur als Stellvertreter (kein FUSE-Mount, PT-1) |
 | `werkzeug/kontrast.py` | WCAG-Kontrast aller Schrift/Grund-Paare |
-| `integration/probe.sh`, `integration/probe-02.sh` | Probe der Integrationsskripte 0.1 und 0.2 |
+| `werkzeug/regression-021.sh`, `lauf-021.sh` | 0.2.1: Regression gegen die Live-Ablage in der gekürzten Matrix (de 1024×768, en 1920×1080; hell und dunkel über das Portal, Cursor ohne Blinken); Archiv mit falschem Kennwort (`label.error`), Menüs per F10 (Tastenkürzel); Pixelvergleich neu gegen live, nach  (ca. 5 min mit 4 parallelen Läufen) |
+| `werkzeug/farbzaehler.py` | 0.2.1: Pixel einer Farbe in einem Bereich zählen (Beleg für neue Farbwerte) |
+| `werkzeug/farbnamen-probe.sh`, `farbnamen-probe.py` | 0.2.1: benannte Farben aus einem Programm-Provider ohne Bindung, hell, dunkel, Neustart mit und ohne `Settings.notify` |
+| `werkzeug/fokus-probe.sh`, `fokus-probe.py` | 0.2.1: Fokus und `focus-visible` nach Farbschema-Wechsel und nach F10/Esc, Querencia gegen GTK-Default |
+| `integration/probe.sh`, `integration/probe-02.sh`, `integration/021/probe-021.sh` | Probe der Integrationsskripte 0.1, 0.2 und 0.2.1 |
 
 Eingaben (`qeingabe`) und Auflösung (`qausgabe`) kommen aus
 `querencia-rechner/werkzeug/bin` (`QTH_WERKZEUG_BIN`). Sie verweigern den
@@ -38,6 +42,41 @@ Bilder, Panel (mit offenem Menü) und Desktop.
   Unter Wayland liest GTK 3 gsettings (im Test nur im Speicher), nicht
   `settings.ini`.
 - Portal-Probe: wie live über gsettings → Portal → Programm.
+
+## Ergebnisse 0.2.1 (21.10.2026)
+
+- **Kontrast:** `kontrast.py` Exit 0, hell 34/34 und dunkel 43/43
+  Pflichtpaare nach AA (docs/farben.md).
+- **Regression gegen die Live-Ablage 0.2** (`regression-021.sh`, 48 Läufe,
+  alle „fertig“): 50 Bildpaare, 38 pixelgleich. Die 12 Abweichungen liegen
+  nur an den beabsichtigten Stellen:
+  - hell und dunkel die Spalte der Tastenkürzel in den Menüs von Dokumente,
+    Editor und Rechner (Bereich je nur die Kürzel);
+  - dunkel die Fehlerzeile im Kennwortfenster von Archiv.
+  - Pixelgleich: alle Startbilder, Archiv hell mit Fehlerzeile, die
+    Kennwortfenster vor der Eingabe, Einstellungen, Musterseiten (deren
+    Menüs haben keine Kürzel).
+- **Farbwerte im Bild** (`farbzaehler.py`): Archiv dunkel, Fehlerzeile neu
+  122 Pixel `#ed8b85` und 0 `#cc0000`, live umgekehrt; hell beide
+  122 `#cc0000`. Dokumente-Menü hell neu 45 Pixel `#6a6a6a` (75 % auf
+  `#f5f4f2`), live 49 `#8f8f8e` (55 %); dunkel neu 45 `#b4b1aa`.
+- **Benannte Farben** (`farbnamen-probe.sh`): aus einem Programm-Provider
+  ohne Bindung hell `#f5f4f2 #3c3c3c #f5f4f2 #3c3c3c`, nach dem Wechsel
+  dunkel `#353430 #e8e6e3 #353430 #dfdbd2`, zurück hell. Ein Neustart unter
+  `prefer-dark` bleibt ohne `Settings.notify` hell (GTK-4.22-Startfehler,
+  docs/aufbau.md), mit `notify` dunkel.
+- **Fokus nach Farbschema-Wechsel** (`fokus-probe.sh`, Notiz Systemmonitor
+  0.1.3): Der Wechsel allein verschiebt weder Fokus noch Fokusrahmen
+  (Start = zurück, pixelgleich, mit Querencia und mit GTK-Default). Nach
+  F10/Esc bleibt der Fokus in GTK auf dem Menüleisten-Eintrag (Zustand
+  `:focus :hover`). `focus-visible` geht nach Tasten an und ohne Taste nach
+  wenigen Sekunden von selbst aus. Querencia zeichnet `menubar > item:hover`
+  orange, deshalb sieht man den behaltenen Zustand; GTK-Default zeichnet
+  `:hover` dort nicht. Einordnung: GTK-Verhalten, vom Thema sichtbar
+  gemacht, kein Programmfehler; für Pixelvergleiche jede Folge mit
+  derselben Eingabe beginnen.
+- **Integration:** Probe 0.2.1 52/52; `pruefen` live Exit 0 (Link auf
+  0.2, Ablage 0.2.1 fehlt, SHA256SUMS der Vorlage in Ordnung).
 
 ## Ergebnisse 0.2 (20.10.2026, dunkle Fassung)
 

@@ -14,6 +14,15 @@
  * von labwc (Querencia-Klassisch/labwc).
  */
 
+/* ------------------------------------------------------- Benannte Farben */
+/* Seit 0.2.1, für Programm-CSS (z. B. @sidebar_bg_color statt #f5f4f2).
+   Die Schicht selbst nutzt sie nicht; die dunklen Werte setzt
+   gtk4-dunkel.css. Liste und Kontraste: docs/farben.md. */
+@define-color sidebar_bg_color #f5f4f2;
+@define-color sidebar_fg_color #3c3c3c;
+@define-color menu_bg_color #f5f4f2;
+@define-color menu_fg_color #3c3c3c;
+
 /* ---------------------------------------------------------------- Knöpfe */
 
 button {
@@ -278,6 +287,12 @@ popover.menu box.inline-buttons button.image-button.model { min-height: 24px; mi
 
 popover.menu check, popover.menu radio { color: #3c3c3c; }
 popover.menu modelbutton:selected check, popover.menu modelbutton:selected radio { color: #1a1a1a; }
+
+/* Tastenkürzel im Menü: das Grundthema dimmt auf 55 % (hell 2,9:1, dunkel
+   3,9:1). 75 % erreichen AA (hell 4,9:1, dunkel 5,8:1); auf der orangen
+   Auswahl volle Schrift (0.2.1). */
+popover.menu accelerator { color: rgb(from currentColor r g b / calc(alpha * 0.75)); }
+popover.menu modelbutton:selected accelerator { color: inherit; }
 
 /* -------------------------------------------------------- Werkzeugleiste */
 

@@ -1706,6 +1706,13 @@ read if you used those and something break with a version upgrade you're on your
  * Palette siehe gtk4-klassisch.css und docs/farben.md.
  */
 
+/* ------------------------------------------------------- Benannte Farben */
+/* Seit 0.2.1, wie gtk4-klassisch.css; dunkel in gtk3-dunkel.css. */
+@define-color sidebar_bg_color #f5f4f2;
+@define-color sidebar_fg_color #3c3c3c;
+@define-color menu_bg_color #f5f4f2;
+@define-color menu_fg_color #3c3c3c;
+
 /* ---------------------------------------------------------------- Knöpfe */
 
 button {
@@ -1864,6 +1871,10 @@ menu menuitem:hover, .menu menuitem:hover, .context-menu menuitem:hover {
 
 menu menuitem:disabled, .menu menuitem:disabled { color: #a5a09a; }
 menu separator, .menu separator { margin: 3px 0; background-color: #dcd8d4; }
+/* Tastenkürzel: 75 % statt 55 % (AA, wie GTK 4), auf der Auswahl voll (0.2.1) */
+menuitem accelerator { color: alpha(currentColor, 0.75); }
+menu menuitem:hover accelerator, .menu menuitem:hover accelerator,
+.context-menu menuitem:hover accelerator { color: inherit; }
 
 popover.background {
   padding: 4px;

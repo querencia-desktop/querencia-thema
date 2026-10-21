@@ -238,7 +238,9 @@ def grund_umsetzen(basis: str, farben: dict, waerme: bool) -> str:
 
 # ------------------------------------------------- helle Schicht -> dunkel
 
-FARBTOKEN = re.compile(r"#[0-9a-fA-F]{6}\b|rgba?\([^)]*\)")
+# rgb(from currentColor …) ist eine relative Farbe ohne festen Wert (0.2.1:
+# Tastenkürzel im Menü) und braucht keine Zuordnung.
+FARBTOKEN = re.compile(r"#[0-9a-fA-F]{6}\b|rgba?\((?!\s*from\b)[^)]*\)")
 DEKLARATION = re.compile(r"([a-z-]+)(\s*:\s*)([^;{}]+)")
 
 

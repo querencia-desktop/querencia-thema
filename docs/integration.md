@@ -1,15 +1,50 @@
 # Integration auf der Entwicklungs-VM
 
-Zwei Skripte, beide nach dem Muster von `theme-osd-integrieren.sh` (G2-R)
+Drei Skripte, alle nach dem Muster von `theme-osd-integrieren.sh` (G2-R)
 aus querencia-runtime:
 
 | Skript | Schritt | Vorlage | Probe |
 |---|---|---|---|
+| `integration/021/thema-021-integrieren.sh` | 0.2 (`b531c620…`) → 0.2.1 | `integration/021/vorlage/` | `integration/021/probe-021.sh` |
 | `integration/thema-02-integrieren.sh` | 0.1 (`a53ff41c…`) → 0.2 (dunkle Fassung) | `integration/vorschlag-02/` | `integration/probe-02.sh` |
 | `integration/thema-integrieren.sh` | G2-R (`e72ae8ed…`) → 0.1, mit gsettings | `integration/vorschlag/` | `integration/probe.sh` |
 
 Das Skript 0.1 und seine Vorlage bleiben unverändert: Journal und Übergabe
 Thema-1 zeigen darauf (Rückfall von 0.1 auf G2-R).
+
+## Thema 0.2.1 (`021/thema-021-integrieren.sh`)
+
+Aktiver Arbeitsordner (von dort läuft das Skript live):
+`~/projects/querencia-thema-021/integration/` mit Skript, Probe und
+`vorlage/`. `integration/021/` im Repo ist derselbe Stand (Tag
+`thema/gtk-0.2.1-int`); `werkzeug/vorlage-021-bauen.sh` baut die Vorlage,
+trägt `BAUM_NEU` und `SUMMEN_SHA` ein und spiegelt in den Arbeitsordner.
+
+```bash
+bash ~/projects/querencia-thema-021/integration/thema-021-integrieren.sh pruefen
+QTH_FREIGABE=ja bash ~/projects/querencia-thema-021/integration/thema-021-integrieren.sh aktivieren   # nur nach Freigabe
+QTH_FREIGABE=ja bash ~/projects/querencia-thema-021/integration/thema-021-integrieren.sh zurueck      # Rückfall auf 0.2
+```
+
+- **aktivieren** legt die Ablage `~/opt/querencia-theme/<B16>/Querencia-Klassisch`
+  an (0555/0444, Kopie von `vorlage/Querencia-Klassisch`, Herkunftsdatei
+  daneben) und stellt den Link von der Ablage 0.2 `b531c620…` atomar auf
+  `<B16>` um. Journalzeile mit Rückfallbefehl. gsettings bleiben unberührt.
+- **zurueck** stellt den Link auf die Ablage 0.2; die Ablage 0.2.1 bleibt.
+  Weiter auf 0.1 geht es danach mit dem Skript 0.2 (`zurueck`); das
+  verweigert, solange der Link auf 0.2.1 zeigt.
+- Invarianten wie 0.2, dazu: `vorlage/SHA256SUMS` hat die im Skript
+  eingetragene Summe `SUMMEN_SHA` und stimmt (`sha256sum -c`); die Liste der
+  Ablage 0.2 liegt als `vorlage/liste-02.txt` bei (Summe `BAUM_ALT`);
+  außerhalb von `gtk-4.0/` und `gtk-3.0/` alles byte-gleich mit 0.2; die
+  Vorlage enthält die benannten Farben.
+- **Wirkung:** neu gestartete GTK-Programme sehen 0.2.1 sofort, laufende
+  behalten 0.2 bis zum Neustart. Hell ändern sich nur die Tastenkürzel in
+  Menüs (etwas dunkler), dunkel zusätzlich die Fehlerschrift.
+
+Probe: `bash integration/021/probe-021.sh` (Wegwerf-Ordner, Ablage 0.2 als
+Kopie; zusätzlich eine veränderte Vorlagendatei und eine veränderte
+SHA256SUMS in einer Kopie). Ergebnis: 52/52.
 
 ## Thema 0.2 (`thema-02-integrieren.sh`)
 
