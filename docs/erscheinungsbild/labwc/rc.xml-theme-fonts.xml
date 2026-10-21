@@ -1,0 +1,6 @@
+    <!-- Querencia Erscheinungsbild (Thema-3), Variante A: Schrift wie Ubuntu 10.04 (Titel fett) -->
+    <font place="ActiveWindow"><name>DejaVu Sans</name><size>10</size><weight>bold</weight></font>
+    <font place="InactiveWindow"><name>DejaVu Sans</name><size>10</size><weight>bold</weight></font>
+    <font place="MenuHeader"><name>DejaVu Sans</name><size>10</size><weight>bold</weight></font>
+    <font place="MenuItem"><name>DejaVu Sans</name><size>10</size></font>
+    <font place="OnScreenDisplay"><name>DejaVu Sans</name><size>10</size></font>

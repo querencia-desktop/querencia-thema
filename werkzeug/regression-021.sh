@@ -5,7 +5,7 @@
 # Live-Ablage (nur gelesen). Rahmen (labwc) immer live. Danach Pixelvergleich
 # neu gegen live je Bild.
 #   bash werkzeug/regression-021.sh [ziel] [parallel]
-# Ziel Standard ; parallel Standard 4 Läufe.
+# Ziel: $1 bzw. der Standardordner unten; parallel Standard 4 Läufe.
 # Ein einzelner Lauf: regression-021.sh --lauf <fall> <spr> <BxH> <hell|dunkel> <neu|live> <ziel>
 set -u
 E=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)

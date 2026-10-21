@@ -4,7 +4,7 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen
 nach [Semantic Versioning](https://semver.org/lang/de/). Solange die Hauptversion
 0 ist, kann sich alles ändern.
 
-## [0.2.1] – 2026-10-21 (Tag `thema/gtk-0.2.1-int`)
+## [0.2.1] – 2026-10-21 (Tags `thema/gtk-0.2.1`, `thema/gtk-0.2.1-1`)
 
 Lesbarkeit (QD-088) und benannte Farben für Programme.
 
@@ -57,6 +57,11 @@ Dunkle Fassung nach Ubuntu 10.04 „Ambiance“.
 
 ### Unverändert
 - Helle Darstellung pixelgleich mit 0.1; `gtk-3.0/gtk.css` byte-gleich.
+
+### Hinzugefügt
+- `docs/erscheinungsbild/`: Schrift und Mauszeiger (Werte, labwc-Vorgaben,
+  Entscheidungsvorlage), übernommen aus dem Arbeitsrepo
+  querencia-erscheinungsbild 0.1.
 
 ### Bekannte Einschränkungen
 - GTK 4.22 lädt `gtk-dark.css` nicht über `color-scheme`, und neu

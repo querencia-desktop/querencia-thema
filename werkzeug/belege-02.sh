@@ -1,7 +1,7 @@
 #!/bin/bash
 # Thema 0.2: Belegbilder hell/dunkel (Farbschema über das Settings-Portal)
 # und Regression der hellen Fassung gegen die Live-Ablage, alles isoliert
-# (belege.sh). Ziel:  (oder $1). Dauer ca. 12 min.
+# (belege.sh). Ziel: $1 bzw. der Standardordner unten. Dauer ca. 12 min.
 set -u
 E=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
 B=$E/werkzeug/belege.sh
