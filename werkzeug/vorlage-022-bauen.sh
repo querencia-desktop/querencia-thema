@@ -13,6 +13,10 @@
 # (QTH_ARBEITSORDNER). Vorlagen 0.1, 0.2 und 0.2.1 bleiben unberührt.
 # Nach dem Tag thema/gtk-0.2.2-int nicht mehr ausführen.
 set -euo pipefail
+# Fassung 1 (Tag thema/gtk-0.2.2-int, nie aktiviert) ist eingefroren; ihre
+# Vorlage braucht labwc/themerc-override-dunkel, das seit Fassung 2 entfällt.
+echo "vorlage-022-bauen.sh: Fassung 1 eingefroren – werkzeug/vorlage-022-2-bauen.sh nehmen" >&2
+exit 2
 E=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
 ALT=${QTH_ALT_ABLAGE:-$HOME/opt/querencia-theme/22824d05ceb49cad}
 I=$E/integration/022

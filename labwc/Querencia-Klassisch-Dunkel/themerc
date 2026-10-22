@@ -28,9 +28,9 @@ window.button.hover.bg.color: #00000000
 window.button.hover.bg.corner-radius: 0
 # Nur für fehlende Grafiken (xbm-Ersatz von labwc):
 window.active.button.unpressed.image.color: #f2f1f0
-window.inactive.button.unpressed.image.color: #a8a29d
-window.active.button.close.unpressed.image.color: #ed8b85
-window.inactive.button.close.unpressed.image.color: #cc8a85
+window.inactive.button.unpressed.image.color: #bdb7b1
+window.active.button.close.unpressed.image.color: #f9c8c5
+window.inactive.button.close.unpressed.image.color: #e8b0ac
 
 window.active.shadow.size: 60
 window.inactive.shadow.size: 40

@@ -11,11 +11,11 @@ seit Alpha 1): eckige Knopffläche mit 3D-Kante, Symbole für Minimieren und
 Maximieren, rotes X für Schließen. Die hellen PNG sind byte-gleich mit
 querencia-runtime data/themes/Querencia-Klassisch/labwc (nachgeprüft mit
 --pruefen). Die dunklen nehmen die Knopffarben der dunklen GTK-Fassung
-(Verlauf #57554f → #4a4843, Rand #23221f), Symbole #f2f1f0 und ein
-einfarbiges X in der dunklen Fehlerschrift #ed8b85 (überfahren #f3a7a1,
-inaktiv #cc8a85). Ein dunkler Umriss wie hell verschwände auf der dunklen
-Fläche; ohne ihn grenzt sich das X selbst mit mindestens 3:1 ab
-(werkzeug/kontrast.py, Tabelle Titelknöpfe).
+(Verlauf #57554f → #4a4843, überfahren #5f5d57 → #55534d, inaktiv
+#45443f → #3c3b37, Rand #23221f), Symbole #f2f1f0 (inaktiv #bdb7b1) und ein
+einfarbiges helles X #f9c8c5 (überfahren #fbd2cf, inaktiv #e8b0ac). Ein
+dunkler Umriss wie hell verschwände auf der dunklen Fläche; jede Glyphe
+erreicht mindestens 4,5:1 gegen die Fläche (werkzeug/kontrast.py).
 
 Nur Standardbibliothek und GdkPixbuf (python3-gi).
 """
@@ -49,7 +49,9 @@ INAKTIV = dict(AKTIV, rahmen=(170, 166, 162), licht=(252, 252, 251), schatten=(1
 INAKTIV_HOVER = dict(INAKTIV, rahmen=(80, 76, 72), oben=(255, 255, 255), unten=(240, 238, 236),
                      symbol=(60, 60, 60), kreuz=(204, 0, 0), kreuz_rand=(130, 0, 0))
 
-# Dunkel (Knopf der dunklen GTK-Fassung, docs/farben.md)
+# Dunkel (Knopf der dunklen GTK-Fassung, docs/farben.md). Glyphen mit
+# mindestens 4,5:1 gegen beide Enden der Fläche in jedem Zustand (Vorgabe der
+# Status-Session für 0.2.2, werkzeug/kontrast.py).
 D_AKTIV = {
     "rahmen": (0x23, 0x22, 0x1f),
     "licht": (0x67, 0x65, 0x5f),
@@ -57,15 +59,15 @@ D_AKTIV = {
     "oben": (0x57, 0x55, 0x4f),
     "unten": (0x4a, 0x48, 0x43),
     "symbol": (0xf2, 0xf1, 0xf0),
-    "kreuz": (0xed, 0x8b, 0x85),
-    "kreuz_rand": (0xed, 0x8b, 0x85),
+    "kreuz": (0xf9, 0xc8, 0xc5),
+    "kreuz_rand": (0xf9, 0xc8, 0xc5),
 }
-D_AKTIV_HOVER = dict(D_AKTIV, rahmen=(0x14, 0x13, 0x11), licht=(0x76, 0x74, 0x6e),
-                     oben=(0x66, 0x64, 0x5e), unten=(0x5a, 0x58, 0x52),
-                     kreuz=(0xf3, 0xa7, 0xa1), kreuz_rand=(0xf3, 0xa7, 0xa1))
-D_INAKTIV = dict(D_AKTIV, rahmen=(0x2b, 0x2a, 0x27), licht=(0x55, 0x53, 0x4d), schatten=(0x38, 0x37, 0x33),
-                 oben=(0x4a, 0x48, 0x43), unten=(0x40, 0x3f, 0x3b), symbol=(0xa8, 0xa2, 0x9d),
-                 kreuz=(0xcc, 0x8a, 0x85), kreuz_rand=(0xcc, 0x8a, 0x85))
+D_AKTIV_HOVER = dict(D_AKTIV, rahmen=(0x14, 0x13, 0x11), licht=(0x6f, 0x6d, 0x67),
+                     oben=(0x5f, 0x5d, 0x57), unten=(0x55, 0x53, 0x4d),
+                     kreuz=(0xfb, 0xd2, 0xcf), kreuz_rand=(0xfb, 0xd2, 0xcf))
+D_INAKTIV = dict(D_AKTIV, rahmen=(0x2b, 0x2a, 0x27), licht=(0x50, 0x4e, 0x49), schatten=(0x34, 0x33, 0x2f),
+                 oben=(0x45, 0x44, 0x3f), unten=(0x3c, 0x3b, 0x37), symbol=(0xbd, 0xb7, 0xb1),
+                 kreuz=(0xe8, 0xb0, 0xac), kreuz_rand=(0xe8, 0xb0, 0xac))
 D_INAKTIV_HOVER = dict(D_AKTIV_HOVER)
 
 THEMEN = {

@@ -127,8 +127,7 @@ list.qs-seite { background-color: @sidebar_bg_color; color: @sidebar_fg_color; }
   schaltet `overlay-scrolling` ab), Emoji-Reiter im GTK-3-Emoji-Wähler (bunte
   Bilder).
 
-labwc dunkel (Theme `Querencia-Klassisch-Dunkel` und
-`themerc-override-dunkel`):
+labwc dunkel (Theme `Querencia-Klassisch-Dunkel`):
 
 | Rolle | hell | dunkel |
 |---|---|---|
@@ -138,19 +137,23 @@ labwc dunkel (Theme `Querencia-Klassisch-Dunkel` und
 | Rahmen aktiv, inaktiv | `#7a7570`, `#aaa6a2` | `#23221f`, `#2b2a27` |
 | Fenstermenü | labwc-Standard `#fcfbfa`, Schrift `#000000` | `#353430`, Schrift `#dfdbd2`, Auswahl `#f07746` mit `#1a1a1a` |
 | Fensterwechsler | `#f5f4f2`, Schrift `#3c3c3c` | `#353430`, Schrift `#dfdbd2` |
-| Knöpfe | Fläche `#f6f5f3` → `#d6d2ce`, Symbol `#000000`, X `#cc0000` | Fläche `#57554f` → `#4a4843`, Symbol `#f2f1f0`, X `#ed8b85` (überfahren `#f3a7a1`, inaktiv `#cc8a85`) |
+| Knopffläche | `#f6f5f3` → `#d6d2ce`, überfahren `#ffffff` → `#f0eeeb`, inaktiv `#f6f5f4` → `#e8e6e4` | `#57554f` → `#4a4843`, überfahren `#5f5d57` → `#55534d`, inaktiv `#45443f` → `#3c3b37` |
+| Knopfsymbol | `#000000`, inaktiv `#6e6e6e` | `#f2f1f0` (5,8–8,1:1), inaktiv `#bdb7b1` (4,9–5,6:1) |
+| Schließen-X | `#cc0000` mit Umriss `#820000`, inaktiv `#c46e6e`/`#a05a5a` | `#f9c8c5` (5,0–6,1:1), überfahren `#fbd2cf` (4,8–5,6:1), inaktiv `#e8b0ac` (5,2–6,0:1) |
 
-Das helle X grenzt sich über seinen dunkelroten Umriss von der Fläche ab
-(mindestens 4,1:1); dunkel ist das X einfarbig, weil ein dunkler Umriss auf
-der dunklen Fläche verschwände.
+Dunkel erreicht jede Glyphe mindestens 4,5:1 gegen beide Enden ihrer
+Fläche. Das X ist dunkel einfarbig, weil ein dunkler Umriss auf der dunklen
+Fläche verschwände. Die hellen Knöpfe sind seit Alpha 1 live und
+unverändert; sie erreichen 3:1 (WCAG 1.4.11), inaktiv 4,1–4,7:1, das X über
+seinen Umriss 4,1–10,8:1.
 
 ## Kontrast-Tabelle
 
 Erzeugt mit `python3 -I werkzeug/kontrast.py --markdown`. Jedes Paar muss in
 der erzeugten Datei vorkommen (hell: `gtk-4.0/gtk.css` vor dem Dunkelblock,
-dunkel: `gtk-4.0/gtk-dark.css`, GTK 3: `gtk-3.0/…`, labwc: die `themerc`
-bzw. das helle Theme mit dem Override), sonst schlägt die Prüfung fehl.
-Symbole (Pfeile, Schließknöpfe, Titelknöpfe) müssen 3:1 erreichen.
+dunkel: `gtk-4.0/gtk-dark.css`, GTK 3: `gtk-3.0/…`, labwc: die `themerc`),
+sonst schlägt die Prüfung fehl. Symbole (Pfeile, Schließknöpfe, helle
+Titelknöpfe) müssen 3:1 erreichen, die dunklen Titelknöpfe 4,5:1.
 
 **Hell (gtk.css)**
 
@@ -386,52 +389,39 @@ Symbole (Pfeile, Schließknöpfe, Titelknöpfe) müssen 3:1 erreichen.
 | Fensterwechsler | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
 | Fensterwechsler, gewählter Eintrag | `#dfdbd2` | `#5a4134` | 6,8:1 | bestanden |
 
-**labwc dunkel (Querencia-Klassisch mit themerc-override-dunkel)**
+**labwc-Titelknöpfe (Glyphe gegen Fläche; dunkel 4,5:1, hell 3:1)**
 
 | Element | Schrift | Grund | Kontrast | AA (4,5:1) |
 |---|---|---|---|---|
-| Titel aktiv, Verlauf oben | `#f2f1f0` | `#4a4843` | 8,1:1 | bestanden |
-| Titel aktiv, Verlauf unten | `#f2f1f0` | `#3c3b37` | 9,9:1 | bestanden |
-| Titel inaktiv | `#a8a29d` | `#353430` | 4,9:1 | bestanden |
-| Fenstermenü | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
-| Fenstermenü, Auswahl | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
-| Fenstermenü, Überschrift | `#dfdbd2` | `#3c3b37` | 8,1:1 | bestanden |
-| Fensterwechsler | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
-| Fensterwechsler, gewählter Eintrag | `#dfdbd2` | `#5a4134` | 6,8:1 | bestanden |
-
-**labwc-Titelknöpfe (Symbol gegen Fläche, WCAG 1.4.11)**
-
-| Element | Schrift | Grund | Kontrast | AA (3,0:1) |
-|---|---|---|---|---|
-| Querencia-Klassisch: Symbol aktiv, oben | `#000000` | `#f6f5f3` | 19,3:1 | bestanden |
-| Querencia-Klassisch: Symbol aktiv, unten | `#000000` | `#d6d2ce` | 14,0:1 | bestanden |
-| Querencia-Klassisch: Schließen-X, Umriss aktiv, oben | `#820000` | `#f6f5f3` | 9,9:1 | bestanden |
-| Querencia-Klassisch: Schließen-X, Umriss aktiv, unten | `#820000` | `#d6d2ce` | 7,2:1 | bestanden |
-| Querencia-Klassisch: Symbol aktiv überfahren, oben | `#000000` | `#ffffff` | 21,0:1 | bestanden |
-| Querencia-Klassisch: Symbol aktiv überfahren, unten | `#000000` | `#f0eeeb` | 18,1:1 | bestanden |
-| Querencia-Klassisch: Schließen-X, Umriss aktiv überfahren, oben | `#820000` | `#ffffff` | 10,8:1 | bestanden |
-| Querencia-Klassisch: Schließen-X, Umriss aktiv überfahren, unten | `#820000` | `#f0eeeb` | 9,3:1 | bestanden |
-| Querencia-Klassisch: Symbol inaktiv, oben | `#6e6e6e` | `#f6f5f4` | 4,7:1 | bestanden |
-| Querencia-Klassisch: Symbol inaktiv, unten | `#6e6e6e` | `#e8e6e4` | 4,1:1 | bestanden |
-| Querencia-Klassisch: Schließen-X, Umriss inaktiv, oben | `#a05a5a` | `#f6f5f4` | 4,7:1 | bestanden |
-| Querencia-Klassisch: Schließen-X, Umriss inaktiv, unten | `#a05a5a` | `#e8e6e4` | 4,1:1 | bestanden |
-| Querencia-Klassisch: Symbol inaktiv überfahren, oben | `#3c3c3c` | `#ffffff` | 11,0:1 | bestanden |
-| Querencia-Klassisch: Symbol inaktiv überfahren, unten | `#3c3c3c` | `#f0eeec` | 9,5:1 | bestanden |
-| Querencia-Klassisch: Schließen-X, Umriss inaktiv überfahren, oben | `#820000` | `#ffffff` | 10,8:1 | bestanden |
-| Querencia-Klassisch: Schließen-X, Umriss inaktiv überfahren, unten | `#820000` | `#f0eeec` | 9,3:1 | bestanden |
+| Querencia-Klassisch: Symbol aktiv, oben | `#000000` | `#f6f5f3` | 19,3:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Symbol aktiv, unten | `#000000` | `#d6d2ce` | 14,0:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Schließen-X, Umriss aktiv, oben | `#820000` | `#f6f5f3` | 9,9:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Schließen-X, Umriss aktiv, unten | `#820000` | `#d6d2ce` | 7,2:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Symbol aktiv überfahren, oben | `#000000` | `#ffffff` | 21,0:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Symbol aktiv überfahren, unten | `#000000` | `#f0eeeb` | 18,1:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Schließen-X, Umriss aktiv überfahren, oben | `#820000` | `#ffffff` | 10,8:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Schließen-X, Umriss aktiv überfahren, unten | `#820000` | `#f0eeeb` | 9,3:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Symbol inaktiv, oben | `#6e6e6e` | `#f6f5f4` | 4,7:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Symbol inaktiv, unten | `#6e6e6e` | `#e8e6e4` | 4,1:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Schließen-X, Umriss inaktiv, oben | `#a05a5a` | `#f6f5f4` | 4,7:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Schließen-X, Umriss inaktiv, unten | `#a05a5a` | `#e8e6e4` | 4,1:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Symbol inaktiv überfahren, oben | `#3c3c3c` | `#ffffff` | 11,0:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Symbol inaktiv überfahren, unten | `#3c3c3c` | `#f0eeec` | 9,5:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Schließen-X, Umriss inaktiv überfahren, oben | `#820000` | `#ffffff` | 10,8:1 | bestanden (Grenze 3:1, Symbol) |
+| Querencia-Klassisch: Schließen-X, Umriss inaktiv überfahren, unten | `#820000` | `#f0eeec` | 9,3:1 | bestanden (Grenze 3:1, Symbol) |
 | Querencia-Klassisch-Dunkel: Symbol aktiv, oben | `#f2f1f0` | `#57554f` | 6,6:1 | bestanden |
 | Querencia-Klassisch-Dunkel: Symbol aktiv, unten | `#f2f1f0` | `#4a4843` | 8,1:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv, oben | `#ed8b85` | `#57554f` | 3,1:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv, unten | `#ed8b85` | `#4a4843` | 3,8:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Symbol aktiv überfahren, oben | `#f2f1f0` | `#66645e` | 5,2:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Symbol aktiv überfahren, unten | `#f2f1f0` | `#5a5852` | 6,3:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv überfahren, oben | `#f3a7a1` | `#66645e` | 3,1:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv überfahren, unten | `#f3a7a1` | `#5a5852` | 3,7:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Symbol inaktiv, oben | `#a8a29d` | `#4a4843` | 3,6:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Symbol inaktiv, unten | `#a8a29d` | `#403f3b` | 4,2:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv, oben | `#cc8a85` | `#4a4843` | 3,3:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv, unten | `#cc8a85` | `#403f3b` | 3,8:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Symbol inaktiv überfahren, oben | `#f2f1f0` | `#66645e` | 5,2:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Symbol inaktiv überfahren, unten | `#f2f1f0` | `#5a5852` | 6,3:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv überfahren, oben | `#f3a7a1` | `#66645e` | 3,1:1 | bestanden |
-| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv überfahren, unten | `#f3a7a1` | `#5a5852` | 3,7:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv, oben | `#f9c8c5` | `#57554f` | 5,0:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv, unten | `#f9c8c5` | `#4a4843` | 6,1:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol aktiv überfahren, oben | `#f2f1f0` | `#5f5d57` | 5,8:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol aktiv überfahren, unten | `#f2f1f0` | `#55534d` | 6,8:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv überfahren, oben | `#fbd2cf` | `#5f5d57` | 4,8:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv überfahren, unten | `#fbd2cf` | `#55534d` | 5,6:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol inaktiv, oben | `#bdb7b1` | `#45443f` | 4,9:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol inaktiv, unten | `#bdb7b1` | `#3c3b37` | 5,6:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv, oben | `#e8b0ac` | `#45443f` | 5,2:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv, unten | `#e8b0ac` | `#3c3b37` | 6,0:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol inaktiv überfahren, oben | `#f2f1f0` | `#5f5d57` | 5,8:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol inaktiv überfahren, unten | `#f2f1f0` | `#55534d` | 6,8:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv überfahren, oben | `#fbd2cf` | `#5f5d57` | 4,8:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv überfahren, unten | `#fbd2cf` | `#55534d` | 5,6:1 | bestanden |

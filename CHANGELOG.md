@@ -4,7 +4,12 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen
 nach [Semantic Versioning](https://semver.org/lang/de/). Solange die Hauptversion
 0 ist, kann sich alles ändern.
 
-## [0.2.2] – 2026-10-22 (Tags `thema/gtk-0.2.2`, `thema/gtk-0.2.2-int`)
+## [0.2.2] – 2026-10-22 (Tags `thema/gtk-0.2.2-2`, `thema/gtk-0.2.2-2-int`)
+
+Fassung 2. Die nie aktivierte Fassung 1 (Tags `thema/gtk-0.2.2`,
+`thema/gtk-0.2.2-int`, `integration/022/`) hatte zusätzlich
+`themerc-override-dunkel` und dunkle Knöpfe mit 3:1; sie bleibt eingefroren
+liegen.
 
 Fensterrahmen dunkel (QD-088 Punkt 6), GTK 3 dunkel geprüft (QD-103),
 Kontrastlauf über GTK 4, GTK 3 und labwc.
@@ -14,20 +19,23 @@ Kontrastlauf über GTK 4, GTK 3 und labwc.
   (byte-gleich mit dem Runtime-Repo und der Ablage 0.2.1), neues dunkles
   Theme `Querencia-Klassisch-Dunkel` (Titelleiste `#4a4843` → `#3c3b37`,
   Titel `#f2f1f0` 8,1:1, inaktiv `#a8a29d` 4,9:1, dunkle Knöpfe, dunkles
-  Fenstermenü und dunkler Fensterwechsler) und `themerc-override-dunkel`
-  (nur die Farben, für den Schalter der Sitzung; Knöpfe bleiben dabei hell).
+  Fenstermenü und dunkler Fensterwechsler, dunkle Knöpfe mit Glyphen
+  ≥ 4,5:1). Den Namen in `rc.xml` schaltet Einstellungen 0.1.6.
 - `werkzeug/labwc-knoepfe.py` (Knöpfe beider Themen, `--pruefen`),
-  `werkzeug/labwc-belege.sh` und `labwc-fenster.py` (Belege hell, Override,
-  dunkel, zurück), `werkzeug/gtk3-belege.sh` mit `gtk3-muster.ui` (GTK 3
+  `werkzeug/labwc-belege.sh` und `labwc-fenster.py` (Belege hell, dunkel,
+  zurück in 1024×768 und 1920×1080), `werkzeug/themenliste-belege.sh`
+  (Einstellungen 0.1.5 und GTK-Inspector listen das Dunkel-Theme nicht als
+  GTK-Thema), `werkzeug/gtk3-belege.sh` mit `gtk3-muster.ui` (GTK 3
   hell/dunkel), `werkzeug/fokus-probe-022.sh` (Fokus nach Taste und
   Farbschema-Wechsel).
-- `werkzeug/kontrast.py`: Tabellen GTK 3 hell/dunkel, labwc hell/dunkel
-  (Theme und Override) und Titelknöpfe (3:1); Grenze 3:1 für Symbole.
-- Integration `integration/022/` (`thema-022-integrieren.sh`, Probe,
+- `werkzeug/kontrast.py`: Tabellen GTK 3 hell/dunkel, labwc hell/dunkel und
+  Titelknöpfe (dunkel 4,5:1, hell 3:1); Grenze 3:1 für Symbole.
+- Integration `integration/022-2/` (`thema-022-2-integrieren.sh`, Probe,
   Vorlage mit SHA256SUMS); Ablage enthält zusätzlich
   `Querencia-Klassisch-Dunkel/labwc`, neuer Link
   `~/.local/share/themes/Querencia-Klassisch-Dunkel`. Gemeinsame Sperre mit
-  den Skripten 0.2 und 0.2.1.
+  den Skripten 0.1, 0.2 und 0.2.1; `zurueck` verweigert, solange die
+  Benutzer-`rc.xml` den dunklen Namen trägt.
 
 ### Geändert
 - **Hell und dunkel, sichtbar:** Skalenwert und Skalenmarken mit 75 % statt

@@ -1,11 +1,11 @@
 # Integration auf der Entwicklungs-VM
 
-Vier Skripte, alle nach dem Muster von `theme-osd-integrieren.sh` (G2-R)
+Vier aktive Skripte (dazu die nie aktivierte Fassung 1 `integration/022/`), alle nach dem Muster von `theme-osd-integrieren.sh` (G2-R)
 aus querencia-runtime:
 
 | Skript | Schritt | Vorlage | Probe |
 |---|---|---|---|
-| `integration/022/thema-022-integrieren.sh` | 0.2.1 (`22824d05…`) → 0.2.2, dazu Link `Querencia-Klassisch-Dunkel` | `integration/022/vorlage/` | `integration/022/probe-022.sh` |
+| `integration/022-2/thema-022-2-integrieren.sh` | 0.2.1 (`22824d05…`) → 0.2.2 (Fassung 2), dazu Link `Querencia-Klassisch-Dunkel` | `integration/022-2/vorlage/` | `integration/022-2/probe-022-2.sh` |
 | `integration/021/thema-021-integrieren.sh` | 0.2 (`b531c620…`) → 0.2.1 | `integration/021/vorlage/` | `integration/021/probe-021.sh` |
 | `integration/thema-02-integrieren.sh` | 0.1 (`a53ff41c…`) → 0.2 (dunkle Fassung) | `integration/vorschlag-02/` | `integration/probe-02.sh` |
 | `integration/thema-integrieren.sh` | G2-R (`e72ae8ed…`) → 0.1, mit gsettings | `integration/vorschlag/` | `integration/probe.sh` |
@@ -13,53 +13,71 @@ aus querencia-runtime:
 Das Skript 0.1 und seine Vorlage bleiben unverändert: Journal und Übergabe
 Thema-1 zeigen darauf (Rückfall von 0.1 auf G2-R).
 
-## Thema 0.2.2 (`022/thema-022-integrieren.sh`)
+## Thema 0.2.2 (`022-2/thema-022-2-integrieren.sh`)
 
-Aktiver Arbeitsordner: `~/projects/querencia-thema-022/integration/` mit
-Skript, Probe und `vorlage/`. `integration/022/` im Repo ist derselbe Stand
-(Tag `thema/gtk-0.2.2-int`); `werkzeug/vorlage-022-bauen.sh` baut die
-Vorlage aus `Querencia-Klassisch/` und `labwc/`, trägt `BAUM_NEU` und
+Aktiver Arbeitsordner: `~/projects/querencia-thema-022-2/integration/` mit
+Skript, Probe und `vorlage/`. `integration/022-2/` im Repo ist derselbe
+Stand (Tag `thema/gtk-0.2.2-2-int`); `werkzeug/vorlage-022-2-bauen.sh` baut
+die Vorlage aus `Querencia-Klassisch/` und `labwc/`, trägt `BAUM_NEU` und
 `SUMMEN_SHA` ein und spiegelt in den Arbeitsordner.
 
+`integration/022/` (Tag `thema/gtk-0.2.2-int`) ist Fassung 1. Sie wurde nie
+aktiviert, die Freigabeanfrage ist zurückgezogen. Sie bleibt eingefroren
+liegen und darf nicht aktiviert werden.
+
 ```bash
-bash ~/projects/querencia-thema-022/integration/thema-022-integrieren.sh pruefen
-QTH_FREIGABE=ja bash ~/projects/querencia-thema-022/integration/thema-022-integrieren.sh aktivieren   # nur nach Freigabe
-QTH_FREIGABE=ja bash ~/projects/querencia-thema-022/integration/thema-022-integrieren.sh zurueck      # Rückfall auf 0.2.1
+bash ~/projects/querencia-thema-022-2/integration/thema-022-2-integrieren.sh pruefen
+QTH_FREIGABE=ja bash ~/projects/querencia-thema-022-2/integration/thema-022-2-integrieren.sh aktivieren   # nur nach Freigabe
+QTH_FREIGABE=ja bash ~/projects/querencia-thema-022-2/integration/thema-022-2-integrieren.sh zurueck      # Rückfall auf 0.2.1
 ```
 
 - **aktivieren** legt die Ablage `~/opt/querencia-theme/<B16>/` an
   (0555/0444) mit `Querencia-Klassisch/` (GTK 4, GTK 3, `index.theme`,
-  `labwc/` wie 0.2.1 plus `labwc/themerc-override-dunkel`) und
-  `Querencia-Klassisch-Dunkel/labwc/`. Dann setzt es den neuen Link
-  `~/.local/share/themes/Querencia-Klassisch-Dunkel` und stellt den Link
-  `Querencia-Klassisch` von 0.2.1 `22824d05…` atomar um. Journalzeile mit
-  Rückfallbefehl.
+  `labwc/` byte-gleich 0.2.1) und `Querencia-Klassisch-Dunkel/labwc/`. Dann
+  setzt es den neuen Link `~/.local/share/themes/Querencia-Klassisch-Dunkel`
+  (dort sucht labwc live) und stellt den Link `Querencia-Klassisch` von
+  0.2.1 `22824d05…` atomar um. Journalzeile mit Rückfallbefehl.
 - **zurueck** stellt den Link auf 0.2.1 und entfernt den Dunkel-Link (nur
-  wenn er auf die Ablage 0.2.2 zeigt); die Ablage 0.2.2 bleibt. Weiter auf
-  0.2 danach mit dem Skript 0.2.1.
+  wenn er auf die Ablage 0.2.2 zeigt); die Ablage 0.2.2 bleibt. Es
+  **verweigert**, solange `~/.config/querencia/labwc/rc.xml` im Abschnitt
+  `<theme>` den Namen `Querencia-Klassisch-Dunkel` trägt. Rückfall-Reihenfolge:
+  erst Einstellungen 0.1.6 `zurueck` (Name wieder hell), dann dieses Skript.
+  Im Notfall läuft `QTH_TROTZ_RC_DUNKEL=ja … zurueck` mit Warnung und
+  Journalzeile; labwc nimmt dann beim nächsten Einlesen sein eingebautes
+  Theme. Weiter auf 0.2 danach mit dem Skript 0.2.1.
 - Halbe Zustände (nur ein Link umgestellt) vervollständigen `aktivieren`
   und `zurueck`; ein fremder Link oder Ordner unter einem der beiden Namen
   führt zur Verweigerung.
-- Invarianten: `vorlage/SHA256SUMS` = `SUMMEN_SHA` und `sha256sum -c`; Liste
-  der Ablage 0.2.1 als `vorlage/liste-021.txt` (`BAUM_ALT`); helles
-  labwc-Theme und `index.theme` byte-gleich mit 0.2.1, dazu genau
-  `themerc-override-dunkel`; `Querencia-Klassisch-Dunkel/labwc` mit
-  `themerc` und 16 Knöpfen; benannte Farben und Kontrastregeln 0.2.2 in der
-  Vorlage.
+- Invarianten:
+  - `vorlage/SHA256SUMS` = `SUMMEN_SHA` und `sha256sum -c`;
+  - Liste der Ablage 0.2.1 als `vorlage/liste-021.txt` (`BAUM_ALT`);
+  - helles labwc-Theme und `index.theme` byte-gleich mit 0.2.1;
+  - `Querencia-Klassisch-Dunkel/labwc` mit `themerc` und 16 Knöpfen;
+  - benannte Farben und Kontrastregeln 0.2.2 in der Vorlage.
 - **Sperre:** `thema-integrieren-gemeinsam.lock` und zusätzlich die
   Sperren der Skripte 0.1, 0.2 und 0.2.1; keines davon kann gleichzeitig
-  laufen.
-- Unberührt: gsettings, `rc.xml`, `themerc-override` der Sitzung,
-  `~/.config/gtk-3.0`, der laufende labwc.
-- **Wirkung:** neu gestartete GTK-Programme sehen 0.2.2 sofort (hell:
-  Skalenwert, Untermenüpfeil, Schließknopf auf Reitern etwas dunkler).
-  Der helle Rahmen bleibt byte-gleich. `Querencia-Klassisch-Dunkel` und
-  `themerc-override-dunkel` liegen nur bereit; dunkel wird der Rahmen erst,
-  wenn die Sitzung sie nutzt (docs/aufbau.md, „labwc-Themen“).
+  laufen. Umlenkung nur vollständig (`QTH_THEMES`, `QTH_THEMEOPT`,
+  `QTH_STATE`, `QTH_PROTOKOLL`, `QTH_LABWC_RC`).
+- Unberührt: gsettings, `rc.xml` (nur gelesen), `~/.config/gtk-3.0`, der
+  laufende labwc.
+- **Wirkung:**
+  - Neu gestartete GTK-Programme sehen 0.2.2 sofort. Hell werden
+    Skalenwert, Untermenüpfeil und Schließknopf auf Reitern etwas dunkler.
+  - Der helle Rahmen bleibt byte-gleich.
+  - `Querencia-Klassisch-Dunkel` liegt nur bereit. Dunkel wird der Rahmen
+    erst, wenn Einstellungen 0.1.6 den Namen in `rc.xml` setzt
+    (docs/aufbau.md, „labwc-Themen“).
 
-Probe: `bash integration/022/probe-022.sh` (Wegwerf-Ordner, Ablage 0.2.1
-als Kopie, Fehler an jeder Stelle mit Rückrollen, halbe Zustände, fremde
-Links und Ordner, alle vier Sperren, halbe Umlenkung). Ergebnis: 69/69.
+Probe: `bash integration/022-2/probe-022-2.sh`. Sie läuft in einem
+Wegwerf-Ordner mit einer Kopie der Ablage 0.2.1 und der Benutzer-`rc.xml`.
+Geprüft wird:
+- Fehler an jeder Stelle mit Rückrollen;
+- dunkler Name in `rc.xml`: `zurueck` verweigert, mit Notfallschalter
+  Warnung;
+- halbe Zustände, fremde Links und Ordner;
+- alle vier Sperren, halbe Umlenkung.
+
+Ergebnis: 79/79.
 
 ## Thema 0.2.1 (`021/thema-021-integrieren.sh`)
 

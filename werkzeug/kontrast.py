@@ -11,9 +11,10 @@ Seit 0.2.2 zusätzlich:
 - GTK 3 (gtk-3.0/gtk.css und gtk-dark.css): alle Paare der GTK-4-Tabellen,
   deren Farben auch in GTK 3 stehen, dazu die Paare, in denen GTK 3 andere
   Farben nimmt (PAARE_GTK3*);
-- labwc (labwc/*/themerc, themerc-override-dunkel): Fenstertitel, Fenstermenü
-  und Fensterwechsler hell und dunkel; Titelknöpfe gegen ihre Fläche mit
-  3:1 (WCAG 1.4.11, Farben aus werkzeug/labwc-knoepfe.py).
+- labwc (labwc/*/themerc): Fenstertitel, Fenstermenü und Fensterwechsler hell
+  und dunkel; Titelknöpfe gegen ihre Fläche (Farben aus
+  werkzeug/labwc-knoepfe.py): dunkel 4,5:1, hell 3:1 (WCAG 1.4.11, das X über
+  seinen Umriss; die hellen Knöpfe sind seit Alpha 1 unverändert live).
 
 Aufruf:  python3 -I werkzeug/kontrast.py [--markdown]
 Exit 1, wenn ein Pflichtpaar AA verfehlt oder eine Farbe im Thema fehlt.
@@ -36,21 +37,6 @@ LABWC_HELL = (REPO / "labwc" / "Querencia-Klassisch" / "themerc").read_text().lo
 LABWC_DUNKEL = (REPO / "labwc" / "Querencia-Klassisch-Dunkel" / "themerc").read_text().lower()
 
 
-
-def themerc(*pfade: Path) -> str:
-    """Wirksame Werte (spätere Datei gewinnt, wie theme_init mit
-    themerc-override) als Text key: wert."""
-    werte = {}
-    for p in pfade:
-        for zeile in p.read_text().lower().splitlines():
-            if ":" in zeile and not zeile.lstrip().startswith("#"):
-                k, w = zeile.split(":", 1)
-                werte[k.strip()] = w.strip()
-    return "\n".join(f"{k}: {w}" for k, w in werte.items())
-
-
-# Override: wirksam ist das helle Theme plus themerc-override-dunkel
-LABWC_OVERRIDE = themerc(REPO / "labwc" / "Querencia-Klassisch" / "themerc", REPO / "labwc" / "themerc-override-dunkel")
 
 # (Element, Schrift, Grund, Pflicht)
 PAARE = [
@@ -177,7 +163,7 @@ PAARE_GTK3_DUNKEL = [
 ]
 
 # labwc: (Element, Schrift, Grund, Pflicht); Farben müssen in der themerc
-# stehen, dunkel zusätzlich in themerc-override-dunkel (außer Knöpfe).
+# stehen.
 OSD_AKTIV_HELL = "#f4dbd0"     # #F0774633 über #f5f4f2
 OSD_AKTIV_DUNKEL = "#5a4134"   # #F0774633 über #353430
 PAARE_LABWC = [
@@ -248,17 +234,19 @@ def gtk3_paare(paare: list, css: str, eigene: list) -> list:
 def knoepfe() -> list:
     """Titelknöpfe: Symbol gegen die Knopffläche (oben und unten im Verlauf).
     Beim X zählt der Umriss (kreuz_rand, außen breiter gezeichnet) als die an
-    die Fläche grenzende Farbe; dunkel ist er gleich der X-Farbe."""
+    die Fläche grenzende Farbe; dunkel ist er gleich der X-Farbe. Grenze
+    dunkel 4,5:1, hell 3:1."""
     spec = importlib.util.spec_from_file_location("labwc_knoepfe", REPO / "werkzeug" / "labwc-knoepfe.py")
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
     hexa = lambda t: "#%02x%02x%02x" % t  # noqa: E731
     paare = []
     for thema, ((an, an_h), (aus, aus_h)) in m.THEMEN.items():
+        g = 4.5 if thema.endswith("-Dunkel") else 3.0
         for zustand, f in (("aktiv", an), ("aktiv überfahren", an_h), ("inaktiv", aus), ("inaktiv überfahren", aus_h)):
             for teil, farbe in (("Symbol", f["symbol"]), ("Schließen-X, Umriss", f["kreuz_rand"])):
                 for lage in ("oben", "unten"):
-                    paare.append((f"{thema}: {teil} {zustand}, {lage}", hexa(farbe), hexa(f[lage]), True, 3.0))
+                    paare.append((f"{thema}: {teil} {zustand}, {lage}", hexa(farbe), hexa(f[lage]), True, g))
     return paare
 
 
@@ -282,7 +270,7 @@ def tabelle(titel: str, paare: list, css: str, md: bool, grenze: float = 4.5) ->
             urteil += " – nicht im Thema: " + ", ".join(fehlt)
         k_txt = f"{k:.1f}:1".replace(".", ",")
         if g != grenze:
-            urteil += f" (Grenze {g:.0f}:1, Symbol)"
+            urteil += f" (Grenze {str(g).replace('.', ',').removesuffix(',0')}:1, Symbol)"
         if md:
             print(f"| {name} | `{fg}` | `{bg}` | {k_txt} | {urteil} |")
         else:
@@ -301,9 +289,7 @@ def main() -> int:
                       gtk3_paare(PAARE_DUNKEL, CSS3_DUNKEL, PAARE_GTK3_DUNKEL), CSS3_DUNKEL, md)
     fehler |= tabelle("labwc hell (labwc/Querencia-Klassisch/themerc)", PAARE_LABWC, LABWC_HELL, md)
     fehler |= tabelle("labwc dunkel (Querencia-Klassisch-Dunkel/themerc)", PAARE_LABWC_DUNKEL, LABWC_DUNKEL, md)
-    fehler |= tabelle("labwc dunkel (Querencia-Klassisch mit themerc-override-dunkel)",
-                      PAARE_LABWC_DUNKEL, LABWC_OVERRIDE, md)
-    fehler |= tabelle("labwc-Titelknöpfe (Symbol gegen Fläche, WCAG 1.4.11)", knoepfe(), None, md, 3.0)
+    fehler |= tabelle("labwc-Titelknöpfe (Glyphe gegen Fläche; dunkel 4,5:1, hell 3:1)", knoepfe(), None, md, 4.5)
     return fehler
 
 

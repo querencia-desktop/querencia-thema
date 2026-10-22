@@ -22,11 +22,12 @@ Theme-Link bleiben unberührt.
 | `werkzeug/farbzaehler.py` | 0.2.1: Pixel einer Farbe in einem Bereich zählen (Beleg für neue Farbwerte) |
 | `werkzeug/farbnamen-probe.sh`, `farbnamen-probe.py` | 0.2.1: benannte Farben aus einem Programm-Provider ohne Bindung, hell, dunkel, Neustart mit und ohne `Settings.notify` |
 | `werkzeug/fokus-probe.sh`, `fokus-probe.py` | 0.2.1: Fokus und `focus-visible` nach Farbschema-Wechsel und nach F10/Esc, Querencia gegen GTK-Default |
-| `werkzeug/labwc-belege.sh`, `labwc-fenster.py` | 0.2.2: labwc mit eigenem Konfigordner, zwei GTK-4-Fenster, Fotos hell, mit `themerc-override-dunkel`, mit Theme `Querencia-Klassisch-Dunkel` und zurück, je mit offenem Fenstermenü; Wechsel über `labwc --reconfigure` an den isolierten labwc |
+| `werkzeug/labwc-belege.sh`, `labwc-fenster.py` | 0.2.2: labwc mit eigenem Konfigordner, zwei GTK-4-Fenster (aktiv, inaktiv), Fotos mit Theme `Querencia-Klassisch`, `Querencia-Klassisch-Dunkel` und zurück, je mit offenem Fenstermenü, in 1024×768 und 1920×1080; Wechsel des Namens in `rc.xml` über `labwc --reconfigure` an den isolierten labwc |
+| `werkzeug/themenliste-belege.sh` | 0.2.2: Einstellungen (Live-Binary, Seiten Erscheinungsbild und Fensterdesign) und GTK-Inspector (Global → Einstellungen, Auswahl GTK-Thema) mit beiden Themen im Datenordner |
 | `werkzeug/gtk3-belege.sh`, `gtk3-muster.ui` | 0.2.2: GTK 3 (`gtk-builder-tool preview`) hell, nur `color-scheme`, `settings.ini` mit `gtk-application-prefer-dark-theme`, `GTK_THEME=…:dark` und Wechsel im Lauf, je mit Menü |
 | `werkzeug/fokus-probe-022.sh` | 0.2.2: Fokus nach Taste und anschließendem Farbschema-Wechsel, Querencia gegen GTK-Default |
 | `werkzeug/labwc-knoepfe.py` | 0.2.2: labwc-Knöpfe beider Themen erzeugen bzw. mit `--pruefen` vergleichen |
-| `integration/probe.sh`, `integration/probe-02.sh`, `integration/021/probe-021.sh`, `integration/022/probe-022.sh` | Probe der Integrationsskripte 0.1, 0.2, 0.2.1 und 0.2.2 |
+| `integration/probe.sh`, `integration/probe-02.sh`, `integration/021/probe-021.sh`, `integration/022-2/probe-022-2.sh` | Probe der Integrationsskripte 0.1, 0.2, 0.2.1 und 0.2.2 (Fassung 2; `integration/022/probe-022.sh` gehört zur nie aktivierten Fassung 1) |
 
 Eingaben (`qeingabe`) und Auflösung (`qausgabe`) kommen aus
 `querencia-rechner/werkzeug/bin` (`QTH_WERKZEUG_BIN`). Sie verweigern den
@@ -49,9 +50,9 @@ Bilder, Panel (mit offenem Menü) und Desktop.
 
 ## Ergebnisse 0.2.2 (22.10.2026)
 
-- **Kontrast:** `kontrast.py` Exit 0 mit 218 Pflichtpaaren: GTK 4 hell 38
-  und dunkel 46, GTK 3 hell 37 und dunkel 44, labwc hell 5, dunkel 8 (Theme)
-  und 8 (Override), Titelknöpfe 32 (3:1). Neu unter AA gefunden und behoben:
+- **Kontrast:** `kontrast.py` Exit 0 mit 210 Pflichtpaaren: GTK 4 hell 38
+  und dunkel 46, GTK 3 hell 37 und dunkel 44, labwc hell 5 und dunkel 8,
+  Titelknöpfe 32 (dunkel 4,5:1, hell 3:1). Neu unter AA gefunden und behoben:
   Skalenwert und -marken (55 %), Untermenüpfeil und Schließknopf auf Reitern
   (30 %), in GTK 4 und GTK 3 (docs/farben.md).
 - **Regression gegen die Live-Ablage 0.2.1** (`regression-021.sh`, 50
@@ -59,10 +60,17 @@ Bilder, Panel (mit offenem Menü) und Desktop.
   beabsichtigten Stellen, hell und dunkel: Untermenüpfeil im Dokumente-Menü
   (62 Pixel), Schließknopf auf dem Reiter im Editor (56 Pixel), Skalenwert
   der Musterseite (138 Pixel). Vergrößerte Ausschnitte in den Belegen.
-- **labwc** (`labwc-belege.sh`): Override und Theme dunkel greifen nach
-  `labwc --reconfigure`; Titelleiste, Titel, Rahmen und Fenstermenü dunkel.
-  Mit Override bleiben die Knöpfe hell (PNG des Themes). Zurück auf hell ist
-  pixelgleich mit dem Anfang (Fenster und Fenstermenü).
+- **labwc** (`labwc-belege.sh`, 1024×768 und 1920×1080): Das Theme
+  `Querencia-Klassisch-Dunkel` greift nach `labwc --reconfigure`. Dunkel
+  sind Titelleiste, Titel, Rahmen, Knöpfe und Fenstermenü, aktiv und
+  inaktiv. Zurück auf hell ist pixelgleich mit dem Anfang (Fenster und
+  Fenstermenü). Suchpfad live gemessen: `~/.local/share/themes`
+  (`XDG_DATA_HOME` nicht gesetzt).
+- **Themenlisten** (`themenliste-belege.sh`): Einstellungen 0.1.5 zeigt
+  unter „Steuerelemente (GTK-Thema)“ nur GTK-Standard und
+  Querencia-Klassisch. Unter „Fensterdesign“ steht Querencia-Klassisch-Dunkel
+  wie gewollt. Der GTK-Inspector (Auswahl GTK-Thema) zeigt Default, Empty
+  und Querencia-Klassisch.
 - **GTK 3** (`gtk3-belege.sh`): `color-scheme` allein = hell (pixelgleich);
   `settings.ini` mit `gtk-application-prefer-dark-theme=true` =
   `GTK_THEME=Querencia-Klassisch:dark` (pixelgleich, auch mit Menü); im Lauf
@@ -74,8 +82,9 @@ Bilder, Panel (mit offenem Menü) und Desktop.
   (Querencia nach 2,4 s schon aus, Default noch an: Zeitpunkt, nicht Thema).
   Wechsel ohne vorherige Taste: pixelgleich. Einordnung: GTK, nicht das
   Thema.
-- **Integration:** Probe 0.2.2 69/69; `pruefen` live Exit 0 (Link 0.2.1,
-  Dunkel-Link fehlt, Ablage 0.2.2 fehlt, SHA256SUMS der Vorlage in Ordnung).
+- **Integration:** Probe 0.2.2 (Fassung 2) 79/79; `pruefen` live Exit 0
+  (Link 0.2.1, Dunkel-Link fehlt, Ablage 0.2.2 fehlt, SHA256SUMS der Vorlage
+  in Ordnung, rc.xml-Name Querencia-Klassisch).
 
 ## Ergebnisse 0.2.1 (21.10.2026)
 

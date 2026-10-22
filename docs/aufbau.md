@@ -145,28 +145,35 @@ Runtime-Repo (`data/themes/Querencia-Klassisch/labwc`):
 | Datei | Inhalt |
 |---|---|
 | `labwc/Querencia-Klassisch/` | helles Theme, `themerc` und 16 Knöpfe, byte-gleich mit dem Runtime-Repo und der Ablage 0.2.1 |
-| `labwc/Querencia-Klassisch-Dunkel/` | dunkles Theme: Titelleiste `#4a4843` → `#3c3b37`, inaktiv `#353430`, Titel `#f2f1f0` bzw. `#a8a29d`, dunkle Knöpfe, Fenstermenü und Fensterwechsler wie die dunklen GTK-Menüs |
-| `labwc/themerc-override-dunkel` | nur die Farben des dunklen Themes; die Sitzung schreibt sie bei dunkel als `<config-dir>/themerc-override` |
+| `labwc/Querencia-Klassisch-Dunkel/` | dunkles Theme, gleicher Aufbau (`themerc` und 16 Knöpfe): Titelleiste `#4a4843` → `#3c3b37`, inaktiv `#353430`, Titel `#f2f1f0` bzw. `#a8a29d`, dunkle Knöpfe (Glyphen ≥ 4,5:1), Fenstermenü und Fensterwechsler wie die dunklen GTK-Menüs |
 
 `werkzeug/labwc-knoepfe.py` erzeugt die PNG-Knöpfe beider Themen
 (`--pruefen` vergleicht nur). Die Zeichnung stammt aus `theme_b.py`
 (Variante B); die hellen Knöpfe kommen byte-gleich heraus.
 
-labwc 0.9.8 wählt sein Theme nicht nach `color-scheme`. Zwei Wege:
+labwc 0.9.8 wählt sein Theme nicht nach `color-scheme`. Dunkel wird der
+Rahmen, wenn `<theme><name>` in der `rc.xml` des Benutzers
+`Querencia-Klassisch-Dunkel` nennt und labwc neu liest (`--reconfigure` oder
+Anmeldung). Den Namen schaltet Einstellungen 0.1.6 (Entscheidung der
+Startsession, 22.10.2026). Ein `themerc-override` (nur Farben) kam nicht in
+Frage: Er kann die Knopfbilder des aktiven Themes nicht tauschen
+(`src/theme.c`, `load_button`).
 
-1. **Override** (für den Schalter der Sitzung): labwc liest nach dem Theme
-   `<config-dir>/themerc-override` (`src/theme.c`, `theme_init`), bei
-   `labwc -C <ordner>` genau `<ordner>/themerc-override`. Die Datei setzt
-   Rahmen, Titelleiste, Titel, Fenstermenü und Fensterwechsler dunkel.
-   Wirksam nach `labwc --reconfigure`. **Grenze:** Die Titelknöpfe sind PNG
-   des aktiven Themes; ein Override kann sie nicht tauschen. Unter
-   Querencia-Klassisch bleiben sie hell (helle Fläche, dunkles Symbol,
-   rotes X) und gut sichtbar.
-2. **Theme-Name** `Querencia-Klassisch-Dunkel` in `rc.xml`: alles dunkel,
-   auch die Knöpfe. Verlangt eine Änderung an der `rc.xml` des Benutzers.
+labwc sucht ein Theme in `$XDG_DATA_HOME/themes` (Vorgabe
+`~/.local/share/themes`), `~/.themes` und `$XDG_DATA_DIRS/themes`, jeweils
+`<Name>/labwc/themerc`, erster Treffer gewinnt (`src/common/dir.c`). Live
+ist `XDG_DATA_HOME` nicht gesetzt; beide Themen liegen deshalb als Links in
+`~/.local/share/themes` (gemessen, Beleg `labwc-suchpfad.txt` der Übergabe
+0.2.2).
 
-Isoliert belegt mit `werkzeug/labwc-belege.sh` (hell, Override, Theme
-dunkel, zurück; der Rückweg ist pixelgleich mit hell).
+Ein Ordner nur mit `labwc/` ist kein GTK-Thema: Die GTK-Thema-Auswahl von
+Einstellungen 0.1.5 verlangt `gtk-4.0/gtk.css`, der GTK-Inspector ebenso;
+`Querencia-Klassisch-Dunkel` erscheint dort nicht, wohl aber unter
+Fensterdesign (labwc-Themen). Isoliert belegt mit
+`werkzeug/themenliste-belege.sh`.
+
+Isoliert belegt mit `werkzeug/labwc-belege.sh` (hell, dunkel, zurück in
+1024×768 und 1920×1080; der Rückweg ist pixelgleich mit hell).
 
 ## Klassische Scrollbalken
 
@@ -198,10 +205,10 @@ zeichnet die Balken breit und klassisch. Erzwingt ein Programm trotzdem
 - **Eigene CSS der Programme bleibt hell.** Feste helle Flächen und dunkle
   Schrift in der Programm-CSS gehen der dunklen Fassung vor; Liste in der
   Übergabe Thema 0.2 (Werkzeug `werkzeug/css-sichten.py`).
-- **Fensterrahmen dunkel nur über die Sitzung.** labwc wählt das Thema
-  nicht nach `color-scheme`; dunkel wird der Rahmen erst, wenn die Sitzung
-  `themerc-override-dunkel` schreibt (Knöpfe bleiben dann hell) oder das
-  Theme `Querencia-Klassisch-Dunkel` wählt (siehe „labwc-Themen“).
+- **Fensterrahmen dunkel nur über den Theme-Namen.** labwc wählt das Thema
+  nicht nach `color-scheme`; dunkel wird der Rahmen erst, wenn `rc.xml`
+  `Querencia-Klassisch-Dunkel` nennt (Einstellungen 0.1.6, siehe
+  „labwc-Themen“).
 - **GTK 3 wird nur beim Start dunkel** (settings.ini), siehe „GTK 3 dunkel“.
 - Ein neues Theme im Link erreicht laufende Programme erst beim Neustart oder
   beim Wechsel von `gtk-theme`; GTK liest die Dateien nicht erneut.
