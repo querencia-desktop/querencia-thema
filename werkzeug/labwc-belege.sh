@@ -11,6 +11,9 @@
 #   3-zurueck  wie 1
 # Jeder Wechsel des Theme-Namens in rc.xml über labwc --reconfigure (SIGHUP an
 # den isolierten labwc), wie es Einstellungen 0.1.6 live tun soll.
+# QTH_THEMA_QUELLE=<ordner> nimmt beide Themen aus <ordner> (Aufbau wie
+# ~/.local/share/themes, z. B. für die Nachkontrolle gegen die Live-Ablage;
+# nur gelesen), sonst aus diesem Repo.
 #   bash werkzeug/labwc-belege.sh [ergebnisordner] [BxH …]
 set -euo pipefail
 E=$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)
@@ -19,6 +22,15 @@ shift || true
 GROESSEN=${*:-1024x768 1920x1080}
 WB=${QTH_WERKZEUG_BIN:-$HOME/projects/querencia-rechner/werkzeug/bin}
 LABWC=${QUERENCIA_LABWC:-$HOME/opt/labwc-0.9.8/bin/labwc}
+Q=${QTH_THEMA_QUELLE:-}
+if [ -n "$Q" ]; then
+    Q=$(readlink -f "$Q")
+    GTK4=$(readlink -f "$Q/Querencia-Klassisch")/gtk-4.0
+    LH=$(readlink -f "$Q/Querencia-Klassisch")/labwc
+    LD=$(readlink -f "$Q/Querencia-Klassisch-Dunkel")/labwc
+else
+    GTK4=$E/Querencia-Klassisch/gtk-4.0 LH=$E/labwc/Querencia-Klassisch LD=$E/labwc/Querencia-Klassisch-Dunkel
+fi
 mkdir -p "$AUS"
 : >"$AUS/ergebnis.txt"
 for G in $GROESSEN; do
@@ -28,9 +40,9 @@ A=$AUS/$G
 rm -rf "$P"
 mkdir -p "$P/data/themes/Querencia-Klassisch" "$P/data/themes/Querencia-Klassisch-Dunkel" \
     "$P/config/labwc" "$P/logs" "$A"
-ln -s "$E/Querencia-Klassisch/gtk-4.0" "$P/data/themes/Querencia-Klassisch/gtk-4.0"
-ln -s "$E/labwc/Querencia-Klassisch" "$P/data/themes/Querencia-Klassisch/labwc"
-ln -s "$E/labwc/Querencia-Klassisch-Dunkel" "$P/data/themes/Querencia-Klassisch-Dunkel/labwc"
+ln -s "$GTK4" "$P/data/themes/Querencia-Klassisch/gtk-4.0"
+ln -s "$LH" "$P/data/themes/Querencia-Klassisch/labwc"
+ln -s "$LD" "$P/data/themes/Querencia-Klassisch-Dunkel/labwc"
 cat >"$P/config/labwc/rc.xml" <<R
 <?xml version="1.0"?>
 <labwc_config>
