@@ -12,9 +12,11 @@ Fensterwechsler) zu einem gemeinsamen Thema `Querencia-Klassisch`:
 ```
 Querencia-Klassisch/
 ├─ index.theme
-├─ labwc/      Fensterrahmen (aus querencia-runtime, hier nicht enthalten)
+├─ labwc/      Fensterrahmen, Knöpfe, themerc-override-dunkel (Quelle: labwc/ im Repo)
 ├─ gtk-4.0/    gtk.css (+ Dunkelblock), gtk-dark.css, assets/ (alle Querencia-Programme)
 └─ gtk-3.0/    gtk.css, gtk-dark.css, assets/ (Fremdprogramme mit GTK 3)
+Querencia-Klassisch-Dunkel/
+└─ labwc/      dunkles labwc-Theme (seit 0.2.2)
 ```
 
 Seit 0.2 gibt es eine dunkle Fassung nach Ambiance (Fenster, Menü- und
@@ -23,7 +25,11 @@ dunkler Schrift). Sie gilt bei `color-scheme` `prefer-dark` (Einstellungen →
 Erscheinungsbild). Seit 0.2.1 ist die Fehlerschrift dunkel lesbar, die
 Tastenkürzel in Menüs erreichen hell und dunkel WCAG AA, und Programme
 finden benannte Farben für Seitenleiste und Menü (`@sidebar_bg_color`,
-`@menu_bg_color` u. a., siehe [docs/farben.md](docs/farben.md)).
+`@menu_bg_color` u. a., siehe [docs/farben.md](docs/farben.md)). Seit 0.2.2
+gibt es die Fensterrahmen auch dunkel (labwc-Theme
+`Querencia-Klassisch-Dunkel` bzw. `themerc-override-dunkel` für den Schalter
+der Sitzung), GTK 3 ist dunkel geprüft, und gedimmte Bedienteile (Skalen,
+Untermenüpfeil, Schließknopf auf Reitern) erreichen AA.
 
 > **Alpha.** Teil 1 jeder `gtk.css` hängt von der installierten GTK-Version
 > ab. GTK 4.22 schaltet nur laufende Programme dunkel; neu gestartete
@@ -35,9 +41,9 @@ finden benannte Farben für Seitenleiste und Menü (`@sidebar_bg_color`,
 
 | | |
 |---|---|
-| Version | 0.2.1 (Tag `thema/gtk-0.2.1-int`, Vorlage `integration/021/vorlage`), noch nicht live |
-| Auf der Entwicklungs-VM | 0.2 live seit 21.10.2026 10:26 (Tag `thema/gtk-0.2`, Ablage `b531c62050830d10`; `gtk-theme` = `Querencia-Klassisch`, `color-scheme` `default`) |
-| Letzte Prüfung | isolierte Läufe hell/dunkel über das Settings-Portal gegen die Live-Ablage 0.2 (de 1024×768, en 1920×1080), hell pixelgleich außer den Tastenkürzeln, Kontraste hell und dunkel nach WCAG AA, siehe [docs/pruefung.md](docs/pruefung.md) und [docs/farben.md](docs/farben.md) |
+| Version | 0.2.2 (Tags `thema/gtk-0.2.2`, `thema/gtk-0.2.2-int`, Vorlage `integration/022/vorlage`), noch nicht live |
+| Auf der Entwicklungs-VM | 0.2.1 live seit 21.10.2026 18:05 (Tag `thema/gtk-0.2.1-int`, Ablage `22824d05ceb49cad`; `gtk-theme` = `Querencia-Klassisch`, `color-scheme` `default`) |
+| Letzte Prüfung | isolierte Läufe gegen die Live-Ablage 0.2.1, labwc hell/Override/dunkel, GTK 3 hell/dunkel, Kontraste GTK 4, GTK 3 und labwc nach WCAG AA, siehe [docs/pruefung.md](docs/pruefung.md) und [docs/farben.md](docs/farben.md) |
 | Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22 und GTK 3 |
 
 Änderungen je Version: [CHANGELOG.md](CHANGELOG.md).
@@ -58,14 +64,15 @@ Dunkel: `org.gnome.desktop.interface color-scheme` auf `prefer-dark`
 `GTK_THEME=Querencia-Klassisch:dark`.
 
 Auf der Entwicklungs-VM richten `integration/thema-integrieren.sh` (0.1),
-`integration/thema-02-integrieren.sh` (0.2) und
-`integration/021/thema-021-integrieren.sh` (0.2.1) das Thema ein. Es tut das nur nach Freigabe durch die Status-Session, siehe
+`integration/thema-02-integrieren.sh` (0.2),
+`integration/021/thema-021-integrieren.sh` (0.2.1) und
+`integration/022/thema-022-integrieren.sh` (0.2.2) das Thema ein. Es tut das nur nach Freigabe durch die Status-Session, siehe
 [docs/integration.md](docs/integration.md). Später kommt es nach
 `/usr/share/themes/Querencia-Klassisch/` (Paket).
 
 ## Bauen und Prüfen
 
-`python3 -I werkzeug/erzeugen.py` erzeugt `gtk.css` und `gtk-dark.css` für GTK 4 und GTK 3 (nie von Hand schreiben), `python3 -I werkzeug/kontrast.py` prüft die Kontraste hell und dunkel; geprüft wird nur isoliert (`werkzeug/isoliert.py`: eigener labwc, eigener D-Bus, Portale im Wegwerf-Bus).
+`python3 -I werkzeug/erzeugen.py` erzeugt `gtk.css` und `gtk-dark.css` für GTK 4 und GTK 3 (nie von Hand schreiben), `python3 -I werkzeug/kontrast.py` prüft die Kontraste hell und dunkel (GTK 4, GTK 3, labwc), `python3 -I werkzeug/labwc-knoepfe.py` erzeugt die labwc-Knöpfe; geprüft wird nur isoliert (`werkzeug/isoliert.py`: eigener labwc, eigener D-Bus, Portale im Wegwerf-Bus).
 Generator, Schichten und Grenzen: [docs/aufbau.md](docs/aufbau.md); Prüfung und Belegbilder: [docs/pruefung.md](docs/pruefung.md); Integration: [docs/integration.md](docs/integration.md).
 
 ## Lizenz und Herkunft

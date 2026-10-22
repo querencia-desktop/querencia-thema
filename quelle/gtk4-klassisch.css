@@ -607,7 +607,12 @@ scale.marks-after:not(.marks-before) > trough > slider:disabled {
 }
 
 scale > trough:disabled > highlight { background-image: none; background-color: #d8d4d0; border-color: #c3beb8; }
-scale > marks { color: #8f8a85; }
+/* Skalenwert und Skalenmarken: 75 % statt 55 % des Grundthemas (AA hell und
+   dunkel wie gedimmter Text, 0.2.2; die feste Farbe bis 0.2.1 galt nur für
+   Marken ohne Ausrichtung) */
+scale > value, scale.horizontal > marks, scale.vertical > marks {
+  color: rgb(from currentColor r g b / calc(alpha * 0.75));
+}
 
 /* ------------------------------------------------------ Fortschritt */
 
@@ -837,3 +842,10 @@ spinbutton:not(.vertical) > text > selection:focus-within {
   background-color: #f07746;
   color: #1a1a1a;
 }
+
+/* ------------------------------------------------ Kontrast-Lauf 0.2.2 */
+/* Pfeil zum Untermenü und Schließknopf auf Reitern: 75 % statt 30 % des
+   Grundthemas (WCAG 1.4.11, 3:1 für Bedienelemente; mit 75 % auch 4,5:1
+   wie gedimmter Text). Überfahren bleibt voll. */
+modelbutton.flat arrow { opacity: 0.75; }
+notebook > header > tabs > tab button.flat { color: rgb(from currentColor r g b / calc(alpha * 0.75)); }

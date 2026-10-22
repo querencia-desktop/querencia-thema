@@ -21,7 +21,7 @@ CSS-Dateien von Rechner, Systemmonitor, Dateisuche und Software überein.
 | Tooltip | Schrift weiß auf `rgba(30, 30, 30, 0.95)` | Ambiance: dunkle Tooltips |
 | Verweis | `#b33c0b`, besucht `#8a3a1c` | Ambiance `link_color` #DD4814, für AA abgedunkelt |
 | Gefährliche Aktion | `#cc3b35` → `#b02a24`, weiße Schrift | Ambiance `error_bg_color` #df382c, für AA abgedunkelt |
-| Fensterrahmen (labwc) | `#7a7570`, Titelleiste `#eeece9` → `#d8d4d0` | Querencia-Klassisch/labwc/themerc |
+| Fensterrahmen (labwc) | `#7a7570`, Titelleiste `#eeece9` → `#d8d4d0` | labwc/Querencia-Klassisch/themerc |
 
 Gelesene Quellen (nur lesend, Farbwerte): Ubuntu-Paket light-themes
 0.1.6.6 (Lucid, Ambiance/Radiance gtk-2.0/gtkrc), human-theme 0.39.1 (Human,
@@ -111,11 +111,46 @@ Beispiel (Programm-CSS):
 list.qs-seite { background-color: @sidebar_bg_color; color: @sidebar_fg_color; }
 ```
 
+## Gedimmte Bedienteile und labwc dunkel (0.2.2)
+
+- **Skalenwert und Skalenmarken** (`scale > value`, `scale.horizontal >
+  marks`, GTK 3 `scale marks, scale value`): 75 % statt 55 % der Schrift
+  (hell 4,9:1 statt 2,9:1, dunkel 5,4:1 statt 3,7:1). Die feste Farbe
+  `#8f8a85` bis 0.2.1 galt nur für Marken ohne Ausrichtung, also nie.
+- **Pfeil zum Untermenü** (`modelbutton.flat arrow`) und **Schließknopf auf
+  Reitern** (`tab button.flat`, auch GTK 3): 75 % statt 30 % (Symbole,
+  WCAG 1.4.11 verlangt 3:1; hell 3,2–4,9:1, dunkel 4,6–5,8:1). Überfahren
+  bleibt voll.
+- Begründet unter AA, unverändert: deaktivierte Schrift und Bedienteile
+  (WCAG-Ausnahme), Kalendertage anderer Monate (30 %, gesperrt wirkende
+  Tage), die Überlagerungsanzeige der GTK-3-Scrollbalken (Integration
+  schaltet `overlay-scrolling` ab), Emoji-Reiter im GTK-3-Emoji-Wähler (bunte
+  Bilder).
+
+labwc dunkel (Theme `Querencia-Klassisch-Dunkel` und
+`themerc-override-dunkel`):
+
+| Rolle | hell | dunkel |
+|---|---|---|
+| Titelleiste aktiv (Verlauf) | `#eeece9` → `#d8d4d0` | `#4a4843` → `#3c3b37` |
+| Titelleiste inaktiv | `#f2f1ef` | `#353430` |
+| Titel aktiv, inaktiv | `#000000`, `#6e6e6e` | `#f2f1f0` (8,1:1), `#a8a29d` (4,9:1) |
+| Rahmen aktiv, inaktiv | `#7a7570`, `#aaa6a2` | `#23221f`, `#2b2a27` |
+| Fenstermenü | labwc-Standard `#fcfbfa`, Schrift `#000000` | `#353430`, Schrift `#dfdbd2`, Auswahl `#f07746` mit `#1a1a1a` |
+| Fensterwechsler | `#f5f4f2`, Schrift `#3c3c3c` | `#353430`, Schrift `#dfdbd2` |
+| Knöpfe | Fläche `#f6f5f3` → `#d6d2ce`, Symbol `#000000`, X `#cc0000` | Fläche `#57554f` → `#4a4843`, Symbol `#f2f1f0`, X `#ed8b85` (überfahren `#f3a7a1`, inaktiv `#cc8a85`) |
+
+Das helle X grenzt sich über seinen dunkelroten Umriss von der Fläche ab
+(mindestens 4,1:1); dunkel ist das X einfarbig, weil ein dunkler Umriss auf
+der dunklen Fläche verschwände.
+
 ## Kontrast-Tabelle
 
 Erzeugt mit `python3 -I werkzeug/kontrast.py --markdown`. Jedes Paar muss in
 der erzeugten Datei vorkommen (hell: `gtk-4.0/gtk.css` vor dem Dunkelblock,
-dunkel: `gtk-4.0/gtk-dark.css`), sonst schlägt die Prüfung fehl.
+dunkel: `gtk-4.0/gtk-dark.css`, GTK 3: `gtk-3.0/…`, labwc: die `themerc`
+bzw. das helle Theme mit dem Override), sonst schlägt die Prüfung fehl.
+Symbole (Pfeile, Schließknöpfe, Titelknöpfe) müssen 3:1 erreichen.
 
 **Hell (gtk.css)**
 
@@ -155,7 +190,13 @@ dunkel: `gtk-4.0/gtk-dark.css`), sonst schlägt die Prüfung fehl.
 | Tastenkürzel auf Auswahl, unten | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
 | @sidebar_fg_color auf @sidebar_bg_color | `#3c3c3c` | `#f5f4f2` | 10,0:1 | bestanden |
 | @menu_fg_color auf @menu_bg_color | `#3c3c3c` | `#f5f4f2` | 10,0:1 | bestanden |
+| Skalenwert und Skalenmarken (75 %) | `#3c3c3c@0.75` | `#f2f1f0` | 4,9:1 | bestanden |
+| Pfeil zum Untermenü (75 %) | `#3c3c3c@0.75` | `#f5f4f2` | 4,9:1 | bestanden (Grenze 3:1, Symbol) |
+| Schließknopf auf aktivem Reiter (75 %) | `#3c3c3c@0.75` | `#f2f1f0` | 4,9:1 | bestanden (Grenze 3:1, Symbol) |
+| Schließknopf auf inaktivem Reiter (75 %), unten | `#5a5652@0.75` | `#dedad6` | 3,2:1 | bestanden (Grenze 3:1, Symbol) |
 | Deaktivierte Schrift (WCAG-Ausnahme) | `#a5a09a` | `#f2f1f0` | 2,3:1 | (Info) unter AA |
+| Vergleich: Skalenwert bis 0.2.1 (55 %) | `#3c3c3c@0.55` | `#f2f1f0` | 2,9:1 | (Info) unter AA |
+| Vergleich: Pfeil, Schließknopf bis 0.2.1 (30 %) | `#3c3c3c@0.3` | `#f2f1f0` | 1,7:1 | (Info) unter AA (Grenze 3:1, Symbol) |
 | Vergleich: Tastenkürzel bis 0.2 (55 %) | `#3c3c3c@0.55` | `#f5f4f2` | 2,9:1 | (Info) unter AA |
 | Tastenkürzel auf Auswahl, gedrückt (Augenblick) | `#1a1a1a` | `#e2683a` | 5,2:1 | (Info) erfüllt |
 | Vergleich: weiße Auswahlschrift (Ambiance, Panelmenü) | `#ffffff` | `#f07746` | 2,8:1 | (Info) unter AA |
@@ -199,7 +240,6 @@ dunkel: `gtk-4.0/gtk-dark.css`), sonst schlägt die Prüfung fehl.
 | Kopfleiste (nur GTK-Dialoge), unten | `#dfdbd2` | `#3c3b37` | 8,1:1 | bestanden |
 | Gedimmter Text (dim-label, 75 %) auf Fenstergrund | `#dfdbd2@0.75` | `#3c3b37` | 5,4:1 | bestanden |
 | Platzhalter (75 %) im Eingabefeld | `#f2f1f0@0.75` | `#2b2a27` | 7,8:1 | bestanden |
-| Skalenmarken | `#b3aea7` | `#3c3b37` | 5,1:1 | bestanden |
 | Fehlerschrift (label.error) auf Fenstergrund und Dialog | `#ed8b85` | `#3c3b37` | 4,6:1 | bestanden |
 | Fehlerschrift auf Menügrund | `#ed8b85` | `#353430` | 5,1:1 | bestanden |
 | Fehlerschrift in Ansicht und Eingabefeld | `#ed8b85` | `#2b2a27` | 5,9:1 | bestanden |
@@ -208,8 +248,190 @@ dunkel: `gtk-4.0/gtk-dark.css`), sonst schlägt die Prüfung fehl.
 | Tastenkürzel auf Auswahl, unten | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
 | @sidebar_fg_color auf @sidebar_bg_color | `#e8e6e3` | `#353430` | 10,0:1 | bestanden |
 | @menu_fg_color auf @menu_bg_color | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
+| Skalenwert und Skalenmarken (75 %) | `#dfdbd2@0.75` | `#3c3b37` | 5,4:1 | bestanden |
+| Pfeil zum Untermenü (75 %) | `#dfdbd2@0.75` | `#353430` | 5,8:1 | bestanden (Grenze 3:1, Symbol) |
+| Schließknopf auf aktivem Reiter (75 %) | `#dfdbd2@0.75` | `#3c3b37` | 5,4:1 | bestanden (Grenze 3:1, Symbol) |
+| Schließknopf auf inaktivem Reiter (75 %), unten | `#bdb7b1@0.75` | `#2f2e2a` | 4,6:1 | bestanden (Grenze 3:1, Symbol) |
 | Deaktivierte Schrift (WCAG-Ausnahme) | `#858079` | `#3c3b37` | 2,9:1 | (Info) unter AA |
 | Deaktivierte Schrift im Feld (WCAG-Ausnahme) | `#858079` | `#353430` | 3,2:1 | (Info) unter AA |
 | Vergleich: Fehlerschrift bis 0.2 (#cc0000) | `#cc0000` | `#3c3b37` | 1,9:1 | (Info) unter AA |
 | Vergleich: Tastenkürzel bis 0.2 (55 %) | `#dfdbd2@0.55` | `#353430` | 3,9:1 | (Info) unter AA |
 | Vergleich: weiße Auswahlschrift (Ambiance) | `#ffffff` | `#f07746` | 2,8:1 | (Info) unter AA |
+| Vergleich: Skalenwert bis 0.2.1 (55 %) | `#dfdbd2@0.55` | `#3c3b37` | 3,7:1 | (Info) unter AA |
+
+**GTK 3 hell (gtk-3.0/gtk.css)**
+
+| Element | Schrift | Grund | Kontrast | AA (4,5:1) |
+|---|---|---|---|---|
+| Fensterschrift auf Fenstergrund | `#3c3c3c` | `#f2f1f0` | 9,8:1 | bestanden |
+| Menüeintrag auf Menügrund | `#3c3c3c` | `#f5f4f2` | 10,0:1 | bestanden |
+| Text in Ansichten und Feldern | `#1a1a1a` | `#ffffff` | 17,4:1 | bestanden |
+| Zebrazeile | `#1a1a1a` | `#f5f4f2` | 15,8:1 | bestanden |
+| Auswahl, Verlauf oben | `#1a1a1a` | `#f6a179` | 8,5:1 | bestanden |
+| Auswahl, Verlauf unten (Akzent) | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| Auswahl ohne Fokus (Ambiance-Beige) | `#1a1a1a` | `#c6b9a6` | 9,0:1 | bestanden |
+| Empfohlene Aktion, oben | `#1a1a1a` | `#f8ad88` | 9,4:1 | bestanden |
+| Empfohlene Aktion, unten | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| Gefährliche Aktion, oben | `#ffffff` | `#cc3b35` | 4,9:1 | bestanden |
+| Gefährliche Aktion, unten | `#ffffff` | `#b02a24` | 6,6:1 | bestanden |
+| Knopf, Verlauf unten | `#3c3c3c` | `#e9e6e2` | 8,9:1 | bestanden |
+| Gedrückter Knopf | `#3c3c3c` | `#d6d2cd` | 7,3:1 | bestanden |
+| Spaltenkopf | `#3c3c3c` | `#ecebe9` | 9,3:1 | bestanden |
+| Reiter inaktiv, Verlauf unten | `#5a5652` | `#dedad6` | 5,2:1 | bestanden |
+| Tooltip | `#ffffff` | `#1e1e1e` | 16,7:1 | bestanden |
+| Verweis auf Fenstergrund | `#b33c0b` | `#f2f1f0` | 5,2:1 | bestanden |
+| Verweis auf Weiß | `#b33c0b` | `#ffffff` | 5,9:1 | bestanden |
+| Besuchter Verweis | `#8a3a1c` | `#f2f1f0` | 6,9:1 | bestanden |
+| Kopfleiste (nur GTK-Dialoge), unten | `#3c3c3c` | `#d8d4d0` | 7,5:1 | bestanden |
+| Schalter an (Textteil) | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| Gedimmter Text (dim-label, 75 %) auf Fenstergrund | `#3c3c3c@0.75` | `#f2f1f0` | 4,9:1 | bestanden |
+| Platzhalter (75 %) im Eingabefeld | `#1a1a1a@0.75` | `#ffffff` | 7,7:1 | bestanden |
+| Fehlerschrift (label.error) auf Fenstergrund | `#cc0000` | `#f2f1f0` | 5,2:1 | bestanden |
+| Fehlerschrift auf Menügrund | `#cc0000` | `#f5f4f2` | 5,4:1 | bestanden |
+| Fehlerschrift in Ansicht und Eingabefeld | `#cc0000` | `#ffffff` | 5,9:1 | bestanden |
+| Tastenkürzel im Menü (75 %) | `#3c3c3c@0.75` | `#f5f4f2` | 4,9:1 | bestanden |
+| Tastenkürzel auf Auswahl, oben | `#1a1a1a` | `#f6a179` | 8,5:1 | bestanden |
+| Tastenkürzel auf Auswahl, unten | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| @sidebar_fg_color auf @sidebar_bg_color | `#3c3c3c` | `#f5f4f2` | 10,0:1 | bestanden |
+| @menu_fg_color auf @menu_bg_color | `#3c3c3c` | `#f5f4f2` | 10,0:1 | bestanden |
+| Skalenwert und Skalenmarken (75 %) | `#3c3c3c@0.75` | `#f2f1f0` | 4,9:1 | bestanden |
+| Pfeil zum Untermenü (75 %) | `#3c3c3c@0.75` | `#f5f4f2` | 4,9:1 | bestanden (Grenze 3:1, Symbol) |
+| Schließknopf auf aktivem Reiter (75 %) | `#3c3c3c@0.75` | `#f2f1f0` | 4,9:1 | bestanden (Grenze 3:1, Symbol) |
+| Schließknopf auf inaktivem Reiter (75 %), unten | `#5a5652@0.75` | `#dedad6` | 3,2:1 | bestanden (Grenze 3:1, Symbol) |
+| Deaktivierte Schrift (WCAG-Ausnahme) | `#a5a09a` | `#f2f1f0` | 2,3:1 | (Info) unter AA |
+| Vergleich: Skalenwert bis 0.2.1 (55 %) | `#3c3c3c@0.55` | `#f2f1f0` | 2,9:1 | (Info) unter AA |
+| Vergleich: Tastenkürzel bis 0.2 (55 %) | `#3c3c3c@0.55` | `#f5f4f2` | 2,9:1 | (Info) unter AA |
+| Tastenkürzel auf Auswahl, gedrückt (Augenblick) | `#1a1a1a` | `#e2683a` | 5,2:1 | (Info) erfüllt |
+| Vergleich: weiße Auswahlschrift (Ambiance, Panelmenü) | `#ffffff` | `#f07746` | 2,8:1 | (Info) unter AA |
+| Vergleich: weiße Schrift, Verlauf oben | `#ffffff` | `#f6a179` | 2,0:1 | (Info) unter AA |
+| Infoleiste (alle Arten, Adwaita 3) | `#3c3c3c` | `#f1e6d9` | 9,0:1 | bestanden |
+| Seitenleiste | `#3c3c3c` | `#fbfafa` | 10,6:1 | bestanden |
+
+**GTK 3 dunkel (gtk-3.0/gtk-dark.css)**
+
+| Element | Schrift | Grund | Kontrast | AA (4,5:1) |
+|---|---|---|---|---|
+| Fensterschrift auf Fenstergrund | `#dfdbd2` | `#3c3b37` | 8,1:1 | bestanden |
+| Werkzeugleiste, Verlauf oben | `#dfdbd2` | `#45443f` | 7,1:1 | bestanden |
+| Menüeintrag auf Menügrund | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
+| Text in Ansichten und Feldern | `#f2f1f0` | `#2b2a27` | 12,7:1 | bestanden |
+| Zebrazeile | `#f2f1f0` | `#353430` | 11,0:1 | bestanden |
+| Auswahl, Verlauf oben | `#1a1a1a` | `#f6a179` | 8,5:1 | bestanden |
+| Auswahl, Verlauf unten (Akzent) | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| Auswahl ohne Fokus (dunkles Beige) | `#f2f1f0` | `#6b6153` | 5,4:1 | bestanden |
+| Empfohlene Aktion, oben | `#1a1a1a` | `#f8ad88` | 9,4:1 | bestanden |
+| Empfohlene Aktion, unten | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| Gefährliche Aktion, oben | `#ffffff` | `#cc3b35` | 4,9:1 | bestanden |
+| Gefährliche Aktion, unten | `#ffffff` | `#b02a24` | 6,6:1 | bestanden |
+| Knopf, Verlauf oben | `#dfdbd2` | `#57554f` | 5,4:1 | bestanden |
+| Knopf, Verlauf unten | `#dfdbd2` | `#4a4843` | 6,6:1 | bestanden |
+| Knopf überfahren, oben | `#dfdbd2` | `#5f5d57` | 4,8:1 | bestanden |
+| Gedrückter Knopf | `#dfdbd2` | `#33322e` | 9,3:1 | bestanden |
+| Spaltenkopf, oben | `#dfdbd2` | `#55534d` | 5,6:1 | bestanden |
+| Spaltenkopf, unten | `#dfdbd2` | `#46443f` | 7,0:1 | bestanden |
+| Reiter inaktiv, Verlauf oben | `#bdb7b1` | `#36352f` | 6,2:1 | bestanden |
+| Reiter inaktiv, Verlauf unten | `#bdb7b1` | `#2f2e2a` | 6,8:1 | bestanden |
+| Schalter aus (Textteil) | `#bdb7b1` | `#2f2e2a` | 6,8:1 | bestanden |
+| Schalter an (Textteil) | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| Tooltip | `#ffffff` | `#1e1e1e` | 16,7:1 | bestanden |
+| Verweis auf Fenstergrund | `#f6a179` | `#3c3b37` | 5,5:1 | bestanden |
+| Verweis auf Ansicht | `#f6a179` | `#2b2a27` | 7,0:1 | bestanden |
+| Besuchter Verweis | `#e5a383` | `#3c3b37` | 5,3:1 | bestanden |
+| Verweis überfahren | `#fbbb9a` | `#3c3b37` | 6,8:1 | bestanden |
+| Kopfleiste (nur GTK-Dialoge), unten | `#dfdbd2` | `#3c3b37` | 8,1:1 | bestanden |
+| Gedimmter Text (dim-label, 75 %) auf Fenstergrund | `#dfdbd2@0.75` | `#3c3b37` | 5,4:1 | bestanden |
+| Platzhalter (75 %) im Eingabefeld | `#f2f1f0@0.75` | `#2b2a27` | 7,8:1 | bestanden |
+| Fehlerschrift (label.error) auf Fenstergrund und Dialog | `#ed8b85` | `#3c3b37` | 4,6:1 | bestanden |
+| Fehlerschrift auf Menügrund | `#ed8b85` | `#353430` | 5,1:1 | bestanden |
+| Fehlerschrift in Ansicht und Eingabefeld | `#ed8b85` | `#2b2a27` | 5,9:1 | bestanden |
+| Tastenkürzel im Menü (75 %) | `#dfdbd2@0.75` | `#353430` | 5,8:1 | bestanden |
+| Tastenkürzel auf Auswahl, oben | `#1a1a1a` | `#f6a179` | 8,5:1 | bestanden |
+| Tastenkürzel auf Auswahl, unten | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| @sidebar_fg_color auf @sidebar_bg_color | `#e8e6e3` | `#353430` | 10,0:1 | bestanden |
+| @menu_fg_color auf @menu_bg_color | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
+| Skalenwert und Skalenmarken (75 %) | `#dfdbd2@0.75` | `#3c3b37` | 5,4:1 | bestanden |
+| Pfeil zum Untermenü (75 %) | `#dfdbd2@0.75` | `#353430` | 5,8:1 | bestanden (Grenze 3:1, Symbol) |
+| Schließknopf auf aktivem Reiter (75 %) | `#dfdbd2@0.75` | `#3c3b37` | 5,4:1 | bestanden (Grenze 3:1, Symbol) |
+| Schließknopf auf inaktivem Reiter (75 %), unten | `#bdb7b1@0.75` | `#2f2e2a` | 4,6:1 | bestanden (Grenze 3:1, Symbol) |
+| Deaktivierte Schrift (WCAG-Ausnahme) | `#858079` | `#3c3b37` | 2,9:1 | (Info) unter AA |
+| Deaktivierte Schrift im Feld (WCAG-Ausnahme) | `#858079` | `#353430` | 3,2:1 | (Info) unter AA |
+| Vergleich: Fehlerschrift bis 0.2 (#cc0000) | `#cc0000` | `#3c3b37` | 1,9:1 | (Info) unter AA |
+| Vergleich: Tastenkürzel bis 0.2 (55 %) | `#dfdbd2@0.55` | `#353430` | 3,9:1 | (Info) unter AA |
+| Vergleich: weiße Auswahlschrift (Ambiance) | `#ffffff` | `#f07746` | 2,8:1 | (Info) unter AA |
+| Vergleich: Skalenwert bis 0.2.1 (55 %) | `#dfdbd2@0.55` | `#3c3b37` | 3,7:1 | (Info) unter AA |
+| Infoleiste (alle Arten, Adwaita 3) | `#dfdbd2` | `#44403b` | 7,4:1 | bestanden |
+| Seitenleiste | `#dfdbd2` | `#31302e` | 9,5:1 | bestanden |
+
+**labwc hell (labwc/Querencia-Klassisch/themerc)**
+
+| Element | Schrift | Grund | Kontrast | AA (4,5:1) |
+|---|---|---|---|---|
+| Titel aktiv, Verlauf oben | `#000000` | `#eeece9` | 17,8:1 | bestanden |
+| Titel aktiv, Verlauf unten | `#000000` | `#d8d4d0` | 14,2:1 | bestanden |
+| Titel inaktiv | `#6e6e6e` | `#f2f1ef` | 4,5:1 | bestanden |
+| Fensterwechsler | `#3c3c3c` | `#f5f4f2` | 10,0:1 | bestanden |
+| Fensterwechsler, gewählter Eintrag | `#3c3c3c` | `#f4dbd0` | 8,3:1 | bestanden |
+| Info: Fenstermenü (labwc-Standard, nicht im Theme) | `#000000` | `#fcfbfa` | 20,3:1 | (Info) erfüllt – nicht im Thema: #fcfbfa |
+
+**labwc dunkel (Querencia-Klassisch-Dunkel/themerc)**
+
+| Element | Schrift | Grund | Kontrast | AA (4,5:1) |
+|---|---|---|---|---|
+| Titel aktiv, Verlauf oben | `#f2f1f0` | `#4a4843` | 8,1:1 | bestanden |
+| Titel aktiv, Verlauf unten | `#f2f1f0` | `#3c3b37` | 9,9:1 | bestanden |
+| Titel inaktiv | `#a8a29d` | `#353430` | 4,9:1 | bestanden |
+| Fenstermenü | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
+| Fenstermenü, Auswahl | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| Fenstermenü, Überschrift | `#dfdbd2` | `#3c3b37` | 8,1:1 | bestanden |
+| Fensterwechsler | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
+| Fensterwechsler, gewählter Eintrag | `#dfdbd2` | `#5a4134` | 6,8:1 | bestanden |
+
+**labwc dunkel (Querencia-Klassisch mit themerc-override-dunkel)**
+
+| Element | Schrift | Grund | Kontrast | AA (4,5:1) |
+|---|---|---|---|---|
+| Titel aktiv, Verlauf oben | `#f2f1f0` | `#4a4843` | 8,1:1 | bestanden |
+| Titel aktiv, Verlauf unten | `#f2f1f0` | `#3c3b37` | 9,9:1 | bestanden |
+| Titel inaktiv | `#a8a29d` | `#353430` | 4,9:1 | bestanden |
+| Fenstermenü | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
+| Fenstermenü, Auswahl | `#1a1a1a` | `#f07746` | 6,2:1 | bestanden |
+| Fenstermenü, Überschrift | `#dfdbd2` | `#3c3b37` | 8,1:1 | bestanden |
+| Fensterwechsler | `#dfdbd2` | `#353430` | 9,0:1 | bestanden |
+| Fensterwechsler, gewählter Eintrag | `#dfdbd2` | `#5a4134` | 6,8:1 | bestanden |
+
+**labwc-Titelknöpfe (Symbol gegen Fläche, WCAG 1.4.11)**
+
+| Element | Schrift | Grund | Kontrast | AA (3,0:1) |
+|---|---|---|---|---|
+| Querencia-Klassisch: Symbol aktiv, oben | `#000000` | `#f6f5f3` | 19,3:1 | bestanden |
+| Querencia-Klassisch: Symbol aktiv, unten | `#000000` | `#d6d2ce` | 14,0:1 | bestanden |
+| Querencia-Klassisch: Schließen-X, Umriss aktiv, oben | `#820000` | `#f6f5f3` | 9,9:1 | bestanden |
+| Querencia-Klassisch: Schließen-X, Umriss aktiv, unten | `#820000` | `#d6d2ce` | 7,2:1 | bestanden |
+| Querencia-Klassisch: Symbol aktiv überfahren, oben | `#000000` | `#ffffff` | 21,0:1 | bestanden |
+| Querencia-Klassisch: Symbol aktiv überfahren, unten | `#000000` | `#f0eeeb` | 18,1:1 | bestanden |
+| Querencia-Klassisch: Schließen-X, Umriss aktiv überfahren, oben | `#820000` | `#ffffff` | 10,8:1 | bestanden |
+| Querencia-Klassisch: Schließen-X, Umriss aktiv überfahren, unten | `#820000` | `#f0eeeb` | 9,3:1 | bestanden |
+| Querencia-Klassisch: Symbol inaktiv, oben | `#6e6e6e` | `#f6f5f4` | 4,7:1 | bestanden |
+| Querencia-Klassisch: Symbol inaktiv, unten | `#6e6e6e` | `#e8e6e4` | 4,1:1 | bestanden |
+| Querencia-Klassisch: Schließen-X, Umriss inaktiv, oben | `#a05a5a` | `#f6f5f4` | 4,7:1 | bestanden |
+| Querencia-Klassisch: Schließen-X, Umriss inaktiv, unten | `#a05a5a` | `#e8e6e4` | 4,1:1 | bestanden |
+| Querencia-Klassisch: Symbol inaktiv überfahren, oben | `#3c3c3c` | `#ffffff` | 11,0:1 | bestanden |
+| Querencia-Klassisch: Symbol inaktiv überfahren, unten | `#3c3c3c` | `#f0eeec` | 9,5:1 | bestanden |
+| Querencia-Klassisch: Schließen-X, Umriss inaktiv überfahren, oben | `#820000` | `#ffffff` | 10,8:1 | bestanden |
+| Querencia-Klassisch: Schließen-X, Umriss inaktiv überfahren, unten | `#820000` | `#f0eeec` | 9,3:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol aktiv, oben | `#f2f1f0` | `#57554f` | 6,6:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol aktiv, unten | `#f2f1f0` | `#4a4843` | 8,1:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv, oben | `#ed8b85` | `#57554f` | 3,1:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv, unten | `#ed8b85` | `#4a4843` | 3,8:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol aktiv überfahren, oben | `#f2f1f0` | `#66645e` | 5,2:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol aktiv überfahren, unten | `#f2f1f0` | `#5a5852` | 6,3:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv überfahren, oben | `#f3a7a1` | `#66645e` | 3,1:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss aktiv überfahren, unten | `#f3a7a1` | `#5a5852` | 3,7:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol inaktiv, oben | `#a8a29d` | `#4a4843` | 3,6:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol inaktiv, unten | `#a8a29d` | `#403f3b` | 4,2:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv, oben | `#cc8a85` | `#4a4843` | 3,3:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv, unten | `#cc8a85` | `#403f3b` | 3,8:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol inaktiv überfahren, oben | `#f2f1f0` | `#66645e` | 5,2:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Symbol inaktiv überfahren, unten | `#f2f1f0` | `#5a5852` | 6,3:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv überfahren, oben | `#f3a7a1` | `#66645e` | 3,1:1 | bestanden |
+| Querencia-Klassisch-Dunkel: Schließen-X, Umriss inaktiv überfahren, unten | `#f3a7a1` | `#5a5852` | 3,7:1 | bestanden |

@@ -458,3 +458,8 @@ window.csd.dialog.message, messagedialog.csd { box-shadow: 0 0 0 1px #7a7570, 0 
 
 /* Gedimmter Text: 75 % Deckkraft (AA, siehe docs/farben.md) */
 .dim-label, label.separator, entry placeholder { opacity: 0.75; }
+
+/* Kontrast-Lauf 0.2.2: Skalenwert und -marken sowie Schließknopf auf Reitern
+   75 % statt 55 % bzw. 30 % des Grundthemas (AA hell und dunkel, wie GTK 4) */
+scale marks, scale value { color: alpha(currentColor, 0.75); }
+notebook > header tab button.flat { color: alpha(currentColor, 0.75); }

@@ -99,12 +99,74 @@ Gemessen isoliert (Probethema mit drei Farben) und an der Quelle
 | Scrollbalken | `overlay-scrolling` über das Portal | gsettings direkt |
 | ohne Portal | eingebautes Thema „Default“; gsettings und settings.ini werden auf Wayland dann **nicht** gelesen, außer `settings.ini` bei `GDK_DEBUG=no-portals` | – |
 | Übersteuern | `GTK_THEME=Querencia-Klassisch` | `GTK_THEME=Querencia-Klassisch` |
-| dunkel | `color-scheme` `prefer-dark` über das Portal (Medienabfrage in `gtk.css`); `GTK_THEME=…:dark` lädt `gtk-dark.css` | nur `GTK_THEME=…:dark` bzw. `gtk-application-prefer-dark-theme` (`gtk-dark.css`) |
+| dunkel | `color-scheme` `prefer-dark` über das Portal (Medienabfrage in `gtk.css`); `GTK_THEME=…:dark` lädt `gtk-dark.css` | nur `GTK_THEME=…:dark` bzw. `gtk-application-prefer-dark-theme=true` in `~/.config/gtk-3.0/settings.ini` (`gtk-dark.css`), beides nur beim Start; `color-scheme` allein wirkt nicht (0.2.2 gemessen) |
 | Suchpfad | `$XDG_DATA_HOME/themes`, `~/.themes`, `$XDG_DATA_DIRS/themes` | ebenso |
 
 Isoliert belegt (docs/pruefung.md, Portal-Probe): Ein laufendes
 GTK-4-Programm übernimmt eine gsettings-Änderung sofort, weil das Portal
 `SettingChanged` sendet. Das gilt auch für Panel und Desktop.
+
+## GTK 3 dunkel für fremde Programme (0.2.2, QD-103)
+
+Alle Querencia-Programme sind GTK 4. GTK 3 brauchen nur fremde Programme,
+auf der VM z. B. `gcr-viewer`, `gcr-prompter` und die Dialoge von
+`xdg-desktop-portal-gtk` (Dateiwahl für Nicht-GTK-Programme). Isoliert
+gemessen mit `werkzeug/gtk3-belege.sh` (GTK 3.24.52, Musterfenster
+`werkzeug/gtk3-muster.ui` in `gtk-builder-tool preview`):
+
+- `color-scheme` `prefer-dark` allein: GTK 3 bleibt hell (pixelgleich mit
+  „Standard“). GTK 3 kennt den Schlüssel nicht.
+- `gtk-application-prefer-dark-theme=true` in
+  `$XDG_CONFIG_HOME/gtk-3.0/settings.ini`: GTK 3 lädt `gtk-dark.css`,
+  pixelgleich mit `GTK_THEME=Querencia-Klassisch:dark`, Menü eingeschlossen.
+- Die Datei wirkt nur beim Start. Ein laufendes GTK-3-Programm bleibt hell,
+  wenn sie während des Laufs geschrieben wird (auch zusammen mit
+  `color-scheme`). Fremde GTK-3-Programme werden also dunkel, wenn sie nach
+  dem Umschalten starten.
+- `gtk-dark.css` deckt das Musterfenster vollständig ab: Menüleiste und Menü
+  samt Kürzeln, Werkzeugleiste, Knöpfe (normal, empfohlen, gefährlich,
+  gesperrt), Kästchen, Optionsfelder, Schalter, Eingabefelder mit Platzhalter
+  und Fehler, Drehfeld, Auswahlliste, Regler, Fortschritt, Pegel, Liste mit
+  Spalten, Textansicht, Infoleiste, Verweis, Reiter, Statusleiste. Alle Paare
+  erreichen AA (Tabellen „GTK 3“ in `docs/farben.md`).
+- Abweichend von GTK 4 färbt GTK 3 die Infoleisten aller Arten gleich
+  (Grundthema Adwaita 3, hell `#f1e6d9`, dunkel `#44403b`, je AA).
+
+Für die Sitzung (Schalter „Dunkle Darstellung“) heißt das: bei dunkel
+`gtk-application-prefer-dark-theme=true` in
+`~/.config/gtk-3.0/settings.ini` setzen, bei hell den Schlüssel entfernen.
+Das Thema braucht dafür keine weitere Änderung.
+
+## labwc-Themen (0.2.2)
+
+Seit 0.2.2 liegen die labwc-Teile im Repo (`labwc/`), vorher nur im
+Runtime-Repo (`data/themes/Querencia-Klassisch/labwc`):
+
+| Datei | Inhalt |
+|---|---|
+| `labwc/Querencia-Klassisch/` | helles Theme, `themerc` und 16 Knöpfe, byte-gleich mit dem Runtime-Repo und der Ablage 0.2.1 |
+| `labwc/Querencia-Klassisch-Dunkel/` | dunkles Theme: Titelleiste `#4a4843` → `#3c3b37`, inaktiv `#353430`, Titel `#f2f1f0` bzw. `#a8a29d`, dunkle Knöpfe, Fenstermenü und Fensterwechsler wie die dunklen GTK-Menüs |
+| `labwc/themerc-override-dunkel` | nur die Farben des dunklen Themes; die Sitzung schreibt sie bei dunkel als `<config-dir>/themerc-override` |
+
+`werkzeug/labwc-knoepfe.py` erzeugt die PNG-Knöpfe beider Themen
+(`--pruefen` vergleicht nur). Die Zeichnung stammt aus `theme_b.py`
+(Variante B); die hellen Knöpfe kommen byte-gleich heraus.
+
+labwc 0.9.8 wählt sein Theme nicht nach `color-scheme`. Zwei Wege:
+
+1. **Override** (für den Schalter der Sitzung): labwc liest nach dem Theme
+   `<config-dir>/themerc-override` (`src/theme.c`, `theme_init`), bei
+   `labwc -C <ordner>` genau `<ordner>/themerc-override`. Die Datei setzt
+   Rahmen, Titelleiste, Titel, Fenstermenü und Fensterwechsler dunkel.
+   Wirksam nach `labwc --reconfigure`. **Grenze:** Die Titelknöpfe sind PNG
+   des aktiven Themes; ein Override kann sie nicht tauschen. Unter
+   Querencia-Klassisch bleiben sie hell (helle Fläche, dunkles Symbol,
+   rotes X) und gut sichtbar.
+2. **Theme-Name** `Querencia-Klassisch-Dunkel` in `rc.xml`: alles dunkel,
+   auch die Knöpfe. Verlangt eine Änderung an der `rc.xml` des Benutzers.
+
+Isoliert belegt mit `werkzeug/labwc-belege.sh` (hell, Override, Theme
+dunkel, zurück; der Rückweg ist pixelgleich mit hell).
 
 ## Klassische Scrollbalken
 
@@ -136,7 +198,10 @@ zeichnet die Balken breit und klassisch. Erzwingt ein Programm trotzdem
 - **Eigene CSS der Programme bleibt hell.** Feste helle Flächen und dunkle
   Schrift in der Programm-CSS gehen der dunklen Fassung vor; Liste in der
   Übergabe Thema 0.2 (Werkzeug `werkzeug/css-sichten.py`).
-- **Fensterrahmen bleibt hell.** Der labwc-Teil hat keine dunkle Fassung;
-  labwc wählt das Thema nicht nach `color-scheme`.
+- **Fensterrahmen dunkel nur über die Sitzung.** labwc wählt das Thema
+  nicht nach `color-scheme`; dunkel wird der Rahmen erst, wenn die Sitzung
+  `themerc-override-dunkel` schreibt (Knöpfe bleiben dann hell) oder das
+  Theme `Querencia-Klassisch-Dunkel` wählt (siehe „labwc-Themen“).
+- **GTK 3 wird nur beim Start dunkel** (settings.ini), siehe „GTK 3 dunkel“.
 - Ein neues Theme im Link erreicht laufende Programme erst beim Neustart oder
   beim Wechsel von `gtk-theme`; GTK liest die Dateien nicht erneut.

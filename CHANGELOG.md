@@ -4,6 +4,49 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionen
 nach [Semantic Versioning](https://semver.org/lang/de/). Solange die Hauptversion
 0 ist, kann sich alles ändern.
 
+## [0.2.2] – 2026-10-22 (Tags `thema/gtk-0.2.2`, `thema/gtk-0.2.2-int`)
+
+Fensterrahmen dunkel (QD-088 Punkt 6), GTK 3 dunkel geprüft (QD-103),
+Kontrastlauf über GTK 4, GTK 3 und labwc.
+
+### Hinzugefügt
+- labwc-Teile im Repo (`labwc/`): helles Theme `Querencia-Klassisch`
+  (byte-gleich mit dem Runtime-Repo und der Ablage 0.2.1), neues dunkles
+  Theme `Querencia-Klassisch-Dunkel` (Titelleiste `#4a4843` → `#3c3b37`,
+  Titel `#f2f1f0` 8,1:1, inaktiv `#a8a29d` 4,9:1, dunkle Knöpfe, dunkles
+  Fenstermenü und dunkler Fensterwechsler) und `themerc-override-dunkel`
+  (nur die Farben, für den Schalter der Sitzung; Knöpfe bleiben dabei hell).
+- `werkzeug/labwc-knoepfe.py` (Knöpfe beider Themen, `--pruefen`),
+  `werkzeug/labwc-belege.sh` und `labwc-fenster.py` (Belege hell, Override,
+  dunkel, zurück), `werkzeug/gtk3-belege.sh` mit `gtk3-muster.ui` (GTK 3
+  hell/dunkel), `werkzeug/fokus-probe-022.sh` (Fokus nach Taste und
+  Farbschema-Wechsel).
+- `werkzeug/kontrast.py`: Tabellen GTK 3 hell/dunkel, labwc hell/dunkel
+  (Theme und Override) und Titelknöpfe (3:1); Grenze 3:1 für Symbole.
+- Integration `integration/022/` (`thema-022-integrieren.sh`, Probe,
+  Vorlage mit SHA256SUMS); Ablage enthält zusätzlich
+  `Querencia-Klassisch-Dunkel/labwc`, neuer Link
+  `~/.local/share/themes/Querencia-Klassisch-Dunkel`. Gemeinsame Sperre mit
+  den Skripten 0.2 und 0.2.1.
+
+### Geändert
+- **Hell und dunkel, sichtbar:** Skalenwert und Skalenmarken mit 75 % statt
+  55 % der Schrift (hell 4,9:1 statt 2,9:1), Pfeil zum Untermenü und
+  Schließknopf auf Reitern mit 75 % statt 30 % (GTK 4 und GTK 3; GTK 3 ohne
+  Untermenüpfeil, dort war er schon voll).
+- `quelle/dunkel-zuordnung.txt`: Zeile Skalenmarken `#8f8a85` entfällt.
+- `werkzeug/isoliert.py`: keine `QUERENCIA_*`-Variable der Live-Sitzung im
+  isolierten Lauf, `GIO_USE_VFS=local` (kein gvfsd/wsdd).
+
+### Geprüft, ohne Änderung
+- GTK 3: `gtk-dark.css` ist für fremde Programme vollständig; dunkel nur
+  über `gtk-application-prefer-dark-theme` in `settings.ini` und nur beim
+  Start (docs/aufbau.md).
+- QD-088 (5): Ein Farbschema-Wechsel verschiebt den Fokus nicht, weder unter
+  Querencia-Klassisch noch unter GTK-Default. Der Fokusrahmen kommt von der
+  Tastatureingabe davor (GTK `focus-visible`) und geht nach einigen Sekunden
+  ohne Taste aus.
+
 ## [0.2.1] – 2026-10-21 (Tag `thema/gtk-0.2.1-int`)
 
 Lesbarkeit (QD-088) und benannte Farben für Programme.

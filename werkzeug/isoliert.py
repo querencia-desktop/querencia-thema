@@ -109,8 +109,10 @@ def main() -> int:
     runtime = tempfile.mkdtemp(prefix="qr-runtime-", dir=laufzeit)
     os.chmod(runtime, 0o700)
 
+    # Thema 0.2.2 (13 §5, 21.10. 20:38): keine QUERENCIA_*-Variable der
+    # Live-Sitzung in den isolierten Lauf.
     env = {k: v for k, v in os.environ.items()
-           if not k.startswith(("WAYLAND", "DBUS", "DISPLAY", "XDG_", "LABWC", "SWAYSOCK"))}
+           if not k.startswith(("WAYLAND", "DBUS", "DISPLAY", "XDG_", "LABWC", "SWAYSOCK", "QUERENCIA_"))}
     env.update({
         "HOME": os.path.expanduser("~"),
         "XDG_RUNTIME_DIR": runtime,
@@ -126,6 +128,8 @@ def main() -> int:
         "WLR_HEADLESS_OUTPUTS": "1",
         "WLR_LIBINPUT_NO_DEVICES": "1",
         "XKB_DEFAULT_LAYOUT": "de",
+        # Thema 0.2.2 (13 §5, 21.10. 01:56): kein gvfsd/wsdd im Wegwerf-Bus
+        "GIO_USE_VFS": "local",
         "GDK_DEBUG": "no-portals",
         "GTK_USE_PORTAL": "0",
         # Thema-1: Einstellungen nur im Speicher; ein Programm im Testlauf

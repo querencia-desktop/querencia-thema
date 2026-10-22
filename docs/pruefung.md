@@ -22,7 +22,11 @@ Theme-Link bleiben unberührt.
 | `werkzeug/farbzaehler.py` | 0.2.1: Pixel einer Farbe in einem Bereich zählen (Beleg für neue Farbwerte) |
 | `werkzeug/farbnamen-probe.sh`, `farbnamen-probe.py` | 0.2.1: benannte Farben aus einem Programm-Provider ohne Bindung, hell, dunkel, Neustart mit und ohne `Settings.notify` |
 | `werkzeug/fokus-probe.sh`, `fokus-probe.py` | 0.2.1: Fokus und `focus-visible` nach Farbschema-Wechsel und nach F10/Esc, Querencia gegen GTK-Default |
-| `integration/probe.sh`, `integration/probe-02.sh`, `integration/021/probe-021.sh` | Probe der Integrationsskripte 0.1, 0.2 und 0.2.1 |
+| `werkzeug/labwc-belege.sh`, `labwc-fenster.py` | 0.2.2: labwc mit eigenem Konfigordner, zwei GTK-4-Fenster, Fotos hell, mit `themerc-override-dunkel`, mit Theme `Querencia-Klassisch-Dunkel` und zurück, je mit offenem Fenstermenü; Wechsel über `labwc --reconfigure` an den isolierten labwc |
+| `werkzeug/gtk3-belege.sh`, `gtk3-muster.ui` | 0.2.2: GTK 3 (`gtk-builder-tool preview`) hell, nur `color-scheme`, `settings.ini` mit `gtk-application-prefer-dark-theme`, `GTK_THEME=…:dark` und Wechsel im Lauf, je mit Menü |
+| `werkzeug/fokus-probe-022.sh` | 0.2.2: Fokus nach Taste und anschließendem Farbschema-Wechsel, Querencia gegen GTK-Default |
+| `werkzeug/labwc-knoepfe.py` | 0.2.2: labwc-Knöpfe beider Themen erzeugen bzw. mit `--pruefen` vergleichen |
+| `integration/probe.sh`, `integration/probe-02.sh`, `integration/021/probe-021.sh`, `integration/022/probe-022.sh` | Probe der Integrationsskripte 0.1, 0.2, 0.2.1 und 0.2.2 |
 
 Eingaben (`qeingabe`) und Auflösung (`qausgabe`) kommen aus
 `querencia-rechner/werkzeug/bin` (`QTH_WERKZEUG_BIN`). Sie verweigern den
@@ -42,6 +46,36 @@ Bilder, Panel (mit offenem Menü) und Desktop.
   Unter Wayland liest GTK 3 gsettings (im Test nur im Speicher), nicht
   `settings.ini`.
 - Portal-Probe: wie live über gsettings → Portal → Programm.
+
+## Ergebnisse 0.2.2 (22.10.2026)
+
+- **Kontrast:** `kontrast.py` Exit 0 mit 218 Pflichtpaaren: GTK 4 hell 38
+  und dunkel 46, GTK 3 hell 37 und dunkel 44, labwc hell 5, dunkel 8 (Theme)
+  und 8 (Override), Titelknöpfe 32 (3:1). Neu unter AA gefunden und behoben:
+  Skalenwert und -marken (55 %), Untermenüpfeil und Schließknopf auf Reitern
+  (30 %), in GTK 4 und GTK 3 (docs/farben.md).
+- **Regression gegen die Live-Ablage 0.2.1** (`regression-021.sh`, 50
+  Bildpaare): 38 pixelgleich. Die 12 Abweichungen liegen nur an den
+  beabsichtigten Stellen, hell und dunkel: Untermenüpfeil im Dokumente-Menü
+  (62 Pixel), Schließknopf auf dem Reiter im Editor (56 Pixel), Skalenwert
+  der Musterseite (138 Pixel). Vergrößerte Ausschnitte in den Belegen.
+- **labwc** (`labwc-belege.sh`): Override und Theme dunkel greifen nach
+  `labwc --reconfigure`; Titelleiste, Titel, Rahmen und Fenstermenü dunkel.
+  Mit Override bleiben die Knöpfe hell (PNG des Themes). Zurück auf hell ist
+  pixelgleich mit dem Anfang (Fenster und Fenstermenü).
+- **GTK 3** (`gtk3-belege.sh`): `color-scheme` allein = hell (pixelgleich);
+  `settings.ini` mit `gtk-application-prefer-dark-theme=true` =
+  `GTK_THEME=Querencia-Klassisch:dark` (pixelgleich, auch mit Menü); im Lauf
+  geschrieben wirkt die Datei nicht (pixelgleich mit hell).
+- **Fokus** (`fokus-probe-022.sh`, QD-088 Punkt 5): Das Fokus-Widget ändert
+  sich bei keinem Farbschema-Wechsel, weder unter Querencia noch unter
+  GTK-Default. `focus-visible` geht mit der Taste an, bleibt über einen
+  sofortigen Wechsel bestehen und geht nach einigen Sekunden ohne Taste aus
+  (Querencia nach 2,4 s schon aus, Default noch an: Zeitpunkt, nicht Thema).
+  Wechsel ohne vorherige Taste: pixelgleich. Einordnung: GTK, nicht das
+  Thema.
+- **Integration:** Probe 0.2.2 69/69; `pruefen` live Exit 0 (Link 0.2.1,
+  Dunkel-Link fehlt, Ablage 0.2.2 fehlt, SHA256SUMS der Vorlage in Ordnung).
 
 ## Ergebnisse 0.2.1 (21.10.2026)
 
