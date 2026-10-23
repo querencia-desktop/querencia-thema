@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Thema 0.2.2: GTK-3-Musterfenster für fremde Programme (QD-103), gezeigt
+     mit gtk-builder-tool preview in gtk3-belege.sh. Menüleiste, Werkzeugleiste,
+     Knöpfe (normal, empfohlen, gefährlich, gesperrt), Kästchen, Optionsfelder,
+     Schalter, Eingabefelder (Platzhalter, Fehler), Drehfeld, Auswahlliste,
+     Regler, Fortschritt, Pegel, Liste mit Spalten und Auswahl, Textansicht,
+     Infoleiste, Verweis, Reiter, Statusleiste. -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkListStore" id="daten">
+    <columns>
+      <column type="gchararray"/>
+      <column type="gchararray"/>
+      <column type="gboolean"/>
+    </columns>
+    <data>
+      <row><col id="0">Dokumente</col><col id="1">12 Elemente</col><col id="2">True</col></row>
+      <row><col id="0">Bilder</col><col id="1">48 Elemente</col><col id="2">False</col></row>
+      <row><col id="0">Musik</col><col id="1">3 Elemente</col><col id="2">True</col></row>
+      <row><col id="0">Vorlagen</col><col id="1">leer</col><col id="2">False</col></row>
+    </data>
+  </object>
+  <object class="GtkTextBuffer" id="text">
+    <property name="text">Textansicht in GTK 3.
+Zweite Zeile.</property>
+  </object>
+  <object class="GtkAdjustment" id="regler"><property name="upper">100</property><property name="value">40</property><property name="step-increment">1</property></object>
+  <object class="GtkAdjustment" id="dreh"><property name="upper">100</property><property name="value">7</property><property name="step-increment">1</property></object>
+  <object class="GtkWindow" id="fenster">
+    <property name="title">GTK-3-Muster</property>
+    <property name="default-width">700</property>
+    <property name="default-height">560</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkMenuBar">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkMenuItem">
+                <property name="visible">True</property>
+                <property name="label">_Datei</property>
+                <property name="use-underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <child><object class="GtkMenuItem"><property name="visible">True</property><property name="label">_Neu</property><property name="use-underline">True</property><accelerator key="n" signal="activate" modifiers="GDK_CONTROL_MASK"/></object></child>
+                    <child><object class="GtkMenuItem"><property name="visible">True</property><property name="label">Ö_ffnen …</property><property name="use-underline">True</property><accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/></object></child>
+                    <child><object class="GtkCheckMenuItem"><property name="visible">True</property><property name="label">Statusleiste</property><property name="active">True</property></object></child>
+                    <child><object class="GtkRadioMenuItem"><property name="visible">True</property><property name="label">Liste</property><property name="active">True</property></object></child>
+                    <child><object class="GtkMenuItem"><property name="visible">True</property><property name="sensitive">False</property><property name="label">Gesperrt</property></object></child>
+                    <child><object class="GtkSeparatorMenuItem"><property name="visible">True</property></object></child>
+                    <child><object class="GtkMenuItem"><property name="visible">True</property><property name="label">_Beenden</property><property name="use-underline">True</property><accelerator key="q" signal="activate" modifiers="GDK_CONTROL_MASK"/></object></child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child><object class="GtkMenuItem"><property name="visible">True</property><property name="label">_Bearbeiten</property><property name="use-underline">True</property></object></child>
+            <child><object class="GtkMenuItem"><property name="visible">True</property><property name="label">_Hilfe</property><property name="use-underline">True</property></object></child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToolbar">
+            <property name="visible">True</property>
+            <child><object class="GtkToolButton"><property name="visible">True</property><property name="label">Neu</property><property name="icon-name">document-new</property><property name="is-important">True</property></object></child>
+            <child><object class="GtkToolButton"><property name="visible">True</property><property name="label">Öffnen</property><property name="icon-name">document-open</property><property name="is-important">True</property></object></child>
+            <child><object class="GtkToggleToolButton"><property name="visible">True</property><property name="label">Umschalten</property><property name="active">True</property><property name="is-important">True</property></object></child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkInfoBar">
+            <property name="visible">True</property>
+            <property name="message-type">warning</property>
+            <child internal-child="content_area"><object class="GtkBox"><child><object class="GtkLabel"><property name="visible">True</property><property name="label">Warnleiste: Das ist ein Hinweis.</property></object></child></object></child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkNotebook">
+            <property name="visible">True</property>
+            <property name="vexpand">True</property>
+            <child>
+              <object class="GtkGrid">
+                <property name="visible">True</property>
+                <property name="margin">10</property>
+                <property name="row-spacing">6</property>
+                <property name="column-spacing">10</property>
+                <child><object class="GtkButton"><property name="visible">True</property><property name="label">Knopf</property></object><packing><property name="left-attach">0</property><property name="top-attach">0</property></packing></child>
+                <child><object class="GtkButton"><property name="visible">True</property><property name="label">Empfohlen</property><style><class name="suggested-action"/></style></object><packing><property name="left-attach">1</property><property name="top-attach">0</property></packing></child>
+                <child><object class="GtkButton"><property name="visible">True</property><property name="label">Löschen</property><style><class name="destructive-action"/></style></object><packing><property name="left-attach">2</property><property name="top-attach">0</property></packing></child>
+                <child><object class="GtkButton"><property name="visible">True</property><property name="sensitive">False</property><property name="label">Gesperrt</property></object><packing><property name="left-attach">3</property><property name="top-attach">0</property></packing></child>
+                <child><object class="GtkCheckButton"><property name="visible">True</property><property name="label">Kästchen</property><property name="active">True</property></object><packing><property name="left-attach">0</property><property name="top-attach">1</property></packing></child>
+                <child><object class="GtkRadioButton" id="r1"><property name="visible">True</property><property name="label">Option A</property><property name="active">True</property></object><packing><property name="left-attach">1</property><property name="top-attach">1</property></packing></child>
+                <child><object class="GtkRadioButton"><property name="visible">True</property><property name="label">Option B</property><property name="group">r1</property></object><packing><property name="left-attach">2</property><property name="top-attach">1</property></packing></child>
+                <child><object class="GtkSwitch"><property name="visible">True</property><property name="active">True</property><property name="halign">start</property></object><packing><property name="left-attach">3</property><property name="top-attach">1</property></packing></child>
+                <child><object class="GtkEntry"><property name="visible">True</property><property name="placeholder-text">Platzhalter</property></object><packing><property name="left-attach">0</property><property name="top-attach">2</property><property name="width">2</property></packing></child>
+                <child><object class="GtkEntry"><property name="visible">True</property><property name="text">Fehlerhafte Eingabe</property><style><class name="error"/></style></object><packing><property name="left-attach">2</property><property name="top-attach">2</property><property name="width">2</property></packing></child>
+                <child><object class="GtkSpinButton"><property name="visible">True</property><property name="adjustment">dreh</property></object><packing><property name="left-attach">0</property><property name="top-attach">3</property></packing></child>
+                <child><object class="GtkComboBoxText"><property name="visible">True</property><property name="active">0</property><items><item>Auswahlliste</item><item>Zweiter</item></items></object><packing><property name="left-attach">1</property><property name="top-attach">3</property></packing></child>
+                <child><object class="GtkLinkButton"><property name="visible">True</property><property name="label">Verweis</property><property name="uri">https://example.org</property></object><packing><property name="left-attach">2</property><property name="top-attach">3</property></packing></child>
+                <child><object class="GtkLabel"><property name="visible">True</property><property name="label">Fehlerschrift</property><style><class name="error"/></style></object><packing><property name="left-attach">3</property><property name="top-attach">3</property></packing></child>
+                <child><object class="GtkScale"><property name="visible">True</property><property name="adjustment">regler</property><property name="hexpand">True</property></object><packing><property name="left-attach">0</property><property name="top-attach">4</property><property name="width">2</property></packing></child>
+                <child><object class="GtkProgressBar"><property name="visible">True</property><property name="fraction">0.6</property><property name="valign">center</property></object><packing><property name="left-attach">2</property><property name="top-attach">4</property></packing></child>
+                <child><object class="GtkLevelBar"><property name="visible">True</property><property name="value">0.3</property><property name="valign">center</property></object><packing><property name="left-attach">3</property><property name="top-attach">4</property></packing></child>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="visible">True</property>
+                    <property name="min-content-height">110</property>
+                    <property name="shadow-type">in</property>
+                    <child>
+                      <object class="GtkTreeView" id="baum">
+                        <property name="visible">True</property>
+                        <property name="model">daten</property>
+                        <child internal-child="selection"><object class="GtkTreeSelection"/></child>
+                        <child><object class="GtkTreeViewColumn"><property name="title">Name</property><child><object class="GtkCellRendererText"/><attributes><attribute name="text">0</attribute></attributes></child></object></child>
+                        <child><object class="GtkTreeViewColumn"><property name="title">Größe</property><child><object class="GtkCellRendererText"/><attributes><attribute name="text">1</attribute></attributes></child></object></child>
+                        <child><object class="GtkTreeViewColumn"><property name="title">Teilen</property><child><object class="GtkCellRendererToggle"/><attributes><attribute name="active">2</attribute></attributes></child></object></child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing><property name="left-attach">0</property><property name="top-attach">5</property><property name="width">2</property></packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="visible">True</property>
+                    <property name="shadow-type">in</property>
+                    <child><object class="GtkTextView"><property name="visible">True</property><property name="buffer">text</property></object></child>
+                  </object>
+                  <packing><property name="left-attach">2</property><property name="top-attach">5</property><property name="width">2</property></packing>
+                </child>
+              </object>
+            </child>
+            <child type="tab"><object class="GtkLabel"><property name="visible">True</property><property name="label">Allgemein</property></object></child>
+            <child><object class="GtkLabel"><property name="visible">True</property><property name="label">Zweiter Reiter</property></object></child>
+            <child type="tab"><object class="GtkLabel"><property name="visible">True</property><property name="label">Erweitert</property></object></child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStatusbar"><property name="visible">True</property></object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

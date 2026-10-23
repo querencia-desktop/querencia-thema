@@ -20,3 +20,9 @@ GNOME-Projekt, LGPL-2.1-or-later) und wird unter der GPL-3.0-or-later
 weitergegeben, wie es die LGPL erlaubt. Farbwerte nach Ubuntu 10.04 Ambiance
 und Human (© Canonical Ltd, CC BY-SA 3.0); übernommen sind nur einzelne
 Farbwerte und Proportionen, keine Grafiken und kein Code.
+
+labwc/: Die Themen und Knöpfe sind eigene Arbeit von Querencia Desktop
+(Variante B aus querencia-werkstatt-w3-system, seit 0.2.2 erzeugt von
+werkzeug/labwc-knoepfe.py); Grundlage der themerc sind die Schlüssel und
+Standardwerte von labwc 0.9.8 (GPL-2.0-only), übernommen sind nur
+Schlüsselnamen, kein Code.

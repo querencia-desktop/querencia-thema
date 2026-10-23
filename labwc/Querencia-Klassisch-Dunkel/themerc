@@ -1,0 +1,75 @@
+# Querencia-Klassisch-Dunkel – labwc-Theme für Querencia Desktop (Thema 0.2.2).
+# Dunkle Fassung von Querencia-Klassisch (labwc/Querencia-Klassisch/themerc),
+# passend zur dunklen GTK-Fassung nach Ubuntu 10.04 „Ambiance“: Titelleiste
+# im Verlauf #4a4843 → #3c3b37 (unten wie der Fenstergrund), inaktiv flach
+# #353430, Rahmen wie die Knopfränder der GTK-Fassung. Maße, Schatten und
+# Fensterwechsler-Aufbau wie hell. Knöpfe: PNG in diesem Ordner, erzeugt von
+# werkzeug/labwc-knoepfe.py. Kontraste: werkzeug/kontrast.py (docs/farben.md).
+
+border.width: 1
+window.active.border.color: #23221f
+window.inactive.border.color: #2b2a27
+
+window.titlebar.padding.width: 8
+window.titlebar.padding.height: 2
+window.active.title.bg: Gradient Vertical
+window.active.title.bg.color: #4a4843
+window.active.title.bg.colorTo: #3c3b37
+window.inactive.title.bg: Solid
+window.inactive.title.bg.color: #353430
+window.active.label.text.color: #f2f1f0
+window.inactive.label.text.color: #a8a29d
+window.label.text.justify: center
+
+window.button.width: 24
+window.button.height: 22
+window.button.spacing: 2
+window.button.hover.bg.color: #00000000
+window.button.hover.bg.corner-radius: 0
+# Nur für fehlende Grafiken (xbm-Ersatz von labwc):
+window.active.button.unpressed.image.color: #f2f1f0
+window.inactive.button.unpressed.image.color: #bdb7b1
+window.active.button.close.unpressed.image.color: #f9c8c5
+window.inactive.button.close.unpressed.image.color: #e8b0ac
+
+window.active.shadow.size: 60
+window.inactive.shadow.size: 40
+window.active.shadow.color: #00000060
+window.inactive.shadow.color: #00000040
+
+# Fenstermenü (Rechtsklick auf die Titelleiste): wie die Menüs der dunklen
+# GTK-Fassung, Auswahl orange mit dunkler Schrift.
+menu.border.color: #23221f
+menu.items.bg.color: #353430
+menu.items.text.color: #dfdbd2
+menu.items.active.bg.color: #f07746
+menu.items.active.text.color: #1a1a1a
+menu.separator.color: #2b2a27
+menu.title.bg.color: #3c3b37
+menu.title.text.color: #dfdbd2
+
+# Fensterwechsler Alt+Tab: Kasten wie die dunklen Menüs (#353430), Schrift
+# #dfdbd2, Auswahl orange wie hell.
+osd.bg.color: #353430
+osd.border.color: #23221f
+osd.border.width: 1
+osd.label.text.color: #dfdbd2
+osd.window-switcher.style-classic.width: 600
+osd.window-switcher.style-classic.padding: 6
+osd.window-switcher.style-classic.item.padding.x: 8
+osd.window-switcher.style-classic.item.padding.y: 4
+osd.window-switcher.style-classic.item.active.border.width: 2
+osd.window-switcher.style-classic.item.active.border.color: #F07746
+osd.window-switcher.style-classic.item.active.bg.color: #F0774633
+osd.window-switcher.style-classic.item.icon.size: 24
+osd.window-switcher.style-thumbnail.width.max: 80%
+osd.window-switcher.style-thumbnail.padding: 6
+osd.window-switcher.style-thumbnail.item.width: 220
+osd.window-switcher.style-thumbnail.item.height: 170
+osd.window-switcher.style-thumbnail.item.padding: 6
+osd.window-switcher.style-thumbnail.item.active.border.width: 2
+osd.window-switcher.style-thumbnail.item.active.border.color: #F07746
+osd.window-switcher.style-thumbnail.item.active.bg.color: #F0774633
+osd.window-switcher.style-thumbnail.item.icon.size: 32
+osd.window-switcher.preview.border.width: 1
+osd.window-switcher.preview.border.color: #F07746,#3c3b37,#F07746

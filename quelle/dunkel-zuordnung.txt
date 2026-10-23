@@ -60,7 +60,6 @@ schrift  #5a5652   #bdb7b1   Reiter inaktiv, Schalter
 schrift  #a5a09a   #858079   deaktiviert (WCAG-Ausnahme)
 schrift  #b0aba5   #77726c   deaktiviertes Kästchen
 schrift  #6d6964   #6d6964   deaktiviert auf Orange (bleibt)
-schrift  #8f8a85   #b3aea7   Skalenmarken
 schrift  #ffffff   #ffffff   Tooltip, Schrift auf Rot
 schrift  #b33c0b   #f6a179   Verweis (hellorange)
 schrift  #8a3a1c   #e5a383   besuchter Verweis

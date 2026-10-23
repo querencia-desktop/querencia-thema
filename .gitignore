@@ -1,7 +1,4 @@
 /gui-test
 /laufzeit
 /nachweis/bilder
-# Ausgaben der isolierten Prüfung (nicht einchecken)
-/target
-/nachweis/
-/integration/
+__pycache__/
