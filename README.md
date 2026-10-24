@@ -7,29 +7,11 @@ Rust, GTK 4).
 Installiert wird es zusammen mit Querencia Desktop aus der APT-Quelle;
 Anleitung auf <https://querencialinux.org>.
 
-Es ergänzt das gleichnamige labwc-Fensterthema (Rahmen, Titelleiste,
-Fensterwechsler) zu einem gemeinsamen Thema `Querencia-Klassisch`:
-
-```
-Querencia-Klassisch/
-├─ index.theme
-├─ labwc/      Fensterrahmen und Knöpfe (Quelle: labwc/ im Repo)
-├─ gtk-4.0/    gtk.css (+ Dunkelblock), gtk-dark.css, assets/ (alle Querencia-Programme)
-└─ gtk-3.0/    gtk.css, gtk-dark.css, assets/ (Fremdprogramme mit GTK 3)
-Querencia-Klassisch-Dunkel/
-└─ labwc/      dunkles labwc-Theme (seit 0.2.2)
-```
-
-Seit 0.2 gibt es eine dunkle Fassung nach Ambiance (Fenster, Menü- und
-Werkzeugleisten `#3c3b37`, Ansichten dunkel, Auswahl weiter Orange mit
-dunkler Schrift). Sie gilt bei `color-scheme` `prefer-dark` (Einstellungen →
-Erscheinungsbild). Seit 0.2.1 ist die Fehlerschrift dunkel lesbar, die
-Tastenkürzel in Menüs erreichen hell und dunkel WCAG AA, und Programme
-finden benannte Farben für Seitenleiste und Menü (`@sidebar_bg_color`,
-`@menu_bg_color` u. a., siehe [docs/farben.md](docs/farben.md)). Seit 0.2.2
-gibt es die Fensterrahmen auch dunkel (labwc-Theme
-`Querencia-Klassisch-Dunkel`, gewählt über Einstellungen), GTK 3 ist dunkel geprüft, und gedimmte Bedienteile (Skalen,
-Untermenüpfeil, Schließknopf auf Reitern) erreichen AA.
+*English summary:* The “Querencia-Klassisch” GTK 4 and GTK 3 theme: the light
+Ubuntu 10.04 look (Ambiance content area, Human/Clearlooks shapes) with the
+Querencia orange accent and, since 0.2, a dark Ambiance variant, generated
+from GTK's built-in theme; since 0.2.2 also a dark labwc window theme. Part of Querencia Desktop, a classic GNOME-2-style
+desktop for Wayland. Alpha; documentation is in German.
 
 > **Alpha.** Teil 1 jeder `gtk.css` hängt von der installierten GTK-Version
 > ab. GTK 4.22 schaltet nur laufende Programme dunkel; neu gestartete bleiben
@@ -67,10 +49,11 @@ Untermenüpfeil, Schließknopf auf Reitern) erreichen AA.
 
 | | |
 |---|---|
-| Version | 0.2.2 Fassung 2 (Tags `thema/gtk-0.2.2-2`, `thema/gtk-0.2.2-2-int`, Vorlage `integration/022-2/vorlage`), noch nicht live |
-| Auf der Entwicklungs-VM | 0.2.1 live seit 21.10.2026 18:05 (Tag `thema/gtk-0.2.1-int`, Ablage `22824d05ceb49cad`; `gtk-theme` = `Querencia-Klassisch`, `color-scheme` `default`) |
-| Letzte Prüfung | isolierte Läufe gegen die Live-Ablage 0.2.1, labwc hell/dunkel, GTK 3 hell/dunkel, Kontraste GTK 4, GTK 3 und labwc nach WCAG AA, siehe [docs/pruefung.md](docs/pruefung.md) und [docs/farben.md](docs/farben.md) |
-| Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22 und GTK 3 |
+| Version | 0.2.2 Fassung 2 (Tag `thema/gtk-0.2.2-2`; dunkles labwc-Fensterthema `Querencia-Klassisch-Dunkel`, GTK 3 dunkel geprüft, gedimmte Bedienteile mit WCAG AA) |
+| Letzte Prüfung | isolierte Läufe labwc hell und dunkel, GTK 3 hell und dunkel, Kontraste GTK 4, GTK 3 und labwc nach WCAG AA ([docs/pruefung.md](docs/pruefung.md), [docs/farben.md](docs/farben.md)) |
+| Bekannte Lücken | Teil 1 hängt von der installierten GTK-Version ab (Grundlage im Kopf der `gtk.css`); GTK 4.22 lädt `gtk-dark.css` nicht über `color-scheme`; Programme mit eigener heller CSS und Files bleiben hell |
+| Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22 und GTK 3.24 |
+| Nicht getestet | andere GTK-Versionen, HiDPI |
 
 ## Bauen
 
@@ -87,17 +70,21 @@ auf den Querencia-Akzent, macht die Ecken klassisch, hängt die eigene Schicht
 aus `quelle/` an und färbt für die dunkle Fassung nach
 `quelle/dunkel-zuordnung.txt` um: [docs/aufbau.md](docs/aufbau.md).
 
-Auf der Entwicklungs-VM richten `integration/thema-integrieren.sh` (0.1),
-`integration/thema-02-integrieren.sh` (0.2),
-`integration/021/thema-021-integrieren.sh` (0.2.1) und
-`integration/022-2/thema-022-2-integrieren.sh` (0.2.2) das Thema ein. Es tut das nur nach Freigabe durch die Status-Session, siehe
-[docs/integration.md](docs/integration.md). Später kommt es nach
-`/usr/share/themes/Querencia-Klassisch/` (Paket).
+Benutzen: `org.gnome.desktop.interface gtk-theme` auf `Querencia-Klassisch`
+(GTK 4 über das Settings-Portal, GTK 3 über gsettings); für einen
+Einzeltest `GTK_THEME=Querencia-Klassisch <programm>`. Paketziel:
+`/usr/share/themes/Querencia-Klassisch/`. Dunkel: `color-scheme` auf
+`prefer-dark` (Einstellungen → Erscheinungsbild), Einzeltest mit
+`GTK_THEME=Querencia-Klassisch:dark <programm>`.
 
 ## Prüfen
 
-`python3 -I werkzeug/erzeugen.py` erzeugt `gtk.css` und `gtk-dark.css` für GTK 4 und GTK 3 (nie von Hand schreiben), `python3 -I werkzeug/kontrast.py` prüft die Kontraste hell und dunkel (GTK 4, GTK 3, labwc), `python3 -I werkzeug/labwc-knoepfe.py` erzeugt die labwc-Knöpfe; geprüft wird nur isoliert (`werkzeug/isoliert.py`: eigener labwc, eigener D-Bus, Portale im Wegwerf-Bus).
-Generator, Schichten und Grenzen: [docs/aufbau.md](docs/aufbau.md); Prüfung und Belegbilder: [docs/pruefung.md](docs/pruefung.md); Integration: [docs/integration.md](docs/integration.md).
+Keine CI (Daten-Repo). Prüfen heißt: `werkzeug/erzeugen.py` ausführen und mit
+`git status` vergleichen, `sha256sum -c SHA256SUMS`, Kontrast hell und dunkel
+mit `werkzeug/kontrast.py`; Belegläufe nur in einer abgeschotteten Sitzung
+(eigener labwc ohne Bildschirm, eigenes `XDG_RUNTIME_DIR` und Profil), nie in
+der laufenden Desktopsitzung: [docs/pruefung.md](docs/pruefung.md).
+Arbeitsweise: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Vorbild und Abgrenzung
 
